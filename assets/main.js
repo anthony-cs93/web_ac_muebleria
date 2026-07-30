@@ -3,7 +3,7 @@
 // ============================================================
 
 // TODO: reemplaza este número por el WhatsApp real del negocio (formato: 51XXXXXXXXX, sin "+")
-const WHATSAPP_NUMBER = "51999999999";
+const WHATSAPP_NUMBER = "51943613883";
 
 function waLink(message){
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;

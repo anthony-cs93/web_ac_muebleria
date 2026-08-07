@@ -3,7 +3,7 @@
    Tema base (AC Mueblería) + variantes (Maderin / CDM)
    ========================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700;9..144,900&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Jost:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Nunito:wght@400;500;600;700;800&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Comic+Relief:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700;9..144,900&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Jost:wght@300;400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&family=Bubblegum+Sans&family=Merriweather:wght@400;700;900&display=swap');
 
 :root{
   /* --- Paleta base: taller de carpintería --- */
@@ -54,15 +54,15 @@ body.theme-maderin{
   --paper-2:    #F0E8DD;     /* fondo alterno arena claro */
   --line:       rgba(45,52,102,.12);   /* bordes sutiles azulados */
   --line-strong:rgba(45,52,102,.22);   /* bordes marcados azulados */
-  --font-display: 'Comic Relief', cursive, sans-serif; /* fuente display cómica */
+  --font-display: 'Sour Gummy', sans-serif;             /* fuente display redondeada */
   --font-body:    'Nunito', sans-serif;                 /* cuerpo con Nunito */
-  --font-mono:    'Playfair Display', Georgia, serif;   /* mono -> Playfair serif */
+  --font-mono:    'Bubblegum Sans', sans-serif;         /* mono -> Bubblegum Sans */
   --radius: 6px;   /* bordes más redondos que AC (6px vs 3px) */
 
   /* --- Layout responsive (solo valores desktop) --- */
   --cols-features: repeat(3,1fr);  /* features: 3 columnas (vs 4 en AC) */
   --hero-pad: 100px 0 80px;        /* más padding vertical en hero */
-  --hero-h1: clamp(34px, 4.5vw, 52px); /* título ligeramente más pequeño */
+  --hero-h1: clamp(38px, 5vw, 55px); /* título más grande */
   --badges-gap: 28px;              /* más espacio entre badges */
   --nav-mobile-bg: rgba(253,248,244,.98); /* nav móvil casi blanco */
   --nav-mobile-divider: var(--line); /* separador sutl en nav móvil */
@@ -100,6 +100,9 @@ body.theme-maderin .btn-wa {
 body.theme-maderin .btn-wa:hover {
   background: color-mix(in srgb, var(--accent) 82%, black); /* oscurece 18% */
 }
+body.theme-maderin .btn {
+  border-radius: 100px;  /* completamente redondo, igual que CDM */
+}
 body.theme-maderin .btn-ghost-dark {
   border-color: rgba(255,255,255,.35); /* borde blanco suave sobre hero oscuro */
   color: #fff;
@@ -126,9 +129,10 @@ body.theme-maderin .hero {
 body.theme-maderin .hero-overlay {
   background: linear-gradient(
     to right,                        /* degradado de izquierda a derecha */
-    rgba(45, 52, 102, 0.9) 0%,      /* azul oscuro opaco a la izquierda */
-    rgba(45, 52, 102, 0.65) 45%,    /* azul medio al centro */
-    rgba(45, 52, 102, 0.2) 100%     /* azul transparente a la derecha */
+    rgba(45, 52, 102, .95) 0%,      /* azul oscuro casi opaco a la izquierda */
+    rgba(45, 52, 102, .82) 20%,     /* azul oscuro */
+    rgba(45, 52, 102, .55) 30%,     /* azul semitransparente */
+    rgba(45, 52, 102, 0)   100%     /* transparente a la derecha */
   );
 }
 body.theme-maderin .hero-container {
@@ -140,26 +144,28 @@ body.theme-maderin .parent-badge {
 }
 body.theme-maderin .parent-badge .dot { background: #fff; }      /* punto blanco */
 body.theme-maderin .parent-badge span { color: rgba(255,255,255,.8); } /* texto blanco suave */
-body.theme-maderin .hero-copy .eyebrow { color: rgba(255,255,255,.7); } /* eyebrow blanco semitransparente */
+body.theme-maderin .hero-copy .eyebrow { color: rgba(255,255,255,.7); font-size: 16px; } /* eyebrow blanco semitransparente */
 body.theme-maderin .hero-copy .eyebrow::before { background: rgba(255,255,255,.5); } /* línea decorativa blanca */
 body.theme-maderin .hero-copy h1 {
   color: #fff;
+  font-size: clamp(34px, 4vw, 50px);  /* más compacto para que quepa en 2 líneas */
   line-height: 1.08;  /* interlineado ajustado */
   margin-top: 16px;
+  margin-left: 0;     /* alineado flush-left (estándar CDM) */
 }
 body.theme-maderin .hero-copy h1 em {
   font-style: normal;  /* sin cursiva */
   color: var(--accent-2); /* azul claro en la palabra destacada */
 }
-body.theme-maderin .hero-hl { color: #86CED5; } /* color highlight turquesa */
+body.theme-maderin .hero-hl { color: #86CED5; font-style: italic; } /* color highlight turquesa en cursiva */
 body.theme-maderin .hero-copy .section-lede {
   color: rgba(255,255,255,.78);  /* texto secundario blanco */
-  font-size: 16.5px;
+  font-size: 17.5px;
   margin-top: 18px;
 }
-body.theme-maderin .hero-actions { display: flex; gap: 14px; margin-top: 32px; flex-wrap: wrap; } /* botones CTA */
+body.theme-maderin .hero-actions { display: flex; gap: 14px; margin-top: 32px; margin-left: 0; flex-wrap: wrap; } /* botones CTA */
 body.theme-maderin .hero-badges {
-  display: flex; margin-top: 48px; flex-wrap: wrap;  /* badges estadísticos */
+  display: flex; margin-top: 48px; margin-left: 0; flex-wrap: wrap;  /* badges estadísticos */
   border-top: 1px solid rgba(255,255,255,.2); padding-top: 22px; /* separador superior */
 }
 body.theme-maderin .hero-badge {
@@ -167,7 +173,7 @@ body.theme-maderin .hero-badge {
 }
 body.theme-maderin .hero-badge b {
   display: block; color: #fff; font-family: var(--font-display); /* número grande del badge */
-  font-size: 20px; font-weight: 700; margin-bottom: 2px;
+  font-size: 20px; font-weight: 600; margin-bottom: 2px;
 }
 
 /* Eyebrow & titles en secciones claras — acento azul en vez de marrón */
@@ -194,7 +200,7 @@ body.theme-maderin .feature-thumb {
 body.theme-maderin .feature-body {
   padding: 20px 20px 22px; display: flex; flex-direction: column; gap: 10px; flex: 1; /* rellena espacio restante */
 }
-body.theme-maderin .feature-body h3 { font-size: 17px; font-weight: 700; }  /* título feature */
+body.theme-maderin .feature-body h3 { font-size: 17px; font-weight: 600; }  /* título feature */
 body.theme-maderin .feature-body p { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; } /* descripción */
 
 /* Catálogo — filter chips redondos (100px radius) */
@@ -234,13 +240,13 @@ body.theme-maderin .sample-badge {
   padding: 4px 10px; border-radius: 100px; /* badge redondo */
 }
 body.theme-maderin .product-body { padding: 20px 20px 22px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
-body.theme-maderin .product-body h3 { font-size: 17px; font-weight: 700; }        /* nombre producto */
+body.theme-maderin .product-body h3 { font-size: 17px; font-weight: 600; }        /* nombre producto */
 body.theme-maderin .product-body p.desc { font-size: 13.5px; color: var(--ink-soft); flex: 1; line-height: 1.55; } /* descripción, flex:1 para empujar specs abajo */
 body.theme-maderin .product-specs {
   display: flex; gap: 14px; font-family: var(--font-body); font-size: 12px;
   color: var(--ink-soft); border-top: 1px solid var(--line); padding-top: 12px; /* separador superior */
 }
-body.theme-maderin .product-price { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--ink); } /* precio grande */
+body.theme-maderin .product-price { font-family: var(--font-display); font-size: 20px; font-weight: 600; color: var(--ink); } /* precio grande */
 body.theme-maderin .product-price small { font-family: var(--font-body); font-size: 11.5px; color: var(--ink-soft); font-weight: 400; } /* texto auxiliar del precio */
 
 /* Section backgrounds — alterna fondo arena en secciones指定adas */
@@ -253,7 +259,7 @@ body.theme-maderin footer {
   padding: 60px 0 26px;
 }
 body.theme-maderin .footer-brand {
-  font-family: var(--font-display); font-size: 22px; color: #fff; font-weight: 800; /* marca grande */
+  font-family: var(--font-display); font-size: 22px; color: #fff; font-weight: 700; /* marca grande */
 }
 body.theme-maderin .footer-grid p { font-size: 13.5px; margin-top: 12px; max-width: 34ch; color: rgba(255,255,255,.7); } /* descripción footer */
 body.theme-maderin .footer-col h4 {
@@ -272,14 +278,14 @@ body.theme-maderin .footer-bottom {
 body.theme-maderin .wa-float {
   background: var(--accent) !important;  /* azul medio */
   color: #fff !important;
-  border-radius: var(--radius) !important; /* 6px (más redondo que AC) */
+  border-radius: 50% !important; /* circular, igual que CDM */
   box-shadow: none !important;             /* sin sombra */
 }
 body.theme-maderin .wa-float:hover { transform: none !important; background: color-mix(in srgb, var(--accent) 85%, black) !important; }
 
 /* Responsive Maderin: colapsos compartidos en "Responsive unificado" (ver abajo). */
 body.theme-maderin .hero-bg-img{
-  object-position: 80% 0;
+  object-position: 80% bottom;
 }
 
 
@@ -309,7 +315,7 @@ body.theme-cdm{
      instalada cae a Jost (geométrica, ya cargada desde Google Fonts). */
   --font-display:   'Playfair Display', Georgia, serif; /* serif elegante para títulos */
   --font-body:      'Unigeo Trial', 'Jost', 'Work Sans', sans-serif; /* sans-serif geométrica */
-  --font-mono:      'IBM Plex Mono', monospace; /* mono para specs, badges */
+  --font-mono:      'Merriweather', serif; /* mono para specs, badges */
 
   --radius: 8px;  /* bordes más redondos que AC (8px vs 3px) */
 
@@ -604,7 +610,7 @@ body.theme-cdm .wa-float:hover{
 body.theme-ac {
   --font-display:   'Jost', sans-serif;       /* sans-serif geométrica para títulos */
   --font-mono:      'Crimson Pro', serif;      /* serif mono para变体 */
-  --font-body:      'Inter', sans-serif;       /* sans-serif limpia para cuerpo */
+  --font-body:      'Jost', sans-serif;        /* sans-serif geométrica para cuerpo */
   --radius:         0px; /* Bordes rectos minimalistas (sin redondeo) */
 
   /* --- Layout responsive (solo valores desktop) --- */
@@ -627,7 +633,7 @@ body.theme-ac {
 
   background: var(--off-black);  /* fondo carbón */
   color: var(--paper);           /* texto crema */
-  font-family: var(--font-body); /* Inter */
+  font-family: var(--font-body); /* Jost */
 }
 body.theme-ac h1, body.theme-ac h2, body.theme-ac h3 {
   color: var(--paper);  /* todos los títulos crema */
@@ -699,6 +705,7 @@ button{ font-family:inherit; cursor:pointer; } /* hereda fuente, cursor mano */
 
 /* Títulos base — fuente display, peso 600, sin espaciado extra */
 h1,h2,h3{ font-family:var(--font-display); font-weight:600; letter-spacing:-.01em; color:var(--ink); }
+body.theme-maderin h1, body.theme-maderin h2, body.theme-maderin h3 { font-weight: 500; } /* titulares Maderin más finos */
 .section-title{ font-size:clamp(28px,4vw,42px); line-height:1.12; margin-top:10px; max-width:22ch; } /* título responsive */
 .section-lede{ font-family:var(--font-body); font-size:16.5px; color:var(--ink-soft); max-width:52ch; margin-top:14px; } /* subtítulo */
 
@@ -850,6 +857,22 @@ section{ padding:50px 0; }
 }
 .hero-badge{ font-family:var(--font-mono); font-size:15px; color:rgba(242,236,223,.6); letter-spacing:.03em; } /* label badge */
 .hero-badge b{ display:block; color:var(--paper); font-family:var(--font-display); font-size:22px; font-weight:600; } /* número badge */
+
+/* Hero grid — wrapper compartido (estándar CDM): 1 columna, centrado vertical */
+.hero-grid{
+  display:grid;
+  grid-template-columns:1fr;  /* una columna por defecto */
+  gap:clamp(40px, 5vw, 80px); /* espacio responsive entre columnas */
+  align-items:center;
+}
+/* Hero full-bleed (estándar CDM): contenedor sin tope de ancho + padding lateral responsive */
+body.theme-maderin .hero .container,
+body.theme-ac .hero .container{
+  position:relative;
+  z-index:2;                     /* sobre el overlay */
+  max-width:none;                /* sin límite de ancho */
+  padding: 0 clamp(28px, 6vw, 110px); /* padding horizontal responsive */
+}
 
 /* =========================== Features =========================== */
 .features-grid{
@@ -1042,6 +1065,14 @@ footer{ background:var(--espresso-3); color:rgba(242,236,223,.7); padding:60px 0
       rgba(46,47,26,0) 100%        /* transparente */
     );
   }
+  body.theme-maderin .hero-overlay{
+    background: linear-gradient(to right, 
+      rgba(45,52,102,0.95) 0%,     /* azul casi opaco */
+      rgba(45,52,102,0.8) 20%,     /* azul oscuro */
+      rgba(45,52,102,0.3) 40%,     /* más transparente */
+      rgba(45,52,102,0) 100%       /* transparente */
+    );
+  }
   body.theme-cdm .hero-grid{ gap: 40px; }
 }
 @media (max-width: 600px){
@@ -1066,6 +1097,12 @@ footer{ background:var(--espresso-3); color:rgba(242,236,223,.7); padding:60px 0
 
   body.theme-cdm .hero-overlay{
     background: linear-gradient(to right, rgba(46,47,26,.88) 0%, rgba(46,47,26,.62) 50%, rgba(46,47,26,.10) 100%);
+  }
+  body.theme-maderin .hero-overlay{
+    background: linear-gradient(to right, rgba(45,52,102,.88) 0%, rgba(45,52,102,.62) 50%, rgba(45,52,102,.10) 100%);
+  }
+  body.theme-maderin .hero-bg-img{
+    object-position: 60% 0;  /* recorta la imagen más a la derecha */
   }
   body.theme-cdm .hero-bg-img{
     object-position: 60% 0;  /* recorta la imagen más a la derecha */

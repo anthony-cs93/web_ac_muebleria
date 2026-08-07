@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<!-- Meta tags: título, descripción para SEO, favicon y CSS -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="public/logo_favicon.png">
@@ -8,24 +9,29 @@
 <meta name="description" content="Corazón de Madera crea regalos y detalles personalizados en madera y melamina. Pide por WhatsApp.">
 <link rel="stylesheet" href="assets/style.css">
 </head>
+<!-- theme-cdm: aplica la variante oliva/champán para detalles y regalos -->
 <body class="theme-cdm">
 
 <!-- ============ NAV ============ -->
+<!-- NAV: barra de navegación sticky con logo CDM, links y botón WhatsApp -->
 <nav class="nav">
   <div class="nav-inner">
-    <a href="#top" class="brand">Corazón de Madera <span>· AC Mueblería</span></a>
+    <a href="#top" class="brand"><img src="public/cdm/logo.png" alt="Corazón de Madera" class="brand-logo"></a>
+    <!-- Links: Productos, Sobre CDM, AC Mueblería (sitio padre), Instagram -->
     <ul class="nav-links">
       <li><a href="#productos">Productos</a></li>
       <li><a href="#nosotros">Sobre CDM</a></li>
       <li><a href="index.html">AC Mueblería</a></li>
       <li><a href="https://www.instagram.com/corazondemadera.pe/" target="_blank" rel="noopener">Instagram</a></li>
     </ul>
+    <!-- Botón WhatsApp: data-wa-message define el mensaje prellenado al abrir chat -->
     <div class="nav-cta">
       <a class="btn btn-wa" data-wa-message="Hola, quiero información sobre los productos de Corazón de Madera.">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
         <span class="long">Escríbenos</span>
       </a>
     </div>
+    <!-- Botón hamburguesa: solo visible en móvil (≤860px) -->
     <button class="nav-toggle" aria-label="Abrir menú">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
     </button>
@@ -33,39 +39,29 @@
 </nav>
 
 <!-- ============ HERO ============ -->
+<!-- HERO: pantalla completa con imagen de fondo, degradado oliva y texto crema -->
 <header class="hero" id="top">
+  <div class="hero-bg">
+    <img src="public/cdm/hero.png" alt="" class="hero-bg-img">
+    <!-- Overlay: degradado oliva oscuro para legibilidad del texto crema -->
+    <div class="hero-overlay"></div>
+  </div>
   <div class="container">
+    <!-- Grid: contenedor del hero con layout de 1 columna -->
     <div class="hero-grid">
       <div class="hero-copy">
-        <div class="parent-badge"><span class="dot"></span><span>Una marca de AC Mueblería</span></div>
-        <span class="eyebrow">Detalles y regalos en madera</span>
         <h1>Regalos que dicen<br>lo que las palabras<br><em>no alcanzan.</em></h1>
         <p class="section-lede">Corazón de Madera crea detalles personalizados en madera y melamina — cuadros, organizadores y recuerdos — para cumpleaños, aniversarios y toda ocasión especial.</p>
+        <!-- Botones CTA: Ver productos (primario) y Instagram (ghost dark) -->
         <div class="hero-actions">
           <a class="btn btn-wa" href="#productos">Ver productos</a>
           <a class="btn btn-ghost-dark" href="https://www.instagram.com/corazondemadera.pe/" target="_blank" rel="noopener">Síguenos en Instagram</a>
         </div>
+        <!-- Badges: personalización, entrega rápida, hecho a mano -->
         <div class="hero-badges">
           <div class="hero-badge"><b>Personalizado</b>con nombres y fechas</div>
           <div class="hero-badge"><b>Entrega rápida</b>ideal para regalos</div>
           <div class="hero-badge"><b>Hecho a mano</b>en madera y melamina</div>
-        </div>
-      </div>
-      <div class="hero-visual">
-        <div class="dim-frame">
-          <svg class="dim-corner tl" viewBox="0 0 26 26" fill="none" stroke="var(--accent-2)" stroke-width="1.4"><path d="M1 12V1h11"/></svg>
-          <svg class="dim-corner tr" viewBox="0 0 26 26" fill="none" stroke="var(--accent-2)" stroke-width="1.4"><path d="M1 12V1h11"/></svg>
-          <svg class="dim-corner bl" viewBox="0 0 26 26" fill="none" stroke="var(--accent-2)" stroke-width="1.4"><path d="M1 12V1h11"/></svg>
-          <svg class="dim-corner br" viewBox="0 0 26 26" fill="none" stroke="var(--accent-2)" stroke-width="1.4"><path d="M1 12V1h11"/></svg>
-          <div class="hero-art">
-            <svg viewBox="0 0 200 160" fill="none" stroke="var(--paper)" stroke-width="1.4" stroke-linejoin="round">
-              <rect x="55" y="30" width="90" height="100" rx="2"/>
-              <rect x="68" y="43" width="64" height="74" rx="1" opacity=".7"/>
-              <path d="M85 100c0-8 24-8 24 0" opacity=".85"/>
-              <circle cx="100" cy="80" r="10" opacity=".85"/>
-            </svg>
-          </div>
-          <div class="dim-line"><span class="dim-tag">Cuadro personalizado 30 × 40 cm</span></div>
         </div>
       </div>
     </div>
@@ -73,6 +69,7 @@
 </header>
 
 <!-- ============ SOBRE CDM ============ -->
+<!-- SECCIÓN FEATURES: 3 cards con icono SVG (sin imagen de fondo) -->
 <section id="nosotros" class="reveal">
   <div class="container">
     <div class="head-row">
@@ -83,6 +80,7 @@
       <p class="section-lede">Nacimos del mismo taller de AC Mueblería para dar espacio a algo más pequeño, pero igual de cuidado: piezas personalizadas para regalar o decorar.</p>
     </div>
     <div class="features-grid">
+      <!-- Cada feature: icono SVG + número + título + descripción -->
       <div class="feature-card">
         <svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 8c-8 0-14 6-14 13 0 9 14 19 14 19s14-10 14-19c0-7-6-13-14-13Z"/></svg>
         <div class="feature-num">01</div>
@@ -106,6 +104,7 @@
 </section>
 
 <!-- ============ CATÁLOGO ============ -->
+<!-- SECCIÓN CATÁLOGO: grid de productos con filtros por categoría -->
 <section id="productos" class="on-paper2 reveal">
   <div class="container">
     <div class="head-row">
@@ -114,6 +113,7 @@
         <h2 class="section-title">Elige tu detalle y coordinamos por WhatsApp.</h2>
       </div>
     </div>
+    <!-- Filtros: botones que muestran/ocultan cards por data-category -->
     <div class="filter-row">
       <button class="filter-chip active" data-filter="todos">Todos</button>
       <button class="filter-chip" data-filter="decoracion">Decoración</button>
@@ -123,15 +123,19 @@
 
     <!-- Nota: catálogo de ejemplo — reemplaza fotos, medidas y precios por los reales -->
     <div class="product-grid">
+      <!-- Cada producto: thumbnail SVG + badge "ejemplo" + nombre + descripción + specs + precio + botón WhatsApp -->
       <article class="product-card" data-category="decoracion">
         <div class="product-thumb">
+          <!-- Badge: indica que es producto de ejemplo (reemplazar por catálogo real) -->
           <span class="sample-badge">Producto de ejemplo</span>
           <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="12" y="8" width="24" height="32" rx="1"/><rect x="16" y="12" width="16" height="20" rx="1" opacity=".7"/></svg>
         </div>
         <div class="product-body">
           <h3>Cuadro personalizado</h3>
           <p class="desc">Nombre, fecha o frase grabada en madera, con marco a elección.</p>
+          <!-- Specs: dimensiones y material del producto -->
           <div class="product-specs"><span>30 × 40 cm</span><span>MDF</span></div>
+          <!-- Precio: formato soles por unidad -->
           <div class="product-price">S/ 65 <small>/ unidad</small></div>
           <button class="btn btn-wa btn-sm" data-wa-message="Hola, quiero pedir el Cuadro personalizado de Corazón de Madera. ¿Me ayudan con precio y disponibilidad?">Pedir por WhatsApp</button>
         </div>
@@ -212,11 +216,12 @@
 </section>
 
 <!-- ============ FOOTER ============ -->
+<!-- FOOTER: logo CDM, navegación, grupo AC Mueblería, copyright -->
 <footer id="contacto">
   <div class="container">
     <div class="footer-grid">
       <div>
-        <div class="footer-brand">Corazón de Madera</div>
+        <div class="footer-brand"><img src="public/cdm/logo.png" alt="Corazón de Madera" class="footer-logo"></div>
         <p>Detalles y regalos personalizados en madera y melamina, una marca de AC Mueblería.</p>
         <div style="margin-top:22px;">
           <a class="btn btn-wa" data-wa-message="Hola, quiero información sobre los productos de Corazón de Madera.">
@@ -245,10 +250,12 @@
   </div>
 </footer>
 
+<!-- WhatsApp flotante: botón fijo abajo-derecha, abre chat con mensaje prellenado para CDM -->
 <a class="wa-float" data-wa-float data-wa-message="Hola, quiero información sobre los productos de Corazón de Madera." aria-label="Escríbenos por WhatsApp" target="_blank" rel="noopener">
   <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
 </a>
 
+<!-- Script: main.js para lógica (filtros, WhatsApp, scroll) -->
 <script src="assets/main.js"></script>
 </body>
 </html>

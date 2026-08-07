@@ -79,6 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- Lógica del timeline "Cómo trabajamos" (GSAP ScrollTrigger) ---
+  // GSAP solo se carga en index.html; en las sub-marcas se omite este bloque
+  if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 
   const timeline = document.querySelector(".process-timeline-container");
@@ -157,5 +159,6 @@ document.addEventListener("DOMContentLoaded", () => {
         createAnimations();
       }, 250);
     });
+  }
   }
 });

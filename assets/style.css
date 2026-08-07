@@ -3,424 +3,722 @@
    Tema base (AC Mueblería) + variantes (Maderin / CDM)
    ========================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700;9..144,900&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Jost:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Nunito:wght@400;500;600;700;800&family=Crimson+Pro:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700;9..144,900&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Jost:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Nunito:wght@400;500;600;700;800&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Comic+Relief:wght@400;700&display=swap');
 
 :root{
   /* --- Paleta base: taller de carpintería --- */
-  --espresso:      #2B2118;
-  --espresso-2:     #3A2C1F;
-  --espresso-3:     #241B14;
-  --paper:          #F2ECDF;
-  --paper-2:        #E7DEC8;
-  --ink:            #221B14;
-  --ink-soft:       #55493B;
-  --line:           rgba(34,27,20,.16);
-  --line-strong:    rgba(34,27,20,.30);
-  --line-on-dark:   rgba(242,236,223,.22);
+  --espresso:      #2B2118;   /* marrón oscuro principal */
+  --espresso-2:     #3A2C1F;  /* marrón medio (cards dark) */
+  --espresso-3:     #241B14;  /* marrón más oscuro (footer base) */
+  --paper:          #F2ECDF;  /* fondo claro tipo papel */
+  --paper-2:        #E7DEC8;  /* fondo alterno (catálogo, secciones alternas) */
+  --ink:            #221B14;  /* texto principal oscuro */
+  --ink-soft:       #55493B;  /* texto secundario (descripciones) */
+  --line:           rgba(34,27,20,.16);   /* bordes sutiles entre secciones */
+  --line-strong:    rgba(34,27,20,.30);   /* bordes más marcados (cards, filtros) */
+  --line-on-dark:   rgba(242,236,223,.22); /* bordes sobre fondos oscuros */
 
   /* --- Acento de marca: AC Mueblería (por defecto) --- */
-  --accent:         #B9793F;   /* oak */
-  --accent-2:       #C9A227;  /* brass */
-  --accent-ink:     #241B14;  /* texto sobre acento claro */
+  --accent:         #B9793F;  /* oak — botones, links, resaltes principales */
+  --accent-2:       #C9A227;  /* brass — acento secundario, hover, estrellas */
+  --accent-ink:     #241B14;  /* texto sobre fondos de acento claro */
 
-  --font-display: 'Fraunces', serif;
-  --font-body:    'Work Sans', sans-serif;
-  --font-mono:    'IBM Plex Mono', monospace;
+  --font-display: 'Fraunces', serif;      /* fuente para títulos y marcas */
+  --font-body:    'Work Sans', sans-serif; /* fuente para texto cuerpo */
+  --font-mono:    'IBM Plex Mono', monospace; /* fuente mono (eyebrow, specs, badges) */
 
-  --radius: 3px;
-  --container: 1180px;
+  --radius: 3px;          /* radio de bordes por defecto */
+  --container: 1180px;    /* ancho máximo del contenido centrado */
+
+  /* --- Layout responsive (compartido por los 3 temas) --- */
+  --cols-features: repeat(4,1fr);  /* grid de features: 4 columnas */
+  --cols-products: repeat(3,1fr);  /* grid de productos: 3 columnas */
+  --cols-footer: 1.3fr 1fr 1fr;    /* grid footer: columna izquierda más ancha */
+  --hero-pad: 30px 0 30px;         /* padding del hero desktop */
+  --hero-h1: clamp(38px,5.2vw,64px); /* tamaño del título hero responsive */
+  --badges-gap: 26px;              /* espacio entre badges del hero */
+  --nav-mobile-bg: var(--espresso);  /* fondo del nav móvil */
+  --nav-mobile-divider: var(--line-on-dark); /* separador del nav móvil */
+
   --wa-number: 51999999999; /* PLACEHOLDER — reemplazar por el número real de WhatsApp */
 }
 
 /* --- Variante Maderin (mobiliario infantil) --- */
 body.theme-maderin{
-  --ink:        #2D3466;
-  --ink-soft:   #6B7199;
-  --accent:     #415aa5;
-  --accent-2:   #C4D3E8;
-  --accent-3:   #C4E5E8;
-  --paper:      #FDF8F4;
-  --paper-2:    #F0E8DD;
-  --line:       rgba(45,52,102,.12);
-  --line-strong:rgba(45,52,102,.22);
-  --font-display: 'Nunito', sans-serif;
-  --font-body:    'Work Sans', sans-serif;
-  --radius: 6px;
+  --ink:        #2D3466;     /* texto azul oscuro */
+  --ink-soft:   #6B7199;     /* texto secundario azul grisáceo */
+  --accent:     #415aa5;     /* azul medio — botones, links */
+  --accent-2:   #C4D3E8;     /* azul claro — hover, acento suave */
+  --accent-3:   #C4E5E8;     /* celeste — fondo footer */
+  --paper:      #FDF8F4;     /* fondo blanco cálido */
+  --paper-2:    #F0E8DD;     /* fondo alterno arena claro */
+  --line:       rgba(45,52,102,.12);   /* bordes sutiles azulados */
+  --line-strong:rgba(45,52,102,.22);   /* bordes marcados azulados */
+  --font-display: 'Comic Relief', cursive, sans-serif; /* fuente display cómica */
+  --font-body:    'Nunito', sans-serif;                 /* cuerpo con Nunito */
+  --font-mono:    'Playfair Display', Georgia, serif;   /* mono -> Playfair serif */
+  --radius: 6px;   /* bordes más redondos que AC (6px vs 3px) */
+
+  /* --- Layout responsive (solo valores desktop) --- */
+  --cols-features: repeat(3,1fr);  /* features: 3 columnas (vs 4 en AC) */
+  --hero-pad: 100px 0 80px;        /* más padding vertical en hero */
+  --hero-h1: clamp(34px, 4.5vw, 52px); /* título ligeramente más pequeño */
+  --badges-gap: 28px;              /* más espacio entre badges */
+  --nav-mobile-bg: rgba(253,248,244,.98); /* nav móvil casi blanco */
+  --nav-mobile-divider: var(--line); /* separador sutl en nav móvil */
 }
+
+/* Maderin: eyebrows en Title Case (primera letra mayúscula, resto minúscula) */
+body.theme-maderin .eyebrow{ text-transform:none; }
 
 /* =========================== Maderin — Flat Design =========================== */
 
-/* Nav clara */
+/* Nav clara — fondo blanco translúcido en vez de oscuro */
 body.theme-maderin .nav {
-  background: rgba(253,248,244,.95);
-  border-bottom: 1px solid var(--line);
+  background: rgba(253,248,244,.95);  /* blanco cálido semitransparente */
+  border-bottom: 1px solid var(--line); /* borde sutil azulado */
 }
-body.theme-maderin .brand { color: var(--ink); }
-body.theme-maderin .brand small { color: var(--accent); }
-body.theme-maderin .nav-links a { color: var(--ink-soft); }
-body.theme-maderin .nav-links a:hover { color: var(--accent); }
-body.theme-maderin .nav-toggle svg { color: var(--ink); }
+body.theme-maderin .brand { color: var(--ink); }           /* marca en azul oscuro */
+body.theme-maderin .brand small { color: var(--accent); }  /* subtítulo en azul medio */
+body.theme-maderin .nav-links a { color: var(--ink-soft); }       /* links en gris azulado */
+body.theme-maderin .nav-links a:hover { color: var(--accent); }   /* hover azul medio */
+body.theme-maderin .nav-toggle svg { color: var(--ink); } /* hamburguesa en azul oscuro */
+body.theme-maderin .nav-links a {
+  font-family: var(--font-display);  /* Nunito redondeada */
+  font-weight: 500;
+  letter-spacing: .01em;
+}
+body.theme-maderin .nav-cta .btn-wa {
+  font-family: var(--font-display);  /* botón WhatsApp con Nunito */
+}
 
-/* Botones */
+/* Botones — azul medio en vez de marrón */
 body.theme-maderin .btn-wa {
-  background: var(--accent);
+  background: var(--accent);  /* azul medio */
   color: #fff;
 }
 body.theme-maderin .btn-wa:hover {
-  background: color-mix(in srgb, var(--accent) 82%, black);
+  background: color-mix(in srgb, var(--accent) 82%, black); /* oscurece 18% */
 }
 body.theme-maderin .btn-ghost-dark {
-  border-color: rgba(255,255,255,.35);
+  border-color: rgba(255,255,255,.35); /* borde blanco suave sobre hero oscuro */
   color: #fff;
 }
 body.theme-maderin .btn-ghost-dark:hover {
-  border-color: #fff;
+  border-color: #fff;  /* borde blanco puro en hover */
   color: #fff;
 }
 body.theme-maderin .btn-ghost {
-  border-color: var(--line-strong);
-  color: var(--ink);
+  border-color: var(--line-strong);  /* borde azulado marcado */
+  color: var(--ink);                  /* texto azul oscuro */
 }
 body.theme-maderin .btn-ghost:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+  border-color: var(--accent);  /* borde azul medio en hover */
+  color: var(--accent);          /* texto azul medio en hover */
 }
 
 /* Hero — imagen de fondo + degradado azul */
 body.theme-maderin .hero {
   color: #fff;
-  min-height: 100dvh;
+  min-height: 100dvh;  /* altura mínima = pantalla completa */
   padding: 0;
 }
 body.theme-maderin .hero-overlay {
   background: linear-gradient(
-    to right,
-    rgba(45, 52, 102, 0.9) 0%,
-    rgba(45, 52, 102, 0.65) 45%,
-    rgba(45, 52, 102, 0.2) 100%
+    to right,                        /* degradado de izquierda a derecha */
+    rgba(45, 52, 102, 0.9) 0%,      /* azul oscuro opaco a la izquierda */
+    rgba(45, 52, 102, 0.65) 45%,    /* azul medio al centro */
+    rgba(45, 52, 102, 0.2) 100%     /* azul transparente a la derecha */
   );
 }
 body.theme-maderin .hero-container {
-  padding: 100px 0 80px;
+  padding: var(--hero-pad);  /* padding responsive del :root */
 }
-body.theme-maderin .hero-copy { max-width: 560px; }
+body.theme-maderin .hero-copy { max-width: 560px; } /* ancho máximo del texto */
 body.theme-maderin .parent-badge {
-  border-color: rgba(255,255,255,.3);
+  border-color: rgba(255,255,255,.3); /* borde blanco suave */
 }
-body.theme-maderin .parent-badge .dot { background: #fff; }
-body.theme-maderin .parent-badge span { color: rgba(255,255,255,.8); }
-body.theme-maderin .hero-copy .eyebrow { color: rgba(255,255,255,.7); }
-body.theme-maderin .hero-copy .eyebrow::before { background: rgba(255,255,255,.5); }
+body.theme-maderin .parent-badge .dot { background: #fff; }      /* punto blanco */
+body.theme-maderin .parent-badge span { color: rgba(255,255,255,.8); } /* texto blanco suave */
+body.theme-maderin .hero-copy .eyebrow { color: rgba(255,255,255,.7); } /* eyebrow blanco semitransparente */
+body.theme-maderin .hero-copy .eyebrow::before { background: rgba(255,255,255,.5); } /* línea decorativa blanca */
 body.theme-maderin .hero-copy h1 {
   color: #fff;
-  font-size: clamp(34px, 4.5vw, 52px);
-  line-height: 1.08;
+  line-height: 1.08;  /* interlineado ajustado */
   margin-top: 16px;
 }
 body.theme-maderin .hero-copy h1 em {
-  font-style: normal;
-  color: var(--accent-2);
+  font-style: normal;  /* sin cursiva */
+  color: var(--accent-2); /* azul claro en la palabra destacada */
 }
-body.theme-maderin .hero-hl { color: #86CED5; }
+body.theme-maderin .hero-hl { color: #86CED5; } /* color highlight turquesa */
 body.theme-maderin .hero-copy .section-lede {
-  color: rgba(255,255,255,.78);
+  color: rgba(255,255,255,.78);  /* texto secundario blanco */
   font-size: 16.5px;
   margin-top: 18px;
 }
-body.theme-maderin .hero-actions { display: flex; gap: 14px; margin-top: 32px; flex-wrap: wrap; }
+body.theme-maderin .hero-actions { display: flex; gap: 14px; margin-top: 32px; flex-wrap: wrap; } /* botones CTA */
 body.theme-maderin .hero-badges {
-  display: flex; gap: 28px; margin-top: 48px; flex-wrap: wrap;
-  border-top: 1px solid rgba(255,255,255,.2); padding-top: 22px;
+  display: flex; margin-top: 48px; flex-wrap: wrap;  /* badges estadísticos */
+  border-top: 1px solid rgba(255,255,255,.2); padding-top: 22px; /* separador superior */
 }
 body.theme-maderin .hero-badge {
-  font-family: var(--font-body); font-size: 12.5px; color: rgba(255,255,255,.6);
+  font-family: var(--font-body); font-size: 12.5px; color: rgba(255,255,255,.6); /* label del badge */
 }
 body.theme-maderin .hero-badge b {
-  display: block; color: #fff; font-family: var(--font-display);
+  display: block; color: #fff; font-family: var(--font-display); /* número grande del badge */
   font-size: 20px; font-weight: 700; margin-bottom: 2px;
 }
 
-/* Eyebrow & titles en secciones claras */
-body.theme-maderin section .eyebrow { color: var(--accent); }
-body.theme-maderin section .eyebrow::before { background: var(--accent); }
+/* Eyebrow & titles en secciones claras — acento azul en vez de marrón */
+body.theme-maderin section .eyebrow { color: var(--accent); }      /* texto azul */
+body.theme-maderin section .eyebrow::before { background: var(--accent); } /* línea azul */
 
 /* Sobre Maderin — features (mismo patrón que product cards) */
 body.theme-maderin .features-grid {
-  display: grid; grid-template-columns: repeat(3,1fr); gap: 26px;
-  background: transparent; border: none;
+  display: grid; gap: 26px;   /* grid automático con separación */
+  background: transparent; border: none; /* sin fondo ni borde en el contenedor */
   margin-top: 8px;
 }
 body.theme-maderin .feature-card {
-  border: 1px solid var(--line); background: var(--paper);
+  border: 1px solid var(--line); background: var(--paper); /* borde sutil, fondo papel */
   display: flex; flex-direction: column; overflow: hidden;
-  transition: border-color .2s ease;
+  transition: border-color .2s ease;  /* animación suave en hover */
 }
-body.theme-maderin .feature-card:hover { border-color: var(--accent); }
+body.theme-maderin .feature-card:hover { border-color: var(--accent); } /* borde azul en hover */
 body.theme-maderin .feature-thumb {
-  aspect-ratio: 1/.92;
-  background-size: cover; background-position: center;
-  border-bottom: 1px solid var(--line);
+  aspect-ratio: 1/.92;  /* casi cuadrado (un poco más alto que ancho) */
+  background-size: cover; background-position: center; /* imagen cubre todo */
+  border-bottom: 1px solid var(--line);  /* separador inferior */
 }
 body.theme-maderin .feature-body {
-  padding: 20px 20px 22px; display: flex; flex-direction: column; gap: 10px; flex: 1;
+  padding: 20px 20px 22px; display: flex; flex-direction: column; gap: 10px; flex: 1; /* rellena espacio restante */
 }
-body.theme-maderin .feature-body h3 { font-size: 17px; font-weight: 700; }
-body.theme-maderin .feature-body p { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; }
+body.theme-maderin .feature-body h3 { font-size: 17px; font-weight: 700; }  /* título feature */
+body.theme-maderin .feature-body p { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; } /* descripción */
 
-/* Catálogo — filter chips */
-body.theme-maderin .filter-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 36px; }
+/* Catálogo — filter chips redondos (100px radius) */
+body.theme-maderin .filter-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 36px; } /* fila de filtros */
 body.theme-maderin .filter-chip {
   font-family: var(--font-body); font-size: 13px; font-weight: 500;
-  padding: 9px 18px; border: 1px solid var(--line-strong); border-radius: 100px;
+  padding: 9px 18px; border: 1px solid var(--line-strong); border-radius: 100px; /* completamente redondo */
   background: transparent; color: var(--ink-soft); transition: .2s ease;
 }
-body.theme-maderin .filter-chip:hover { border-color: var(--accent); color: var(--accent); }
+body.theme-maderin .filter-chip:hover { border-color: var(--accent); color: var(--accent); } /* azul en hover */
 body.theme-maderin .filter-chip.active {
-  background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600;
+  background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; /* relleno azul cuando activo */
 }
 
-/* Product cards */
+/* Product cards — misma tarjeta que features pero con precio */
 body.theme-maderin .product-card {
   border: 1px solid var(--line); background: var(--paper);
   display: flex; flex-direction: column; overflow: hidden;
-  transition: border-color .2s ease;
+  transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
 }
-body.theme-maderin .product-card:hover { border-color: var(--accent); }
+body.theme-maderin .product-card:hover{
+  border-color: var(--accent);               /* borde azul en hover */
+  transform: translateY(-3px);                /* sube 3px */
+  box-shadow: 0 18px 30px -22px rgba(65,90,165,.35); /* sombra azul sutil */
+}
 body.theme-maderin .product-thumb {
-  aspect-ratio: 1/.92; background: var(--paper-2);
-  position: relative; display: flex; align-items: center; justify-content: center;
+  aspect-ratio: 1/.92; background: var(--paper-2); /* fondo arena claro */
+  position: relative; display: flex; align-items: center; justify-content: center; /* centra el SVG */
   border-bottom: 1px solid var(--line);
 }
-body.theme-maderin .product-thumb svg { width: 46%; height: 46%; color: var(--accent); }
+body.theme-maderin .product-thumb svg { width: 46%; height: 46%; color: var(--accent); } /* icono azul centrado */
 body.theme-maderin .sample-badge {
-  position: absolute; top: 10px; right: 10px;
-  background: var(--accent); color: #fff;
+  position: absolute; top: 10px; right: 10px; /* esquina superior derecha */
+  background: var(--accent); color: #fff;     /* badge azul */
   font-family: var(--font-body); font-size: 10px; font-weight: 600;
-  letter-spacing: .04em; text-transform: uppercase;
-  padding: 4px 10px; border-radius: 100px;
+  letter-spacing: .04em; text-transform: uppercase; /* texto en mayúsculas */
+  padding: 4px 10px; border-radius: 100px; /* badge redondo */
 }
 body.theme-maderin .product-body { padding: 20px 20px 22px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
-body.theme-maderin .product-body h3 { font-size: 17px; font-weight: 700; }
-body.theme-maderin .product-body p.desc { font-size: 13.5px; color: var(--ink-soft); flex: 1; line-height: 1.55; }
+body.theme-maderin .product-body h3 { font-size: 17px; font-weight: 700; }        /* nombre producto */
+body.theme-maderin .product-body p.desc { font-size: 13.5px; color: var(--ink-soft); flex: 1; line-height: 1.55; } /* descripción, flex:1 para empujar specs abajo */
 body.theme-maderin .product-specs {
   display: flex; gap: 14px; font-family: var(--font-body); font-size: 12px;
-  color: var(--ink-soft); border-top: 1px solid var(--line); padding-top: 12px;
+  color: var(--ink-soft); border-top: 1px solid var(--line); padding-top: 12px; /* separador superior */
 }
-body.theme-maderin .product-price { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--ink); }
-body.theme-maderin .product-price small { font-family: var(--font-body); font-size: 11.5px; color: var(--ink-soft); font-weight: 400; }
+body.theme-maderin .product-price { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--ink); } /* precio grande */
+body.theme-maderin .product-price small { font-family: var(--font-body); font-size: 11.5px; color: var(--ink-soft); font-weight: 400; } /* texto auxiliar del precio */
 
-/* Section backgrounds */
+/* Section backgrounds — alterna fondo arena en secciones指定adas */
 body.theme-maderin .on-paper2 { background: var(--paper-2); }
 
-/* Footer claro */
+/* Footer claro — fondo celeste en vez de marrón oscuro */
 body.theme-maderin footer {
-  background: var(--accent-3);
-  color: var(--ink);
+  background: var(--ink);  /* azul base #2D3466 */
+  color: rgba(255,255,255,.85);
   padding: 60px 0 26px;
 }
 body.theme-maderin .footer-brand {
-  font-family: var(--font-display); font-size: 22px; color: var(--ink); font-weight: 800;
+  font-family: var(--font-display); font-size: 22px; color: #fff; font-weight: 800; /* marca grande */
 }
-body.theme-maderin .footer-grid p { font-size: 13.5px; margin-top: 12px; max-width: 34ch; color: var(--ink-soft); }
+body.theme-maderin .footer-grid p { font-size: 13.5px; margin-top: 12px; max-width: 34ch; color: rgba(255,255,255,.7); } /* descripción footer */
 body.theme-maderin .footer-col h4 {
   font-family: var(--font-body); font-size: 12px; font-weight: 600;
-  letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--accent-2); margin-bottom: 14px; /* título columna en azul claro */
 }
-body.theme-maderin .footer-col a { display: block; font-size: 14px; margin-bottom: 9px; color: var(--ink-soft); }
-body.theme-maderin .footer-col a:hover { color: var(--accent); }
-body.theme-maderin .footer-grid { border-bottom: 1px solid rgba(45,52,102,.15); }
+body.theme-maderin .footer-col a { display: block; font-size: 14px; margin-bottom: 9px; color: rgba(255,255,255,.7); } /* links crema suave */
+body.theme-maderin .footer-col a:hover { color: #fff; } /* hover blanco */
+body.theme-maderin .footer-grid { border-bottom: 1px solid rgba(255,255,255,.18); } /* separador sutil */
 body.theme-maderin .footer-bottom {
   display: flex; justify-content: space-between; padding-top: 22px;
-  font-size: 12.5px; flex-wrap: wrap; gap: 10px; color: var(--ink-soft); opacity: .7;
+  font-size: 12.5px; flex-wrap: wrap; gap: 10px; color: rgba(255,255,255,.5); opacity: 1; /* copyright suave */
 }
 
-/* WhatsApp flotante */
+/* WhatsApp flotante — azul con borde redondo, sin sombra */
 body.theme-maderin .wa-float {
-  background: var(--accent) !important;
+  background: var(--accent) !important;  /* azul medio */
   color: #fff !important;
-  border-radius: var(--radius) !important;
-  box-shadow: none !important;
+  border-radius: var(--radius) !important; /* 6px (más redondo que AC) */
+  box-shadow: none !important;             /* sin sombra */
 }
 body.theme-maderin .wa-float:hover { transform: none !important; background: color-mix(in srgb, var(--accent) 85%, black) !important; }
 
-/* Responsive Maderin */
-@media (max-width: 980px) {
-  body.theme-maderin .hero-container { padding: 80px 0 60px; }
-  body.theme-maderin .features-grid { grid-template-columns: repeat(2,1fr); }
-  body.theme-maderin .product-grid { grid-template-columns: repeat(2,1fr); }
-  body.theme-maderin .footer-grid { grid-template-columns: 1fr; gap: 28px; }
-}
-@media (max-width: 600px) {
-  body.theme-maderin .hero-container { padding: 70px 0 50px; }
-  body.theme-maderin .hero-copy h1 { font-size: clamp(28px, 7vw, 38px); }
-  body.theme-maderin .hero-badges { gap: 20px; }
-  body.theme-maderin .features-grid { grid-template-columns: 1fr; }
-  body.theme-maderin .product-grid { grid-template-columns: 1fr; }
+/* Responsive Maderin: colapsos compartidos en "Responsive unificado" (ver abajo). */
+body.theme-maderin .hero-bg-img{
+  object-position: 80% 0;
 }
 
-/* --- Variante CDM (detalles y regalos) --- */
+
+/* ==========================================================================
+   VARIANTE CDM (Corazón de Madera) — detalles y regalos en madera
+   Los colores se configuran en "Colores de marca" y las tipografías en
+   "Tipografías". El resto de bloques usan esos tokens automáticamente.
+   ========================================================================== */
+
 body.theme-cdm{
-  --accent:   #9C4A4F; /* berenjena / vino */
-  --accent-2: #7C8B6F; /* salvia */
+  /* --- Colores de marca (configurables) --- */
+  --accent:         #3F4021;   /* oliva oscuro — CTA, títulos, detalles */
+  --accent-2:       #E1CBA2;   /* champán — resaltes, hero, hover */
+
+  /* --- Neutros armonizados --- */
+  --ink:            #3F4021;   /* texto oliva (mismo que accent) */
+  --ink-soft:       #6B6B50;   /* texto secundario oliva grisáceo */
+  --paper:          #F7F2E6;   /* fondo cremoso claro */
+  --paper-2:        #E9DEC8;   /* arena — fondo alterno (catálogo) */
+  --line:           rgba(63,64,33,.14);   /* bordes sutiles oliva */
+  --line-strong:    rgba(63,64,33,.28);   /* bordes marcados oliva */
+  --line-on-dark:   rgba(225,203,162,.25); /* bordes champán sobre fondo oscuro */
+  --off-black:      #2E2F1A;   /* superficie oscura hero / nav / footer */
+
+  /* --- Tipografías (configurables) ---
+     'Unigeo Trial' es una fuente local: si el visitante no la tiene
+     instalada cae a Jost (geométrica, ya cargada desde Google Fonts). */
+  --font-display:   'Playfair Display', Georgia, serif; /* serif elegante para títulos */
+  --font-body:      'Unigeo Trial', 'Jost', 'Work Sans', sans-serif; /* sans-serif geométrica */
+  --font-mono:      'IBM Plex Mono', monospace; /* mono para specs, badges */
+
+  --radius: 8px;  /* bordes más redondos que AC (8px vs 3px) */
+
+  /* --- Layout responsive (solo valores desktop) --- */
+  --cols-features: repeat(3,1fr);        /* 3 columnas de features */
+  --hero-h1: clamp(36px, 4.6vw, 60px);  /* título hero responsive */
+  --nav-mobile-bg: var(--off-black);     /* nav móvil oscuro */
 }
 
-/* =========================== CDM — Hero visual =========================== */
-.hero-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:60px;
-  align-items:center;
+/* =========================== CDM — Hero =========================== */
+
+body.theme-cdm .hero{
+  background: var(--off-black);  /* fondo oliva muy oscuro */
+  color: var(--paper);            /* texto crema */
 }
-.hero-visual{
-  position:relative;
+body.theme-cdm .hero .container{
+  position: relative;
+  z-index: 2;                     /* sobre el overlay */
+  max-width: none;                /* sin límite de ancho */
+  padding: 0 clamp(28px, 6vw, 110px); /* padding horizontal responsive */
 }
-.dim-frame{
-  position:relative;
-  padding:40px 48px;
+body.theme-cdm .hero-overlay{
+  background: linear-gradient(to right, 
+    rgba(46,47,26,.95) 0%,      /* oliva casi opaco a la izquierda */
+    rgba(46,47,26,.82) 20%,     /* oliva oscuro */
+    rgba(46,47,26,.55) 30%,     /* oliva semitransparente */
+    rgba(46,47,26,0) 100%       /* transparente a la derecha */
+  );
 }
-.hero-art{
-  display:flex;
-  justify-content:center;
-  align-items:center;
+body.theme-cdm .hero-copy h1{
+  color: var(--paper);   /* crema */
+  margin-left: 0;        /* sin margen izquierdo */
+  line-height: 1.1;
 }
-.hero-art svg{
-  width:65%;
-  height:auto;
-  stroke-width:1.2;
+body.theme-cdm .hero-copy h1 em{
+  font-style: italic;    /* cursiva para palabra destacada */
+  color: var(--accent-2); /* champán */
 }
-.dim-corner{
-  position:absolute;
-  width:26px;
-  height:26px;
+body.theme-maderin .hero-copy .eyebrow { color: rgba(255,255,255,.7); }
+body.theme-maderin .hero-copy .eyebrow::before { background: rgba(255,255,255,.5); }
+body.theme-cdm .hero-copy .eyebrow{ color: rgba(247,242,230,.72); }  /* eyebrow crema semitransparente */
+body.theme-cdm .hero-copy .eyebrow::before{ background: var(--accent-2); } /* línea decorativa champán */
+body.theme-cdm .hero-copy .section-lede{ color: rgba(247,242,230,.78); }   /* subtítulo crema */
+body.theme-cdm .hero-actions{ margin-left: 0; }
+body.theme-cdm .hero-badges{
+  margin-left: 0;
+  border-top-color: var(--line-on-dark); /* separador champán */
 }
-.dim-corner.tl{ top:0; left:0; }
-.dim-corner.tr{ top:0; right:0; transform:scaleX(-1); }
-.dim-corner.bl{ bottom:0; left:0; transform:scaleY(-1); }
-.dim-corner.br{ bottom:0; right:0; transform:scale(-1,-1); }
-.dim-line{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin-top:20px;
-  border-top:1px dashed var(--accent-2);
-  padding-top:12px;
+body.theme-cdm .hero-badge{ color: rgba(247,242,230,.6); } /* label badge crema suave */
+body.theme-cdm .hero-badge b{ color: var(--paper); }        /* número badge crema puro */
+
+body.theme-cdm .parent-badge{ border-color: var(--line-on-dark); } /* borde champán */
+body.theme-cdm .parent-badge .dot{ background: var(--accent-2); }  /* punto champán */
+body.theme-cdm .parent-badge span{ color: rgba(247,242,230,.78); } /* texto crema */
+
+/* CTA sobre hero oscuro: champán sobre oliva (inverso a AC) */
+body.theme-cdm .hero-actions .btn-wa{
+  background: var(--accent-2);  /* champán */
+  color: var(--accent);         /* oliva oscuro */
 }
-.dim-tag{
-  font-family:var(--font-mono);
-  font-size:11.5px;
-  letter-spacing:.04em;
-  color:var(--accent-2);
+body.theme-cdm .hero-actions .btn-wa:hover{
+  background: color-mix(in srgb, var(--accent-2) 85%, white); /* se aclara 15% */
 }
 
-/* --- Variante AC Mueblería (Minimalista / Flat Design) --- */
+/* =========================== CDM — Hero layout =========================== */
+
+body.theme-cdm .hero-grid{
+  display: grid;
+  grid-template-columns: 1fr;  /* una columna por defecto */
+  gap: clamp(40px, 5vw, 80px); /* espacio responsive entre columnas */
+  align-items: center;
+}
+/* =========================== CDM — Nav =========================== */
+
+body.theme-cdm .nav{
+  background: rgba(46,47,26,.94); /* oliva oscuro semitransparente */
+  border-bottom: 1px solid var(--line-on-dark); /* borde champán */
+}
+body.theme-cdm .brand{ color: var(--paper); }         /* marca crema */
+body.theme-cdm .brand-logo{ height: 56px; object-fit: contain; } /* logo delimitado */
+body.theme-cdm .brand span{
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 10.5px;
+  letter-spacing: .08em;
+  text-transform: uppercase;   /* subtítulo en mayúsculas */
+  color: var(--accent-2);      /* champán */
+}
+body.theme-cdm .nav-links a{ color: rgba(247,242,230,.75); }  /* links crema suave */
+body.theme-cdm .nav-links a:hover{ color: var(--paper); }       /* hover crema puro */
+body.theme-cdm .nav-toggle svg{ color: var(--paper); }          /* hamburguesa crema */
+body.theme-cdm .nav-cta .btn-wa{
+  background: var(--accent-2);  /* champán */
+  color: var(--accent);         /* oliva */
+}
+body.theme-cdm .nav-cta .btn-wa:hover{
+  background: color-mix(in srgb, var(--accent-2) 85%, white);
+}
+
+/* =========================== CDM — Botones =========================== */
+
+body.theme-cdm .btn{ border-radius: 100px; } /* completamente redondo */
+body.theme-cdm .btn:hover{ transform: translateY(-1px); } /* sube 1px en hover */
+body.theme-cdm .btn:active{ transform: translateY(0) scale(.97); } /* se achica al clickear */
+body.theme-cdm .btn-wa{
+  background: var(--accent);  /* oliva oscuro */
+  color: #fff;
+}
+body.theme-cdm .btn-wa:hover{
+  background: color-mix(in srgb, var(--accent) 85%, black); /* oscurece 15% */
+}
+body.theme-cdm .btn-ghost-dark:hover{ border-color: var(--accent-2); color: var(--accent-2); } /* champán en hover */
+
+/* =========================== CDM — Sobre CDM (features) =========================== */
+
+body.theme-cdm .features-grid{
+  display: grid;
+  gap: 24px;
+  background: transparent;  /* sin fondo en el grid */
+  border: none;
+  margin-top: 8px;
+}
+body.theme-cdm .feature-card{
+  background: var(--paper);         /* fondo cremoso */
+  border: 1px solid var(--line);
+  border-radius: var(--radius);     /* 8px redondeado */
+  padding: 30px 28px;               /* relleno generoso */
+  transition: border-color .2s ease, transform .2s ease;
+}
+body.theme-cdm .feature-card:hover{
+  border-color: var(--accent);  /* borde oliva en hover */
+  transform: translateY(-3px);  /* sube 3px (efecto elevación) */
+}
+body.theme-cdm .feature-icon{
+  width: 34px; height: 34px;
+  color: var(--accent);         /* icono oliva */
+  margin-bottom: 14px;
+}
+body.theme-cdm .feature-num{
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--accent);         /* número oliva */
+}
+body.theme-cdm .feature-card h3{
+  font-family: var(--font-display);  /* Playfair Display serif */
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 16px;
+}
+body.theme-cdm .feature-card p{
+  margin-top: 10px;
+  font-size: 13.5px;
+  color: var(--ink-soft);       /* texto oliva suave */
+}
+
+/* =========================== CDM — Catálogo =========================== */
+
+body.theme-cdm .on-paper2{ background: var(--paper-2); } /* fondo arena en secciones指定adas */
+
+body.theme-cdm .filter-row{
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+body.theme-cdm .filter-chip{
+  font-family: var(--font-mono);   /* mono para filtros */
+  font-size: 12.5px;
+  letter-spacing: .02em;
+  padding: 9px 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: 100px;            /* completamente redondo */
+  background: transparent;
+  color: var(--ink-soft);
+  transition: .2s ease;
+}
+body.theme-cdm .filter-chip:hover{ border-color: var(--accent); color: var(--accent); } /* oliva en hover */
+body.theme-cdm .filter-chip.active{
+  background: var(--accent);   /* relleno oliva */
+  border-color: var(--accent);
+  color: var(--paper);         /* texto crema */
+  font-weight: 600;
+}
+
+body.theme-cdm .product-grid{
+  display: grid;
+  gap: 24px;
+}
+body.theme-cdm .product-card{
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);  /* 8px redondeado */
+  transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+body.theme-cdm .product-card:hover{
+  border-color: var(--accent);    /* borde oliva */
+  transform: translateY(-3px);    /* sube 3px */
+  box-shadow: 0 18px 30px -22px rgba(46,47,26,.35); /* sombra oscura sutil */
+}
+body.theme-cdm .product-thumb{
+  aspect-ratio: 1/.92;           /* casi cuadrado */
+  background: linear-gradient(155deg, var(--paper-2), var(--paper)); /* gradiente sutil */
+  position: relative;
+  display: flex; align-items: center; justify-content: center; /* centra SVG */
+  border-bottom: 1px solid var(--line);
+}
+body.theme-cdm .product-thumb svg{ width: 46%; height: 46%; color: var(--accent); } /* icono oliva */
+body.theme-cdm .sample-badge{
+  background: var(--accent);  /* badge oliva */
+  color: var(--paper);        /* texto crema */
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 100px;       /* badge redondo */
+}
+body.theme-cdm .product-body{
+  padding: 20px 20px 22px;
+  display: flex; flex-direction: column; gap: 10px; flex: 1; /* rellena espacio */
+}
+body.theme-cdm .product-body h3{
+  font-family: var(--font-display);  /* Playfair Display serif */
+  font-size: 18px;
+  font-weight: 600;
+}
+body.theme-cdm .product-body p.desc{ font-size: 13.5px; color: var(--ink-soft); flex: 1; } /* descripción, flex:1 */
+body.theme-cdm .product-specs{
+  display: flex; gap: 14px;
+  font-family: var(--font-mono);    /* mono para especificaciones */
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  border-top: 1px solid var(--line); /* separador superior */
+  padding-top: 12px;
+}
+body.theme-cdm .product-price{
+  font-family: var(--font-display); /* Playfair Display */
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--ink);               /* oliva oscuro */
+}
+body.theme-cdm .product-price small{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+
+/* =========================== CDM — Footer =========================== */
+
+body.theme-cdm footer{
+  background: #26271A;  /* oliva muy oscuro (casi negro) */
+  color: rgba(247,242,230,.72); /* crema suave */
+}
+body.theme-cdm .footer-brand{
+  font-family: var(--font-display);  /* Playfair Display serif */
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--paper);  /* crema puro */
+}
+body.theme-cdm .footer-logo{ height: 40px; object-fit: contain; } /* logo delimitado */
+body.theme-cdm .footer-col h4{ color: var(--accent-2); }  /* título columna champán */
+body.theme-cdm .footer-col a{ color: rgba(247,242,230,.72); } /* links crema suave */
+body.theme-cdm .footer-col a:hover{ color: var(--accent-2); } /* hover champán */
+body.theme-cdm .footer-grid{ border-bottom-color: var(--line-on-dark); } /* separador champán */
+body.theme-cdm .footer-bottom{ color: rgba(247,242,230,.45); } /* copyright muy suave */
+body.theme-cdm footer .btn-wa{
+  background: var(--accent-2);  /* champán */
+  color: var(--accent);         /* oliva */
+}
+body.theme-cdm footer .btn-wa:hover{
+  background: color-mix(in srgb, var(--accent-2) 85%, white); /* se aclara */
+}
+
+/* =========================== CDM — WhatsApp flotante =========================== */
+
+body.theme-cdm .wa-float{
+  background: var(--accent);  /* oliva */
+  color: #fff;
+  box-shadow: 0 10px 24px -8px rgba(46,47,26,.5); /* sombra oscura */
+}
+body.theme-cdm .wa-float:hover{
+  transform: scale(1.06);  /* se agranda 6% en hover */
+  background: color-mix(in srgb, var(--accent) 85%, black); /* oscurece */
+}
+
+/* =========================== CDM — Responsive ===========================
+   Colapsos compartidos en "Responsive unificado" (ver abajo). */
+
+/* ==========================================================================
+   VARIANTE AC Mueblería (Minimalista / Flat Design)
+   Bordes rectos, paleta carbón/amarillo, sin sombras ni elevación
+   ========================================================================== */
 body.theme-ac {
-  --font-display:   'Jost', sans-serif;
-  --font-mono:      'Crimson Pro', serif;
-  --font-body:      'Inter', sans-serif;
-  --radius:         0px; /* Bordes rectos minimalistas */
+  --font-display:   'Jost', sans-serif;       /* sans-serif geométrica para títulos */
+  --font-mono:      'Crimson Pro', serif;      /* serif mono para变体 */
+  --font-body:      'Inter', sans-serif;       /* sans-serif limpia para cuerpo */
+  --radius:         0px; /* Bordes rectos minimalistas (sin redondeo) */
+
+  /* --- Layout responsive (solo valores desktop) --- */
+  --hero-h1: clamp(36px, 4.6vw, 58px); /* título hero responsive */
 
   /* Paleta carbón y amarillo */
-  --off-black:      #151515;
-  --accent:         #af8f1a;
-  --accent-hover:   #957a16;
-  --accent-muted:   #a9965a;
-  --accent-dark:    #827857;
+  --off-black:      #151515;    /* carbón oscuro (fondo principal) */
+  --accent:         #af8f1a;    /* amarillo/dorado — acento principal */
+  --accent-hover:   #957a16;    /* amarillo oscuro para hover */
+  --accent-muted:   #a9965a;    /* dorado apagado para números, specs */
+  --accent-dark:    #827857;    /* dorado muy oscuro */
 
-  --paper:          #F8F8F6;
-  --paper-2:        #EFEFEA;
-  --ink:            #151515;
-  --ink-soft:       #59564C;
-  --line:           #D8D6D1;
-  --line-strong:    #B8B6B0;
-  --line-on-dark:   rgba(255,255,255,0.08);
+  --paper:          #F8F8F6;    /* fondo claro casi blanco */
+  --paper-2:        #EFEFEA;    /* fondo alterno gris claro */
+  --ink:            #151515;    /* texto carbón */
+  --ink-soft:       #59564C;    /* texto secundario gris */
+  --line:           #D8D6D1;    /* bordes sutiles */
+  --line-strong:    #B8B6B0;    /* bordes marcados */
+  --line-on-dark:   rgba(255,255,255,0.08); /* bordes muy sutiles sobre oscuro */
 
-  background: var(--off-black);
-  color: var(--paper);
-  font-family: var(--font-body);
+  background: var(--off-black);  /* fondo carbón */
+  color: var(--paper);           /* texto crema */
+  font-family: var(--font-body); /* Inter */
 }
 body.theme-ac h1, body.theme-ac h2, body.theme-ac h3 {
-  color: var(--paper);
+  color: var(--paper);  /* todos los títulos crema */
 }
 body.theme-ac .section-lede {
-  color: rgba(242,236,223,.7);
+  color: rgba(242,236,223,.7);  /* subtítulo crema suave */
 }
 body.theme-ac section {
-  background: var(--off-black);
+  background: var(--off-black);  /* todas las secciones fondo carbón */
 }
 body.theme-ac .on-paper2 {
   background: #1a1a1a;
 }
 
 /* =========================== Reset =========================== */
-*,*::before,*::after{ box-sizing:border-box; }
-html{ scroll-behavior:smooth; }
+*,*::before,*::after{ box-sizing:border-box; } /*incluye padding y border en el ancho total */
+html{ scroll-behavior:smooth; } /* scroll suave al hacer clic en anchors */
 body{
   margin:0;
-  background:var(--paper);
-  color:var(--ink);
-  font-family:var(--font-body);
+  background:var(--paper);      /* fondo claro por defecto */
+  color:var(--ink);             /* texto oscuro por defecto */
+  font-family:var(--font-body); /* Work Sans */
   font-size:16px;
-  line-height:1.55;
-  -webkit-font-smoothing:antialiased;
+  line-height:1.55;             /* interlineado cómodo */
+  -webkit-font-smoothing:antialiased; /* texto más suave en macOS/iOS */
 }
-img,svg{ display:block; max-width:100%; }
-a{ color:inherit; text-decoration:none; }
-ul{ margin:0; padding:0; list-style:none; }
-h1,h2,h3,h4,p{ margin:0; }
-button{ font-family:inherit; cursor:pointer; }
+img,svg{ display:block; max-width:100%; } /* imágenes bloque, nunca más del 100% */
+a{ color:inherit; text-decoration:none; }  /* hereda color, sin subrayado */
+ul{ margin:0; padding:0; list-style:none; } /* listas sin viñetas ni márgenes */
+h1,h2,h3,h4,p{ margin:0; }    /* elimina márgenes por defecto */
+button{ font-family:inherit; cursor:pointer; } /* hereda fuente, cursor mano */
 
+/* Focus visible — resalta con borde amarillo al navegar con teclado (accesibilidad) */
 :focus-visible{
   outline: 2px solid var(--accent-2);
   outline-offset: 3px;
 }
 
+/* Reduced motion — desactiva animaciones si el usuario lo pide en SO */
 @media (prefers-reduced-motion: reduce){
   *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
 }
 
+/* Container — centra contenido con ancho máximo (1180px) */
 .container{
   width:100%;
   max-width:var(--container);
-  margin:0 auto;
-  padding:0 28px;
+  margin:0 auto;               /* centrado horizontal */
+  padding:0 28px;              /* margen lateral */
 }
 
+/* Eyebrow — texto mono pequeño con línea decorativa a la izquierda */
 .eyebrow{
   display:inline-flex;
   align-items:center;
   gap:8px;
-  font-family:var(--font-mono);
+  font-family:var(--font-mono); /* IBM Plex Mono */
   font-size:15px;
-  letter-spacing:.09em;
-  text-transform:uppercase;
+  letter-spacing:.09em;          /* espaciado entre letras */
+  text-transform:uppercase;      /* todo en mayúsculas */
   color:var(--accent);
 }
 .eyebrow::before{
   content:"";
-  width:16px; height:1px;
+  width:16px; height:1px;       /* línea de 16px de ancho */
   background:var(--accent);
   display:inline-block;
 }
 
+/* Títulos base — fuente display, peso 600, sin espaciado extra */
 h1,h2,h3{ font-family:var(--font-display); font-weight:600; letter-spacing:-.01em; color:var(--ink); }
-.section-title{ font-size:clamp(28px,4vw,42px); line-height:1.12; margin-top:10px; max-width:22ch; }
-.section-lede{ font-family:var(--font-body); font-size:16.5px; color:var(--ink-soft); max-width:52ch; margin-top:14px; }
+.section-title{ font-size:clamp(28px,4vw,42px); line-height:1.12; margin-top:10px; max-width:22ch; } /* título responsive */
+.section-lede{ font-family:var(--font-body); font-size:16.5px; color:var(--ink-soft); max-width:52ch; margin-top:14px; } /* subtítulo */
 
+/* Secciones — padding vertical */
 section{ padding:50px 0; }
-.section-tight{ padding:56px 0; }
-.on-dark{ background:var(--espresso); color:var(--paper); }
-.on-dark .section-lede{ color:rgba(242,236,223,.72); }
-.on-dark .eyebrow{ color:var(--accent-2); }
-.on-dark .eyebrow::before{ background:var(--accent-2); }
-.on-paper2{ background:var(--paper-2); }
+.section-tight{ padding:56px 0; } /* sección con más padding */
+.on-dark{ background:var(--espresso); color:var(--paper); }   /* fondo oscuro */
+.on-dark .section-lede{ color:rgba(242,236,223,.72); }       /* subtítulo crema suave */
+.on-dark .eyebrow{ color:var(--accent-2); }                   /* eyebrow champán */
+.on-dark .eyebrow::before{ background:var(--accent-2); }      /* línea champán */
+.on-paper2{ background:var(--paper-2); }                       /* fondo alterno */
 
+/* Head-row — título y subtítulo en fila con espacio entre ellos */
 .head-row{
   display:flex;
   justify-content:space-between;
   align-items:flex-end;
   gap:24px;
-  flex-wrap:wrap;
-  margin-bottom:44px;
+  flex-wrap:wrap;       /* se apila en móvil */
+  margin-bottom:44px;  /* separación del grid de abajo */
 }
 
 /* =========================== Botones =========================== */
@@ -436,242 +734,243 @@ section{ padding:50px 0; }
   letter-spacing:.01em;
   border:1px solid transparent;
   transition: transform .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
-  white-space:nowrap;
+  white-space:nowrap;  /* texto en una sola línea */
 }
-.btn:hover{ transform: translateY(-1px); }
+.btn:hover{ transform: translateY(-1px); } /* sube 1px en hover */
 .btn-wa{
-  background:var(--accent);
+  background:var(--accent);  /* color sólido (marrón en AC, azul en Maderin, oliva en CDM) */
   color:#fff;
 }
-.btn-wa:hover{ background: color-mix(in srgb, var(--accent) 85%, black); }
+.btn-wa:hover{ background: color-mix(in srgb, var(--accent) 85%, black); } /* oscurece 15% */
 .btn-ghost-dark{
-  border-color: var(--line-on-dark);
+  border-color: var(--line-on-dark); /* borde sutil sobre fondo oscuro */
   color: var(--paper);
 }
-.btn-ghost-dark:hover{ border-color: var(--accent-2); color:var(--accent-2); }
+.btn-ghost-dark:hover{ border-color: var(--accent-2); color:var(--accent-2); } /* acento secundario en hover */
 .btn-ghost{
-  border-color: var(--line-strong);
+  border-color: var(--line-strong);  /* borde marcado sobre fondo claro */
   color: var(--ink);
 }
-.btn-ghost:hover{ border-color: var(--accent); color:var(--accent); }
-.btn-sm{ padding:10px 16px; font-size:13.5px; width:100%; justify-content:center; }
-.btn svg{ width:16px; height:16px; flex:none; }
+.btn:hover{ border-color: var(--accent); color:var(--accent); } /* acento en hover */
+.btn-sm{ padding:10px 16px; font-size:13.5px; width:100%; justify-content:center; } /* botón pequeño, ancho completo */
+.btn svg{ width:16px; height:16px; flex:none; } /* icono del botón */
 
 /* =========================== Nav =========================== */
 .nav{
-  position:sticky; top:0; z-index:50;
-  background: rgba(43,33,24,.92);
-  backdrop-filter: blur(6px);
-  border-bottom:1px solid var(--line-on-dark);
+  position:sticky; top:0; z-index:50;  /* se pega arriba al hacer scroll */
+  background: rgba(43,33,24,.92);      /* marrón oscuro semitransparente */
+  backdrop-filter: blur(6px);          /* desenfoque detrás */
+  border-bottom:1px solid var(--line-on-dark); /* borde sutil */
 }
 .nav-inner{
   display:flex; align-items:center; justify-content:space-between;
   padding:16px 28px;
-  max-width:var(--container); margin:0 auto;
+  max-width:var(--container); margin:0 auto; /* centrado */
 }
 .brand{
   display:flex; align-items:center; gap:9px;
   font-family:var(--font-display); font-weight:700; font-size:19px;
-  color:var(--paper);
+  color:var(--paper);  /* marca crema */
 }
 .brand-logo{
   height:60px;
-  object-fit:contain;
+  object-fit:contain; /* logo no se deforma */
 }
 .brand small{
   font-family:var(--font-mono); font-weight:400; font-size:10.5px;
-  letter-spacing:.08em; text-transform:uppercase; color:var(--accent-2);
+  letter-spacing:.08em; text-transform:uppercase; color:var(--accent-2); /* subtítulo champán */
 }
 .nav-links{ display:contents; gap:30px; align-items:center; }
 .nav-links a{
   font-family:var(--font-mono); font-size:16px; color:rgba(244, 241, 233, 0.78); font-weight:0;
   transition:color .15s ease;
 }
-.nav-links a:hover{ color:var(--paper); }
+.nav-links a:hover{ color:var(--paper); } /* crema puro en hover */
 .nav-cta{ display:flex; align-items:center; gap:14px; }
-.nav-toggle{ display:none; background:none; border:none; padding:6px; }
+.nav-toggle{ display:none; background:none; border:none; padding:6px; } /* hamburguesa oculta en desktop */
 .nav-toggle svg{ width:24px; height:24px; color:var(--paper); }
 
+/* Nav responsive — menú hamburguesa en móvil */
 @media (max-width: 860px){
   .nav-links{
-    position:absolute; top:100%; left:0; right:0;
-    background:var(--espresso); flex-direction:column; align-items:flex-start;
-    gap:0; padding:8px 28px 18px; border-bottom:1px solid var(--line-on-dark);
-    display:none;
+    position:absolute; top:100%; left:0; right:0; /* debajo del nav */
+    background: var(--nav-mobile-bg); flex-direction:column; align-items:flex-start;
+    gap:0; padding:8px 28px 18px; border-bottom:1px solid var(--nav-mobile-divider);
+    display:none;  /* oculto por defecto */
   }
-  .nav-links.open{ display:flex; }
-  .nav-links a{ padding:12px 0; width:100%; border-bottom:1px solid var(--line-on-dark); }
-  .nav-toggle{ display:block; }
-  .nav-cta .btn span.long{ display:none; }
+  .nav-links.open{ display:flex; }  /* se muestra con la clase .open */
+  .nav-links a{ padding:12px 0; width:100%; border-bottom:1px solid var(--nav-mobile-divider); } /* links apilados */
+  .nav-toggle{ display:block; }     /* se muestra la hamburguesa */
+  .nav-cta .btn span.long{ display:none; } /* oculta texto largo del botón */
 }
 
 /* =========================== Hero =========================== */
 .hero{
   position:relative;
-  min-height:100vh;
-  background:var(--off-black);
+  min-height:100vh;          /* altura mínima = pantalla completa */
+  background:var(--off-black); /* fondo oscuro por defecto */
   color:var(--paper);
-  overflow:hidden;
+  overflow:hidden;            /* recorta imagen de fondo */
   display:flex;
-  align-items:center;
+  align-items:center;         /* centra verticalmente */
 }
 .hero-bg{
-  position:absolute; inset:0; z-index:0;
+  position:absolute; inset:0; z-index:0;  /* detrás de todo */
 }
 .hero-bg-img{
   width:100%; height:100%;
-  object-fit:cover;
+  object-fit:cover;   /* imagen cubre todo el hero sin deformarse */
   display:block;
 }
 .hero-overlay{
-  position:absolute; inset:0; z-index:1;
-  background:linear-gradient(to right, rgba(21,21,21,0.92) 0%, rgba(21,21,21,0.6) 45%, transparent 100%);
+  position:absolute; inset:0; z-index:1;  /* sobre la imagen */
+  background:linear-gradient(to right, rgba(21,21,21,0.92) 0%, rgba(21,21,21,0.6) 45%, transparent 100%); /* degradado carbón a transparente */
 }
 .hero-container{
-  position:relative; z-index:2;
+  position:relative; z-index:2;  /* sobre el overlay */
   width:100%;
-  padding:30px 0 30px;
+  padding: var(--hero-pad);      /* padding responsive del :root */
 }
 .hero-copy{
-  max-width:640px;
+  max-width:640px;  /* ancho máximo del texto del hero */
 }
 .hero-copy h1{
   color:var(--paper);
-  font-size:clamp(38px,5.2vw,64px);
-  line-height:1.04;
+  font-size: var(--hero-h1);  /* clamp responsive del :root */
+  line-height:1.04;           /* interlineado ajustado para títulos grandes */
   margin-top:5px;
-  margin-left:15px;
+  margin-left:15px;           /* indentación sutil */
 }
-.hero-copy h1 em{ font-style:normal; color:var(--accent); }
-.hero-copy p.section-lede{ margin-top:20px; color:rgba(242,236,223,.75); font-size:17.5px; max-width:46ch; }
-.hero-actions{ display:flex; gap:14px; margin-top:34px; margin-left:15px; flex-wrap:wrap; }
+.hero-copy h1 em{ font-style:normal; color:var(--accent); } /* palabra destacada en acento */
+.hero-copy p.section-lede{ margin-top:20px; color:rgba(242,236,223,.75); font-size:17.5px; max-width:46ch; } /* subtítulo crema */
+.hero-actions{ display:flex; gap:14px; margin-top:34px; margin-left:15px; flex-wrap:wrap; } /* botones CTA */
 .hero-badges{
-  display:flex; gap:26px; margin-top:52px; margin-left:15px; flex-wrap:wrap;
-  border-top:1px solid var(--line-on-dark); padding-top:24px;
+  display:flex; gap: var(--badges-gap); margin-top:52px; margin-left:15px; flex-wrap:wrap;
+  border-top:1px solid var(--line-on-dark); padding-top:24px; /* separador superior */
 }
-.hero-badge{ font-family:var(--font-mono); font-size:15px; color:rgba(242,236,223,.6); letter-spacing:.03em; }
-.hero-badge b{ display:block; color:var(--paper); font-family:var(--font-display); font-size:22px; font-weight:600; }
+.hero-badge{ font-family:var(--font-mono); font-size:15px; color:rgba(242,236,223,.6); letter-spacing:.03em; } /* label badge */
+.hero-badge b{ display:block; color:var(--paper); font-family:var(--font-display); font-size:22px; font-weight:600; } /* número badge */
 
 /* =========================== Features =========================== */
 .features-grid{
-  display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
-  background:var(--line); border:1px solid var(--line); margin-top:8px;
+  display:grid; grid-template-columns: var(--cols-features); gap:1px; /* 1px de separación */
+  background:var(--line); border:1px solid var(--line); margin-top:8px; /* fondo = color de borde = separación visual */
 }
 .feature-card{ background:var(--paper); padding:32px 26px; position:relative; overflow:hidden; }
 .feature-img{
-  position:absolute; inset:0;
+  position:absolute; inset:0;  /* cubre toda la tarjeta */
   background-size:cover; background-position:center;
-  opacity:0; transform:scale(1.03);
+  opacity:0; transform:scale(1.03); /* oculta y ligeramente agrandada */
   transition: opacity 0.45s cubic-bezier(0.4,0,0.2,1), transform 0.45s cubic-bezier(0.4,0,0.2,1);
-  z-index:0;
+  z-index:0;  /* detrás del contenido */
 }
 .feature-img::after{
   content:""; position:absolute; inset:0;
-  background:rgba(21,21,21,0.75);
+  background:rgba(21,21,21,0.75); /* oscurece la imagen para legibilidad */
 }
-.feature-card:hover .feature-img{ opacity:1; transform:scale(1); }
-.feature-card > *:not(.feature-img){ position:relative; z-index:1; }
-.feature-num{ font-family:var(--font-mono); font-size:16px; color:var(--accent); }
+.feature-card:hover .feature-img{ opacity:1; transform:scale(1); } /* imagen aparece en hover */
+.feature-card > *:not(.feature-img){ position:relative; z-index:1; } /* contenido sobre la imagen */
+.feature-num{ font-family:var(--font-mono); font-size:16px; color:var(--accent); } /* número de feature */
 .feature-card h3{ font-size:19px; margin-top:16px; }
 .feature-card p{ margin-top:10px; font-size:13px; color:var(--ink-soft); }
-.feature-icon{ width:34px; height:34px; color:var(--accent); margin-bottom:14px; }
+.feature-icon{ width:34px; height:34px; color:var(--accent); margin-bottom:14px; } /* icono acento */
 
 /* =========================== Portafolio / catálogo (grillas) =========================== */
-.filter-row{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:36px; }
+.filter-row{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:36px; } /* fila de filtros */
 .filter-chip{
   font-family:var(--font-mono); font-size:13x; letter-spacing:.02em;
-  padding:8px 16px; border:1px solid var(--line-strong); border-radius:100px;
+  padding:8px 16px; border:1px solid var(--line-strong); border-radius:100px; /* completamente redondo */
   background:transparent; color:var(--ink-soft); transition:.15s ease;
 }
 .filter-chip:hover{ border-color:var(--accent); color:var(--accent); }
-.filter-chip.active{ background:var(--ink); border-color:var(--ink); color:var(--paper); }
+.filter-chip.active{ background:var(--ink); border-color:var(--ink); color:var(--paper); } /* activo = fondo sólido */
 
 .work-grid, .product-grid{
-  display:grid; grid-template-columns:repeat(3,1fr); gap:26px;
+  display:grid; grid-template-columns: var(--cols-products); gap:26px;
 }
 .work-card{
   border:1px solid var(--line); background:var(--paper); overflow:hidden;
   transition: transform .2s ease, box-shadow .2s ease;
 }
-.work-card:hover{ transform:translateY(-3px); box-shadow:0 18px 30px -22px rgba(34,27,20,.35); }
+.work-card:hover{ transform:translateY(-3px); box-shadow:0 18px 30px -22px rgba(34,27,20,.35); } /* sube y sombra */
 .work-thumb{
-  aspect-ratio:1/1; background: linear-gradient(155deg, var(--paper-2), var(--paper));
+  aspect-ratio:1/1; background: linear-gradient(155deg, var(--paper-2), var(--paper)); /* gradiente sutil */
   position:relative; display:flex; align-items:center; justify-content:center;
   border-bottom:1px solid var(--line);
 }
-.work-thumb svg{ width:44%; height:44%; color:var(--ink-soft); opacity:.85; }
-.work-thumb img{ width:100%; height:100%; object-fit:cover; }
+.work-thumb svg{ width:44%; height:44%; color:var(--ink-soft); opacity:.85; } /* placeholder icon */
+.work-thumb img{ width:100%; height:100%; object-fit:cover; } /* imagen real cubre todo */
 .work-tag{
-  position:absolute; top:12px; left:12px; font-family:var(--font-mono); font-size:10.5px;
+  position:absolute; top:12px; left:12px; font-family:var(--font-mono); font-size:10.5px; /* esquina sup izquierda */
   letter-spacing:.05em; text-transform:uppercase; background:var(--espresso); color:var(--paper);
-  padding:4px 9px; border-radius:2px;
+  padding:4px 9px; border-radius:2px; /* badge pequeño */
 }
 .work-body{ padding:20px 22px 22px; }
 .work-body h3{ font-size:17px; }
 .work-body p{ font-size:13.5px; color:var(--ink-soft); margin-top:6px; }
 .work-meta{
   display:flex; justify-content:space-between; align-items:center;
-  margin-top:14px; padding-top:14px; border-top:1px solid var(--line);
-  font-family:var(--font-mono); font-size:15px; color:var(--accent);
+  margin-top:14px; padding-top:14px; border-top:1px solid var(--line); /* separador */
+  font-family:var(--font-mono); font-size:15px; color:var(--accent); /* precio en acento */
 }
 
 /* =========================== Proceso =========================== */
-.process-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin-top:8px; position:relative; }
+.process-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin-top:8px; position:relative; } /* 4 pasos en fila */
 .process-step{ position:relative; padding:0 22px 0 0; }
 
 .process-num{
   font-family:var(--font-mono); font-size:13px; color:var(--accent);
-  width:34px; height:34px; border:1px solid var(--accent); border-radius:50%;
+  width:34px; height:34px; border:1px solid var(--accent); border-radius:50%; /* círculo con número */
   display:flex; align-items:center; justify-content:center; margin-bottom:18px;
 }
 .process-step h3{ font-size:16.5px; }
 .process-step p{ font-size:13.5px; color:var(--ink-soft); margin-top:8px; }
 
 /* =========================== Testimonios =========================== */
-.testi-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; }
+.testi-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; } /* 3 columnas */
 .testi-card{ background:var(--paper); border:1px solid var(--line); padding:28px; }
-.testi-stars{ color:var(--accent-2); font-size:13px; letter-spacing:2px; }
-.testi-card p.quote{ margin-top:16px; font-family:var(--font-display); font-size:17px; line-height:1.4; color:var(--ink); }
-.testi-who{ margin-top:18px; font-family:var(--font-mono); font-size:12px; color:var(--ink-soft); }
-.testi-note{ margin-top:28px; font-family:var(--font-mono); font-size:11.5px; color:var(--ink-soft); opacity:.75; }
+.testi-stars{ color:var(--accent-2); font-size:13px; letter-spacing:2px; } /* estrellas doradas */
+.testi-card p.quote{ margin-top:16px; font-family:var(--font-display); font-size:17px; line-height:1.4; color:var(--ink); } /* cita */
+.testi-who{ margin-top:18px; font-family:var(--font-mono); font-size:12px; color:var(--ink-soft); } /* autor */
+.testi-note{ margin-top:28px; font-family:var(--font-mono); font-size:11.5px; color:var(--ink-soft); opacity:.75; } /* nota adicional */
 
 /* =========================== Marcas (submarcas) =========================== */
-.brands-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+.brands-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; } /* 3 columnas */
 .brand-card{
-  background:var(--espresso-2); border:1px solid var(--line-on-dark);
-  padding:30px 26px; display:flex; flex-direction:column; gap:14px; min-height:100%;
+  background:var(--espresso-2); border:1px solid var(--line-on-dark); /* fondo marrón oscuro */
+  padding:30px 26px; display:flex; flex-direction:column; gap:14px; min-height:100%; /* altura mínima igual */
   transition: border-color .2s ease, transform .2s ease;
 }
-.brand-card:hover{ border-color:var(--accent-2); transform:translateY(-3px); }
-.brand-card .tag{ font-family:var(--font-mono); font-size:14px; letter-spacing:.05em; text-transform:uppercase; color:var(--accent-2); }
+.brand-card:hover{ border-color:var(--accent-2); transform:translateY(-3px); } /* sube y borde champán */
+.brand-card .tag{ font-family:var(--font-mono); font-size:14px; letter-spacing:.05em; text-transform:uppercase; color:var(--accent-2); } /* etiqueta champán */
 .brand-card h3{ color:var(--paper); font-size:22px; }
-.brand-logo{ height:45px; width:auto; object-fit:contain; }
-.brand-card p{ color:rgba(242,236,223,.68); font-size:14px; flex:1; }
-.brand-card .go{ display:flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600; color:var(--paper); }
+.brand-logo{ height:45px; width:auto; object-fit:contain; } /* logo delimitado */
+.brand-card p{ color:rgba(242,236,223,.68); font-size:14px; flex:1; } /* descripción, flex:1 para empujar "go" abajo */
+.brand-card .go{ display:flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600; color:var(--paper); } /* enlace "ver más" */
 .brand-card .go svg{ width:15px; height:15px; transition:transform .2s ease; }
-.brand-card:hover .go svg{ transform:translateX(4px); }
+.brand-card:hover .go svg{ transform:translateX(4px); } /* flecha se mueve a la derecha */
 
 /* =========================== Footer =========================== */
-footer{ background:var(--espresso-3); color:rgba(242,236,223,.7); padding:60px 0 26px; }
-.footer-grid{ display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:40px; padding-bottom:40px; border-bottom:1px solid var(--line-on-dark); }
-.footer-brand{ font-family:var(--font-display); font-size:20px; color:var(--paper); font-weight:700; }
-.footer-grid p{ font-size:12px; margin-top:12px; max-width:40ch; }
-.footer-col h4{ font-family:var(--font-mono); font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-2); margin-bottom:14px; }
-.footer-col a, .footer-col li{ display:block; font-size:14px; margin-bottom:9px; color:rgba(242,236,223,.72); }
-.footer-col a:hover{ color:var(--paper); }
-.footer-bottom{ display:flex; justify-content:space-between; padding-top:22px; font-size:12.5px; flex-wrap:wrap; gap:10px; color:rgba(242,236,223,.45); }
+footer{ background:var(--espresso-3); color:rgba(242,236,223,.7); padding:60px 0 26px; } /* fondo marrón muy oscuro */
+.footer-grid{ display:grid; grid-template-columns: var(--cols-footer); gap:40px; padding-bottom:40px; border-bottom:1px solid var(--line-on-dark); } /* 3 columnas */
+.footer-brand{ font-family:var(--font-display); font-size:20px; color:var(--paper); font-weight:700; } /* marca footer */
+.footer-grid p{ font-size:12px; margin-top:12px; max-width:40ch; } /* descripción footer */
+.footer-col h4{ font-family:var(--font-mono); font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-2); margin-bottom:14px; } /* título columna champán */
+.footer-col a, .footer-col li{ display:block; font-size:14px; margin-bottom:9px; color:rgba(242,236,223,.72); } /* links crema */
+.footer-col a:hover{ color:var(--paper); } /* hover crema puro */
+.footer-bottom{ display:flex; justify-content:space-between; padding-top:22px; font-size:12.5px; flex-wrap:wrap; gap:10px; color:rgba(242,236,223,.45); } /* copyright muy suave */
 
 /* =========================== WhatsApp flotante =========================== */
 .wa-float{
-  position:fixed; bottom:22px; right:22px; z-index:60;
-  width:56px; height:56px; border-radius:50%;
-  background:#3DA45E; color:#fff;
+  position:fixed; bottom:22px; right:22px; z-index:60; /* fijo abajo a la derecha */
+  width:56px; height:56px; border-radius:50%;            /* circular */
+  background:#3DA45E; color:#fff;                        /* verde WhatsApp */
   display:flex; align-items:center; justify-content:center;
-  box-shadow:0 10px 24px -8px rgba(0,0,0,.4);
+  box-shadow:0 10px 24px -8px rgba(0,0,0,.4);           /* sombra oscura */
   transition: transform .18s ease;
 }
-.wa-float:hover{ transform:scale(1.06); }
-.wa-float svg{ width:27px; height:27px; }
+.wa-float:hover{ transform:scale(1.06); } /* se agranda 6% en hover */
+.wa-float svg{ width:27px; height:27px; } /* icono WhatsApp */
 
 /* =========================== Catálogo de productos (Maderin / CDM) =========================== */
 .product-card{
@@ -679,277 +978,354 @@ footer{ background:var(--espresso-3); color:rgba(242,236,223,.7); padding:60px 0
   display:flex; flex-direction:column; overflow:hidden;
 }
 .product-thumb{
-  aspect-ratio:1/.92; background:linear-gradient(155deg,var(--paper-2),var(--paper));
+  aspect-ratio:1/.92; background:linear-gradient(155deg,var(--paper-2),var(--paper)); /* gradiente sutil */
   position:relative; display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--line);
 }
-.product-thumb svg{ width:46%; height:46%; color:var(--accent); }
+.product-thumb svg{ width:46%; height:46%; color:var(--accent); } /* icono placeholder */
 .sample-badge{
-  position:absolute; top:10px; right:10px; background:rgba(34,27,20,.82); color:var(--paper);
+  position:absolute; top:10px; right:10px; background:rgba(34,27,20,.82); color:var(--paper); /* badge oscuro */
   font-family:var(--font-mono); font-size:9.5px; letter-spacing:.05em; text-transform:uppercase;
   padding:4px 8px; border-radius:2px;
 }
 .product-body{ padding:20px 20px 22px; display:flex; flex-direction:column; gap:10px; flex:1; }
 .product-body h3{ font-size:17px; }
-.product-body p.desc{ font-size:13.5px; color:var(--ink-soft); flex:1; }
+.product-body p.desc{ font-size:13.5px; color:var(--ink-soft); flex:1; } /* flex:1 empuja specs abajo */
 .product-specs{ display:flex; gap:14px; font-family:var(--font-mono); font-size:11.5px; color:var(--ink-soft); border-top:1px solid var(--line); padding-top:12px; }
 .product-price{ font-family:var(--font-display); font-size:20px; font-weight:600; color:var(--ink); }
-.product-price small{ font-family:var(--font-mono); font-size:11px; color:var(--ink-soft); font-weight:400; }
+.product-price small{ font-family:var(--font-mono); font-size:11px; color:var(--ink-soft); font-weight:400; } /* texto auxiliar */
 
 /* =========================== Sub-brand hero band =========================== */
 .parent-badge{
   display:inline-flex; align-items:center; gap:9px; padding:7px 14px 7px 8px;
-  border:1px solid var(--line-on-dark); border-radius:100px; margin-bottom:22px;
+  border:1px solid var(--line-on-dark); border-radius:100px; margin-bottom:22px; /* badge redondo */
 }
-.parent-badge .dot{ width:7px; height:7px; border-radius:50%; background:var(--accent-2); }
-.parent-badge span{ font-family:var(--font-mono); font-size:11.5px; letter-spacing:.04em; color:rgba(242,236,223,.75); }
+.parent-badge .dot{ width:7px; height:7px; border-radius:50%; background:var(--accent-2); } /* punto dorado */
+.parent-badge span{ font-family:var(--font-mono); font-size:11.5px; letter-spacing:.04em; color:rgba(242,236,223,.75); } /* texto crema */
 
 /* =========================== Modulax external card =========================== */
 .modulax-band{
-  border:1px dashed var(--line-on-dark); padding:26px; display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;
+  border:1px dashed var(--line-on-dark); padding:26px; display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap; /* borde punteado */
 }
 
 /* =========================== Reveal on scroll =========================== */
-.reveal{ opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease; }
-.reveal.in-view{ opacity:1; transform:translateY(0); }
+.reveal{ opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease; } /* oculto, desplazado abajo */
+.reveal.in-view{ opacity:1; transform:translateY(0); } /* visible cuando entra en viewport */
 
-/* =========================== Responsive =========================== */
+/* =========================== Responsive unificado (AC / Maderin / CDM) =========================== */
 @media (max-width: 980px){
-  .hero-overlay{
-    background:linear-gradient(to right, rgba(21,21,21,0.88) 0%, rgba(21,21,21,0.5) 60%, transparent 100%);
+  :root{
+    --cols-features: repeat(2,1fr);  /* features: 2 columnas */
+    --cols-products: repeat(2,1fr);  /* productos: 2 columnas */
+    --cols-footer: 1fr;              /* footer: 1 columna */
+    --hero-pad: 80px 0 60px;         /* padding hero tablets */
   }
-  .hero-container{ padding:80px 0 60px; }
-  .features-grid{ grid-template-columns:repeat(2,1fr); }
-  .work-grid, .product-grid{ grid-template-columns:repeat(2,1fr); }
-  .process-row{ grid-template-columns:repeat(2,1fr); row-gap:40px; }
-  .process-step:nth-child(2)::after{ display:none; }
-  .testi-grid{ grid-template-columns:1fr; }
-  .brands-grid{ grid-template-columns:1fr; }
-  .footer-grid{ grid-template-columns:1fr; gap:28px; }
-  .hero-grid{ grid-template-columns:1fr; gap:40px; }
+  body.theme-cdm, body.theme-maderin{ --cols-features: repeat(2,1fr); }
+  body.theme-cdm{ --hero-h1: clamp(32px, 6vw, 44px); }   /* título CDM más pequeño */
+  body.theme-maderin{ --hero-pad: 0px 200px 0px 30px; }   /* Maderin: más padding derecho */
+  body.theme-ac{ --hero-pad: 0px 100px 0px 30px; }        /* AC: padding derecho moderado */
+
+  .hero-overlay{
+    background:linear-gradient(to right, rgba(21,21,21,0.88) 0%, rgba(21,21,21,0.5) 60%, transparent 100%); /* más transparente */
+  }
+  .footer-grid{ gap:28px; }                               /* menos espacio entre columnas */
+  .process-row{ grid-template-columns:repeat(2,1fr); row-gap:40px; } /* proceso: 2 columnas */
+  .process-step:nth-child(2)::after{ display:none; }      /* oculta línea conectora */
+  .testi-grid{ grid-template-columns:1fr; }               /* testimonios: 1 columna */
+  .brands-grid{ grid-template-columns:1fr; }              /* marcas: 1 columna */
+  .hero-grid{ grid-template-columns:1fr; gap:40px; }      /* hero grid: 1 columna */
+
+  body.theme-cdm .hero-overlay{
+    background: linear-gradient(to right, 
+      rgba(46,47,26,0.95) 0%,      /* oliva casi opaco */
+      rgba(46,47,26,0.8) 20%,      /* oliva oscuro */
+      rgba(46,47,26,0.3) 40%,      /* más transparente */
+      rgba(46,47,26,0) 100%        /* transparente */
+    );
+  }
+  body.theme-cdm .hero-grid{ gap: 40px; }
 }
 @media (max-width: 600px){
-  .hero-overlay{
-    background:linear-gradient(to bottom, rgba(21,21,21,0.85) 0%, rgba(21,21,21,0.6) 50%, rgba(21,21,21,0.9) 100%);
+  :root{
+    --cols-features: 1fr;  /* features: 1 columna */
+    --cols-products: 1fr;  /* productos: 1 columna */
+    --cols-footer: 1fr;    /* footer: 1 columna */
+    --hero-pad: 100px 0 50px;        /* más padding arriba */
+    --hero-h1: clamp(30px, 8vw, 42px); /* título más grande en % */
+    --badges-gap: 20px;              /* menos espacio entre badges */
   }
-  .hero-container{ padding:100px 0 50px; }
-  .hero-copy h1{ font-size:clamp(30px,8vw,42px); }
-  section{ padding:64px 0; }
-  .features-grid{ grid-template-columns:1fr; }
-  .work-grid, .product-grid{ grid-template-columns:1fr; }
-  .hero-badges{ gap:20px; }
-  .hero-visual{ display:none; }
+  body.theme-cdm, body.theme-maderin{ --cols-features: 1fr; }
+  body.theme-cdm{ --hero-h1: clamp(32px, 6vw, 44px); }
+  body.theme-maderin{ --hero-pad: 0px 100px 0px 10px; --hero-h1: clamp(28px, 7vw, 38px); --badges-gap: 20px; }
+  body.theme-ac{ --hero-pad: 0px 100px 0px 30px; }
+
+  .hero-overlay{
+    background:linear-gradient(to bottom, rgba(21,21,21,0.85) 0%, rgba(21,21,21,0.6) 50%, rgba(21,21,21,0.9) 100%); /* gradiente vertical */
+  }
+  section{ padding:64px 0; }       /* más padding vertical en móvil */
+  .hero-visual{ display:none; }    /* oculta imagen decorativa del hero */
+
+  body.theme-cdm .hero-overlay{
+    background: linear-gradient(to right, rgba(46,47,26,.88) 0%, rgba(46,47,26,.62) 50%, rgba(46,47,26,.10) 100%);
+  }
+  body.theme-cdm .hero-bg-img{
+    object-position: 60% 0;  /* recorta la imagen más a la derecha */
+  }
 }
 
 /* ==========================================================================
    MINIMALIST FLAT DESIGN & TIMELINE (EXCLUSIVO AC MUEBLERÍA)
+   Bordes rectos, sin sombras, sin elevación; hover solo cambia borde
    ========================================================================== */
 
-/* Botones Flat */
+/* Botones Flat — bordes rectos (10px), sin elevación en hover */
 body.theme-ac .btn {
-  border-radius: 10px !important;
+  border-radius: 10px !important;  /* recto en vez de redondo */
 }
 body.theme-ac .btn:hover {
-  transform: none !important;
+  transform: none !important;       /* sin movimiento en hover */
 }
 body.theme-ac .btn-wa {
-  background: var(--accent);
+  background: var(--accent);  /* amarillo/dorado */
   color: #fff;
 }
 body.theme-ac .btn-wa:hover {
-  background: var(--accent-hover);
+  background: var(--accent-hover);  /* amarillo oscuro */
 }
 body.theme-ac .btn-ghost-dark {
-  border-color: var(--line-strong);
+  border-color: var(--line-strong);  /* borde gris sobre fondo oscuro */
   color: var(--paper);
 }
 body.theme-ac .btn-ghost-dark:hover {
-  border-color: var(--accent);
+  border-color: var(--accent);  /* borde amarillo en hover */
   color: var(--accent);
 }
 body.theme-ac .btn-ghost {
-  border-color: var(--line-on-dark);
+  border-color: var(--line-on-dark);  /* borde muy sutil */
   color: var(--paper);
 }
 body.theme-ac .btn-ghost:hover {
-  border-color: var(--accent);
+  border-color: var(--accent);  /* borde amarillo en hover */
   color: var(--accent);
 }
 
-/* Nav Flat */
+/* Nav Flat — carbón opaco, sin sombra, links con Jost */
 body.theme-ac .nav {
-  background: rgba(21, 21, 21, 0.96);
+  background: rgba(21, 21, 21, 0.96);  /* carbón casi opaco */
   border-bottom: 1px solid var(--line-on-dark);
-  box-shadow: none !important;
+  box-shadow: none !important;           /* sin sombra */
 }
 body.theme-ac .brand span {
-  color: var(--accent) !important;
+  color: var(--accent) !important;  /* subtítulo amarillo */
+}
+body.theme-ac .nav-links a {
+  font-family: var(--font-display);  /* Jost en vez de mono */
+  font-weight: 500;
+  letter-spacing: .01em;
+}
+body.theme-ac .nav-cta .btn-wa {
+  font-family: var(--font-display);  /* botón con Jost */
 }
 body.theme-ac .nav-links a:hover {
-  color: var(--accent);
+  color: var(--accent);  /* hover amarillo */
 }
 
-/* Hero Flat */
+/* Hero Flat — carbón puro, acentos amarillos */
 body.theme-ac .hero {
-  background: var(--off-black);
+  background: var(--off-black);  /* carbón */
 }
 body.theme-ac .hero-copy h1 em {
-  color: var(--accent);
+  color: var(--accent);  /* palabra destacada amarilla */
 }
 body.theme-ac .hero-badges {
-  border-color: var(--line-on-dark);
+  border-color: var(--line-on-dark);  /* separador muy sutil */
 }
 body.theme-ac .hero-badge b {
-  color: var(--accent);
+  color: var(--accent);  /* número del badge amarillo */
 }
 
-/* Tarjetas Flat (Sin Sombras, Sin Elevación) */
+/* =========================== AC — Hero rediseñado (tipografía + full-bleed) =========================== */
+
+body.theme-ac .hero-copy {
+  max-width: 600px;  /* ancho máximo del texto */
+}
+body.theme-ac .hero-copy .eyebrow {
+  color: var(--accent);  /* eyebrow amarillo */
+}
+body.theme-ac .hero-copy .eyebrow::before {
+  background: var(--accent);  /* línea decorativa amarilla */
+}
+body.theme-ac .hero-copy h1 {
+  margin-left: 0;  /* sin indentación */
+}
+body.theme-ac .hero-copy h1 em {
+  font-family: var(--font-mono);   /* mono para la palabra destacada */
+  font-style: italic;              /* cursiva */
+  color: var(--accent);
+  font-size: 1.07em;               /* ligeramente más grande */
+  line-height: 1.15;
+}
+body.theme-ac .hero-copy .section-lede {
+  color: rgba(242,236,223,.85);  /* crema más visible */
+  max-width: 44ch;
+}
+body.theme-ac .hero-actions {
+  margin-left: 0;  /* sin indentación */
+}
+body.theme-ac .hero-badges {
+  margin-left: 0;
+}
+
+/* Tarjetas Flat (Sin Sombras, Sin Elevación) — fondo carbón, bordes rectos */
 body.theme-ac .features-grid {
-  background: var(--line-on-dark);
+  background: var(--line-on-dark);  /* fondo sutil entre tarjetas */
   border: 1px solid var(--line-on-dark);
 }
 body.theme-ac .feature-card,
 body.theme-ac .work-card,
 body.theme-ac .testi-card,
 body.theme-ac .product-card {
-  border: 1px solid var(--line-on-dark);
-  background: #1c1c1c;
-  border-radius: 0px !important;
-  box-shadow: none !important;
+  border: 1px solid var(--line-on-dark);  /* borde muy sutil */
+  background: #1c1c1c;                    /* carbón oscuro */
+  border-radius: 0px !important;          /* sin redondeo */
+  box-shadow: none !important;            /* sin sombra */
   transition: border-color 0.25s ease, background-color 0.25s ease;
 }
 body.theme-ac .feature-card:hover,
 body.theme-ac .work-card:hover,
 body.theme-ac .testi-card:hover {
-  transform: none !important;
-  border-color: var(--accent);
+  transform: none !important;  /* sin elevación */
+  border-color: var(--accent); /* solo cambia borde a amarillo */
   box-shadow: none !important;
 }
 body.theme-ac .feature-card:hover .feature-img {
-  opacity: 0.8;
+  opacity: 0.8;  /* imagen aparece al 80% en hover */
 }
 body.theme-ac .feature-card:hover .feature-img::after {
-  opacity: 0.2;
+  opacity: 0.2;  /* overlay de la imagen más transparente */
 }
 body.theme-ac .feature-card:hover h3 {
-  transform: translateY(75px);
+  transform: translateY(75px);  /* título se desplaza hacia abajo */
 }
 body.theme-ac .feature-card:hover p {
-  opacity: 0;
+  opacity: 0;  /* descripción desaparece en hover */
 }
 body.theme-ac .feature-card h3,
 body.theme-ac .work-body h3,
 body.theme-ac .testi-card p.quote {
-  color: var(--paper);
+  color: var(--paper);  /* títulos crema */
 }
 body.theme-ac .feature-card h3 {
-  transition: transform 0.35s ease;
+  transition: transform 0.35s ease;  /* animación del título */
 }
 body.theme-ac .feature-card p,
 body.theme-ac .work-body p,
 body.theme-ac .testi-who,
 body.theme-ac .testi-note {
-  color: rgba(242,236,223,.6);
+  color: rgba(242,236,223,.6);  /* texto crema suave */
 }
 body.theme-ac .feature-card p {
-  transition: opacity 0.35s ease;
+  transition: opacity 0.35s ease;  /* animación de desvanecimiento */
 }
 body.theme-ac .feature-num {
-  color: var(--accent-muted);
+  color: var(--accent-muted);  /* número dorado apagado */
 }
 body.theme-ac .feature-icon {
-  color: var(--accent);
+  color: var(--accent);  /* icono amarillo */
 }
 body.theme-ac .work-thumb {
-  border-radius: 0px !important;
+  border-radius: 0px !important;  /* sin redondeo */
   border-color: var(--line-on-dark);
-  background: #222;
+  background: #222;               /* carbón oscuro */
 }
 body.theme-ac .work-thumb svg {
-  color: rgba(242,236,223,.3);
+  color: rgba(242,236,223,.3);  /* placeholder muy suave */
 }
 body.theme-ac .work-tag {
-  border-radius: 0px;
-  background: var(--accent);
-  color: var(--off-black);
+  border-radius: 0px;              /* badge rectangular */
+  background: var(--accent);       /* amarillo */
+  color: var(--off-black);         /* texto carbón */
   font-weight: 600;
 }
 body.theme-ac .work-meta {
   border-color: var(--line-on-dark);
-  color: var(--accent-muted);
+  color: var(--accent-muted);  /* precio dorado apagado */
 }
 
-/* Filtros Flat */
+/* Filtros Flat — bordes rectos (5px), activo amarillo */
 body.theme-ac .filter-chip {
-  border-radius: 5px !important;
+  border-radius: 5px !important;  /* casi recto */
   border-color: var(--line-on-dark);
   color: rgba(242,236,223,.6);
 }
 body.theme-ac .filter-chip:hover {
   border-color: var(--accent);
-  color: var(--accent);
+  color: var(--accent);  /* amarillo en hover */
 }
 body.theme-ac .filter-chip.active {
-  background: var(--accent);
+  background: var(--accent);   /* relleno amarillo */
   border-color: var(--accent);
-  color: var(--off-black);
+  color: var(--off-black);     /* texto carbón */
   font-weight: 600;
 }
 
-/* Testimonios */
+/* Testimonios — estrellas amarillas */
 body.theme-ac .testi-stars {
   color: var(--accent);
 }
 
-/* Marcas Flat */
+/* Marcas Flat — fondo carbón, bordes rectos, hover solo borde */
 body.theme-ac .brand-card {
-  background: #1c1c1c;
+  background: #1c1c1c;                    /* carbón oscuro */
   border: 1px solid var(--line-on-dark);
-  border-radius: 0px !important;
+  border-radius: 0px !important;          /* sin redondeo */
   transition: border-color 0.25s ease;
 }
 body.theme-ac .brand-card:hover {
-  border-color: var(--accent);
-  transform: none !important;
+  border-color: var(--accent);  /* borde amarillo */
+  transform: none !important;   /* sin elevación */
 }
 body.theme-ac .brand-card .tag {
-  color: var(--accent);
+  color: var(--accent);  /* etiqueta amarilla */
 }
 body.theme-ac .brand-card .go svg {
-  color: var(--accent);
+  color: var(--accent);  /* flecha amarilla */
 }
 body.theme-ac .brand-card:hover .go svg {
-  transform: translateX(4px);
+  transform: translateX(4px);  /* flecha se mueve a la derecha */
 }
 
-/* WhatsApp Flotante Flat */
+/* WhatsApp Flotante Flat — borde circular (100px), fondo amarillo */
 body.theme-ac .wa-float {
-  border-radius: 100px !important;
-  background: var(--accent) !important;
-  color: var(--off-black) !important;
-  box-shadow: none !important;
-  border: 1px solid var(--off-black);
+  border-radius: 100px !important;  /* completamente redondo */
+  background: var(--accent) !important;  /* amarillo */
+  color: var(--off-black) !important;    /* icono carbón */
+  box-shadow: none !important;           /* sin sombra */
+  border: 1px solid var(--off-black);    /* borde carbón */
 }
 body.theme-ac .wa-float:hover {
-  transform: none !important;
-  background: var(--accent-hover) !important;
+  transform: none !important;           /* sin escala en hover */
+  background: var(--accent-hover) !important; /* amarillo oscuro */
 }
 
-/* Footer Flat */
+/* Footer Flat — carbón, bordes sutiles */
 body.theme-ac footer {
-  background: var(--off-black);
+  background: var(--off-black);  /* carbón */
   border-top: 1px solid var(--line-on-dark);
 }
 body.theme-ac .footer-col h4 {
-  color: var(--accent);
+  color: var(--accent);  /* títulos columna amarillos */
 }
 body.theme-ac .footer-col a:hover {
-  color: var(--accent);
+  color: var(--accent);  /* links hover amarillo */
 }
 body.theme-ac .footer-grid {
-  border-color: var(--line-on-dark);
+  border-color: var(--line-on-dark);  /* separador sutil */
+}
+body.theme-ac .footer-logo {
+  height: 40px; object-fit: contain;  /* logo delimitado */
 }
 
-/* Prevent scroll bleed during pin */
+/* Prevent scroll bleed during pin — evita desborde del timeline */
 body.theme-ac #proceso {
   overflow: hidden;
 }
@@ -958,28 +1334,28 @@ body.theme-ac #proceso {
 body.theme-ac .process-timeline-container {
   position: relative;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between;  /* pasos repartidos */
   align-items: flex-start;
   max-width: 1100px;
   margin: 60px auto 0;
   padding: 0 40px;
 }
 
-/* Línea horizontal (desktop) */
+/* Línea horizontal (desktop) — se llena con scroll */
 body.theme-ac .process-h-line {
   position: absolute;
-  top: 23px;
+  top: 23px;            /* centrada con los dots */
   left: 50px;
   right: 50px;
   height: 2px;
-  background: var(--line-on-dark);
+  background: var(--line-on-dark);  /* línea base sutil */
   z-index: 0;
 }
 body.theme-ac .process-h-line-progress {
   position: absolute;
   left: 0; top: 0;
-  width: 0%; height: 100%;
-  background: var(--accent);
+  width: 0%; height: 100%;  /* comienza vacía, se llena con JS */
+  background: var(--accent); /* amarillo */
 }
 
 /* Línea vertical (oculta en desktop) */
@@ -987,120 +1363,121 @@ body.theme-ac .process-timeline-line {
   display: none;
 }
 
-/* Steps horizontales */
+/* Steps horizontales — centrados con dot + texto */
 body.theme-ac .process-step {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 16px;
   text-align: center;
-  flex: 1;
+  flex: 1;             /* cada paso ocupa el mismo espacio */
   position: relative;
   margin-bottom: 0;
 }
 body.theme-ac .process-dot {
   width: 55px;
   height: 55px;
-  border-radius: 100px;
-  background: #1c1c1c;
+  border-radius: 100px;         /* circular */
+  background: #1c1c1c;          /* carbón */
   border: 1px solid var(--line-on-dark);
-  color: rgba(242,236,223,.6);
+  color: rgba(242,236,223,.6);  /* número gris suave */
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono);
   font-size: 18px;
   font-weight: 600;
-  z-index: 2;
+  z-index: 2;                   /* sobre la línea */
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 body.theme-ac .process-content {
   padding-top: 0;
-  opacity: 0.35;
-  transform: translateY(8px);
+  opacity: 0.35;               /* contenido suave por defecto */
+  transform: translateY(8px);  /* desplazado abajo */
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   max-width: 160px;
 }
 body.theme-ac .process-content h3 {
   font-size: 16px;
   margin-bottom: 6px;
-  font-family: var(--font-display);
+  font-family: var(--font-display);  /* Jost */
   color: var(--paper);
 }
 body.theme-ac .process-content p {
-  color: rgba(249, 247, 241, 0.6);
+  color: rgba(249, 247, 241, 0.6);  /* texto crema suave */
   font-size: 13.5px;
   line-height: 1.5;
 }
 
+/* Step activo — borde amarillo, contenido visible */
 body.theme-ac .process-step.active .process-dot {
   background: var(--off-black);
-  border-color: var(--accent);
-  color: var(--accent);
+  border-color: var(--accent);  /* borde amarillo */
+  color: var(--accent);         /* número amarillo */
 }
 body.theme-ac .process-step.active .process-content {
-  opacity: 1;
-  transform: translateY(0);
+  opacity: 1;                  /* contenido completamente visible */
+  transform: translateY(0);    /* sin desplazamiento */
 }
 
-/* --- Mobile: volver a vertical --- */
+/* --- Mobile: volver a vertical (pasos apilados) --- */
 @media (max-width: 980px) {
-  body.theme-ac .process-h-line { display: none; }
+  body.theme-ac .process-h-line { display: none; } /* oculta línea horizontal */
   body.theme-ac .process-timeline-line {
-    display: block;
+    display: block;           /* muestra línea vertical */
     position: absolute;
-    left: 23px;
+    left: 23px;               /* alineada con los dots */
     top: 0;
     bottom: 0;
     width: 2px;
-    background: var(--line-on-dark);
+    background: var(--line-on-dark); /* línea base sutil */
   }
   body.theme-ac .process-timeline-line-progress {
     position: absolute;
     left: 0; top: 0;
-    width: 100%; height: 0%;
+    width: 100%; height: 0%;  /* comienza vacía, se llena con scroll */
     background: var(--accent);
     transition: height 0.1s ease-out;
   }
   body.theme-ac .process-timeline-container {
-    display: block;
+    display: block;           /* apila los pasos */
     max-width: 760px;
     margin: 48px auto 0;
     padding: 20px 0;
   }
   body.theme-ac .process-row {
-    display: none;
+    display: none;            /* oculta la grilla de 4 columnas */
   }
   body.theme-ac .process-step {
-    flex-direction: row;
+    flex-direction: row;      /* dot a la izquierda, texto a la derecha */
     align-items: flex-start;
     gap: 28px;
     text-align: left;
-    margin-bottom: 56px;
+    margin-bottom: 56px;     /* espacio entre pasos */
   }
   body.theme-ac .process-content {
-    flex: 1;
+    flex: 1;                  /* ocupa todo el espacio restante */
     padding-top: 8px;
-    max-width: none;
+    max-width: none;          /* sin límite de ancho */
   }
   body.theme-ac .process-content h3 { font-size: 18px; }
   body.theme-ac .process-content p { font-size: 15px; }
 }
 @media (max-width: 600px) {
   body.theme-ac .process-timeline-container {
-    padding-left: 10px;
+    padding-left: 10px;  /* menos padding en móvil pequeño */
   }
   body.theme-ac .process-step {
-    gap: 20px;
+    gap: 20px;            /* menos espacio entre dot y texto */
     margin-bottom: 40px;
   }
   body.theme-ac .process-dot {
-    width: 38px;
-    height: 38px;
-    font-size: 12px;
+    width: 38px;          /* dot más pequeño */
+    height:38px;
+    font-size: 12px;      /* número más pequeño */
   }
   body.theme-ac .process-timeline-line {
-    left: 19px;
+    left: 19px;           /* ajusta posición de la línea vertical */
   }
 }
 

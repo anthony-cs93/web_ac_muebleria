@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<!-- Meta tags: título, descripción para SEO, favicon y CSS -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="public/logo_favicon.png">
@@ -8,24 +9,29 @@
 <meta name="description" content="Maderin fabrica mobiliario infantil listo para tu hogar: camas, veladores, repisas y organizadores. Pide por WhatsApp.">
 <link rel="stylesheet" href="assets/style.css">
 </head>
+<!-- theme-maderin: aplica la variante azul suave para mobiliario infantil -->
 <body class="theme-maderin">
 
 <!-- ============ NAV ============ -->
+<!-- NAV: barra de navegación sticky con logo Maderin, links y botón WhatsApp -->
 <nav class="nav">
   <div class="nav-inner">
     <a href="#top" class="brand"><img src="public/maderin/logo-maderin.png" alt="Maderin" class="brand-logo"></a>
+    <!-- Links: Productos, Sobre Maderin, AC Mueblería (sitio padre), Instagram -->
     <ul class="nav-links">
       <li><a href="#productos">Productos</a></li>
       <li><a href="#nosotros">Sobre Maderin</a></li>
       <li><a href="index.html">AC Mueblería</a></li>
       <li><a href="https://www.instagram.com/maderin.pe/" target="_blank" rel="noopener">Instagram</a></li>
     </ul>
+    <!-- Botón WhatsApp: data-wa-message define el mensaje prellenado al abrir chat -->
     <div class="nav-cta">
       <a class="btn btn-wa" data-wa-message="Hola, quiero información sobre los productos de Maderin.">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
         <span class="long">Escríbenos</span>
       </a>
     </div>
+    <!-- Botón hamburguesa: solo visible en móvil (≤860px) -->
     <button class="nav-toggle" aria-label="Abrir menú">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
     </button>
@@ -34,19 +40,23 @@
 
 <main>
 <!-- ============ HERO ============ -->
+<!-- HERO: pantalla completa con imagen de fondo, degradado azul y texto blanco -->
 <header class="hero" id="top">
   <div class="hero-bg">
     <img src="public/maderin/hero.jpg" alt="" class="hero-bg-img">
+    <!-- Overlay: degradado azul para legibilidad del texto blanco -->
     <div class="hero-overlay"></div>
   </div>
   <div class="hero-container container">
     <div class="hero-copy">
-      <div class="parent-badge"><span class="dot"></span><span>Una marca de AC Mueblería</span></div>
-      <h1>El mobiliario <span class="hero-hl">infantil</span> personalizado que buscas, hecho para acompañar su <span class="hero-hl">crecimiento</span>.</h1>
+      <!-- Badge: indica que Maderin es una marca de AC Mueblería -->
+      <h1>El mobiliario infantil hecho para  <span class="hero-hl">acompañar su crecimiento</span>.</h1>
+      <!-- Botones CTA: Ver productos (primario) y Instagram (ghost dark) -->
       <div class="hero-actions">
         <a class="btn btn-wa" href="#productos">Ver productos</a>
         <a class="btn btn-ghost-dark" href="https://www.instagram.com/maderin.pe/" target="_blank" rel="noopener">Síguenos en Instagram</a>
       </div>
+      <!-- Badges: materiales de calidad y diseño infantil -->
       <div class="hero-badges">
         <div class="hero-badge"><b>Materiales de calidad</b>Madera pino y melamina</div>
         <div class="hero-badge"><b>Diseño infantil</b>Pensado para jugar y crecer</div>
@@ -56,6 +66,7 @@
 </header>
 
 <!-- ============ SOBRE MADERIN ============ -->
+<!-- SECCIÓN FEATURES: 3 cards con thumbnail (imagen) en vez de icono SVG -->
 <section id="nosotros" class="reveal">
   <div class="container">
     <div class="head-row">
@@ -65,6 +76,7 @@
       </div>
     </div>
     <div class="features-grid">
+      <!-- Cada feature: thumbnail con imagen + cuerpo con título y descripción -->
       <article class="feature-card">
         <div class="feature-thumb" style="background-image:url('public/maderin/materiales.png')"></div>
         <div class="feature-body">
@@ -91,6 +103,7 @@
 </section>
 
 <!-- ============ CATÁLOGO ============ -->
+<!-- SECCIÓN CATÁLOGO: grid de productos con filtros por categoría -->
 <section id="productos" class="on-paper2 reveal">
   <div class="container">
     <div class="head-row">
@@ -99,6 +112,7 @@
         <h2 class="section-title">Elige, escríbenos y coordinamos tu entrega.</h2>
       </div>
     </div>
+    <!-- Filtros: botones que muestran/ocultan cards por data-category -->
     <div class="filter-row">
       <button class="filter-chip active" data-filter="todos">Todos</button>
       <button class="filter-chip" data-filter="camas">Camas</button>
@@ -108,15 +122,19 @@
 
     <!-- Nota: catálogo de ejemplo — reemplaza fotos, medidas y precios por los reales -->
     <div class="product-grid">
+      <!-- Cada producto: thumbnail SVG + badge "ejemplo" + nombre + descripción + specs + precio + botón WhatsApp -->
       <article class="product-card" data-category="camas">
         <div class="product-thumb">
+          <!-- Badge: indica que es producto de ejemplo (reemplazar por catálogo real) -->
           <span class="sample-badge">Producto de ejemplo</span>
           <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 32V18h10v6h16v-6h10v14"/><line x1="6" y1="32" x2="42" y2="32"/><line x1="6" y1="32" x2="6" y2="40"/><line x1="42" y1="32" x2="42" y2="40"/></svg>
         </div>
         <div class="product-body">
           <h3>Cama Montessori</h3>
           <p class="desc">Estructura baja de madera, ideal desde los 2 años. Incluye baranda de seguridad.</p>
+          <!-- Specs: dimensiones y material del producto -->
           <div class="product-specs"><span>90 × 190 cm</span><span>Pino</span></div>
+          <!-- Precio: formato soles por unidad/set -->
           <div class="product-price">S/ 450 <small>/ unidad</small></div>
           <button class="btn btn-wa btn-sm" data-wa-message="Hola, quiero pedir la Cama Montessori de Maderin. ¿Me ayudan con precio y disponibilidad?">Pedir por WhatsApp</button>
         </div>
@@ -197,6 +215,7 @@
 </section>
 
 <!-- ============ FOOTER ============ -->
+<!-- FOOTER: marca Maderin, navegación, grupo AC Mueblería, copyright -->
 </main>
 <footer id="contacto">
   <div class="container">
@@ -231,10 +250,12 @@
   </div>
 </footer>
 
+<!-- WhatsApp flotante: botón fijo abajo-derecha, abre chat con mensaje prellenado para Maderin -->
 <a class="wa-float" data-wa-float data-wa-message="Hola, quiero información sobre los productos de Maderin." aria-label="Escríbenos por WhatsApp" target="_blank" rel="noopener">
   <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
 </a>
 
+<!-- Script: main.js para lógica (filtros, WhatsApp, scroll) -->
 <script src="assets/main.js"></script>
 </body>
 </html>

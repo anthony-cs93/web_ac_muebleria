@@ -188,10 +188,11 @@ body.theme-maderin .features-grid {
 }
 body.theme-maderin .feature-card {
   border: 1px solid var(--line); background: var(--paper); /* borde sutil, fondo papel */
+  border-radius: var(--radius);  /* redondeado (igual que CDM) */
   display: flex; flex-direction: column; overflow: hidden;
-  transition: border-color .2s ease;  /* animación suave en hover */
+  transition: border-color .2s ease, transform .2s ease;  /* animación suave en hover */
 }
-body.theme-maderin .feature-card:hover { border-color: var(--accent); } /* borde azul en hover */
+body.theme-maderin .feature-card:hover { border-color: var(--accent); transform: translateY(-3px); } /* borde azul + sube 3px en hover */
 body.theme-maderin .feature-thumb {
   aspect-ratio: 1/.92;  /* casi cuadrado (un poco más alto que ancho) */
   background-size: cover; background-position: center; /* imagen cubre todo */

@@ -50,8 +50,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // --- Filtro de categorías (portafolio / catálogo) ---
-  const chips = document.querySelectorAll(".filter-chip");
-  const cards = document.querySelectorAll("[data-category]");
+  const chips = document.querySelectorAll(".filter-chip:not(#maderinFilters .filter-chip)");
+  const cards = document.querySelectorAll("#worksCarouselTrack [data-category], .catalog-grid:not(#maderinProductGrid) [data-category]");
   chips.forEach(chip => {
     chip.addEventListener("click", () => {
       chips.forEach(c => c.classList.remove("active"));
@@ -320,26 +320,25 @@ document.addEventListener("DOMContentLoaded", () => {
       updateActiveDot(index);
     }
 
-    // Navegación con flechas Prev / Next del carrusel
+    // Navegación con flechas Prev / Next del carrusel (flotantes y barra inferior)
     function getCardScrollStep() {
       const cardWidth = cards[0].offsetWidth;
       const gap = parseInt(window.getComputedStyle(track).gap, 10) || 16;
       return cardWidth + gap;
     }
 
-    if (prevBtn) {
-      prevBtn.addEventListener("click", () => {
-        const step = getCardScrollStep();
-        viewport.scrollBy({ left: -step, behavior: "smooth" });
-      });
+    function handleScrollPrev() {
+      const step = getCardScrollStep();
+      viewport.scrollBy({ left: -step, behavior: "smooth" });
     }
 
-    if (nextBtn) {
-      nextBtn.addEventListener("click", () => {
-        const step = getCardScrollStep();
-        viewport.scrollBy({ left: step, behavior: "smooth" });
-      });
+    function handleScrollNext() {
+      const step = getCardScrollStep();
+      viewport.scrollBy({ left: step, behavior: "smooth" });
     }
+
+    if (prevBtn) prevBtn.addEventListener("click", handleScrollPrev);
+    if (nextBtn) nextBtn.addEventListener("click", handleScrollNext);
 
     // Sincronizar dots al hacer scroll con debounce
     let scrollTimeout = null;
@@ -648,103 +647,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Mobile y Tablet (<= 980px): scroll vertical fluido con animación card-por-card en #elegirnos y seguimiento en #proceso
       "(max-width: 980px)": function() {
-        // --- 1. Animación de baraja de tarjetas apiladas en #elegirnos (cards contiguas visibles en profundidad) ---
-        const elegirnosSection = document.getElementById("elegirnos");
-        const featureCards = elegirnosSection ? elegirnosSection.querySelectorAll(".feature-card") : [];
+        // --- 1. Animación secuencial de tarjetas en vertical para #elegirnos ---
+        const featureCards = document.querySelectorAll("#elegirnos .feature-card");
 
-        if (elegirnosSection && featureCards.length === 4) {
-          // Posicionamiento y profundidad inicial de la baraja:
-          // Card 0 en primer plano, Card 1 y 2 visibles parcialmente detrás con escala y desplazamiento vertical
-          featureCards.forEach((card, i) => {
-            const img = card.querySelector(".feature-img");
-            const h3 = card.querySelector("h3");
-            const p = card.querySelector("p");
+        featureCards.forEach((card) => {
+          gsap.set(card, { clearProps: "all" });
+          const img = card.querySelector(".feature-img");
+          const h3 = card.querySelector("h3");
+          const p = card.querySelector("p");
+          if (img) gsap.set(img, { clearProps: "all" });
+          if (h3) gsap.set(h3, { clearProps: "all" });
+          if (p) gsap.set(p, { clearProps: "all" });
 
-            if (i === 0) {
-              gsap.set(card, { autoAlpha: 1, y: 0, scale: 1, zIndex: 10, borderColor: "rgba(255,255,255,0.12)" });
-            } else if (i === 1) {
-              gsap.set(card, { autoAlpha: 0.75, y: 18, scale: 0.94, zIndex: 8, borderColor: "rgba(255,255,255,0.06)" });
-            } else if (i === 2) {
-              gsap.set(card, { autoAlpha: 0.45, y: 34, scale: 0.88, zIndex: 6, borderColor: "rgba(255,255,255,0.04)" });
-            } else {
-              gsap.set(card, { autoAlpha: 0, y: 48, scale: 0.82, zIndex: 4, borderColor: "rgba(255,255,255,0.02)" });
+          // Animación de entrada suave tipo tarjeta con scrollTrigger
+          gsap.fromTo(card,
+            { y: 35, opacity: 0.15, scale: 0.97 },
+            {
+              y: 0,
+              opacity: 1,
+              scale: 1,
+              duration: 0.75,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: card,
+                start: "top 88%",
+                toggleActions: "play none none none",
+                invalidateOnRefresh: true,
+              }
             }
-            if (img) gsap.set(img, { opacity: 0 });
-            if (h3) gsap.set(h3, { y: 0 });
-            if (p) gsap.set(p, { opacity: 1 });
-          });
-
-          const cardsTl = gsap.timeline({
-            scrollTrigger: {
-              trigger: elegirnosSection,
-              start: "top top",
-              end: "+=2400",
-              pin: true,
-              scrub: 0.4,
-              anticipatePin: 1,
-              invalidateOnRefresh: true,
-            }
-          });
-
-          // ===== PASO 1: CARD 0 (01 Diseño a tu medida) =====
-          const img0 = featureCards[0].querySelector(".feature-img");
-          const h3_0 = featureCards[0].querySelector("h3");
-          const p0 = featureCards[0].querySelector("p");
-          cardsTl.to({}, { duration: 0.35 });
-          if (img0) cardsTl.to(img0, { opacity: 0.85, duration: 1.0 }, "card0_photo");
-          if (h3_0) cardsTl.to(h3_0, { y: 65, duration: 1.0 }, "card0_photo");
-          if (p0) cardsTl.to(p0, { opacity: 0, duration: 1.0 }, "card0_photo");
-          cardsTl.to(featureCards[0], { borderColor: "#af8f1a", duration: 1.0 }, "card0_photo");
-          cardsTl.to({}, { duration: 0.4 });
-
-          // ===== TRANSICIÓN 0 -> 1: Card 0 sube y se retira; Card 1 toma el frente; Card 2 y 3 avanzan en la baraja =====
-          cardsTl.to(featureCards[0], { y: -50, scale: 0.98, autoAlpha: 0, zIndex: 12, duration: 0.85 }, "card1_enter");
-          cardsTl.to(featureCards[1], { y: 0, scale: 1, autoAlpha: 1, zIndex: 10, borderColor: "rgba(255,255,255,0.12)", duration: 0.85 }, "card1_enter");
-          cardsTl.to(featureCards[2], { y: 18, scale: 0.94, autoAlpha: 0.75, zIndex: 8, borderColor: "rgba(255,255,255,0.06)", duration: 0.85 }, "card1_enter");
-          cardsTl.to(featureCards[3], { y: 34, scale: 0.88, autoAlpha: 0.45, zIndex: 6, borderColor: "rgba(255,255,255,0.04)", duration: 0.85 }, "card1_enter");
-          cardsTl.to({}, { duration: 0.4 });
-
-          // ===== PASO 2: CARD 1 (02 Materiales de calidad) =====
-          const img1 = featureCards[1].querySelector(".feature-img");
-          const h3_1 = featureCards[1].querySelector("h3");
-          const p1 = featureCards[1].querySelector("p");
-          if (img1) cardsTl.to(img1, { opacity: 0.85, duration: 1.0 }, "card1_photo");
-          if (h3_1) cardsTl.to(h3_1, { y: 65, duration: 1.0 }, "card1_photo");
-          if (p1) cardsTl.to(p1, { opacity: 0, duration: 1.0 }, "card1_photo");
-          cardsTl.to(featureCards[1], { borderColor: "#af8f1a", duration: 1.0 }, "card1_photo");
-          cardsTl.to({}, { duration: 0.4 });
-
-          // ===== TRANSICIÓN 1 -> 2: Card 1 se retira; Card 2 toma el frente; Card 3 avanza a la posición contigua =====
-          cardsTl.to(featureCards[1], { y: -50, scale: 0.98, autoAlpha: 0, zIndex: 12, duration: 0.85 }, "card2_enter");
-          cardsTl.to(featureCards[2], { y: 0, scale: 1, autoAlpha: 1, zIndex: 10, borderColor: "rgba(255,255,255,0.12)", duration: 0.85 }, "card2_enter");
-          cardsTl.to(featureCards[3], { y: 18, scale: 0.94, autoAlpha: 0.75, zIndex: 8, borderColor: "rgba(255,255,255,0.06)", duration: 0.85 }, "card2_enter");
-          cardsTl.to({}, { duration: 0.4 });
-
-          // ===== PASO 3: CARD 2 (03 Fabricación propia) =====
-          const img2 = featureCards[2].querySelector(".feature-img");
-          const h3_2 = featureCards[2].querySelector("h3");
-          const p2 = featureCards[2].querySelector("p");
-          if (img2) cardsTl.to(img2, { opacity: 0.85, duration: 1.0 }, "card2_photo");
-          if (h3_2) cardsTl.to(h3_2, { y: 65, duration: 1.0 }, "card2_photo");
-          if (p2) cardsTl.to(p2, { opacity: 0, duration: 1.0 }, "card2_photo");
-          cardsTl.to(featureCards[2], { borderColor: "#af8f1a", duration: 1.0 }, "card2_photo");
-          cardsTl.to({}, { duration: 0.4 });
-
-          // ===== TRANSICIÓN 2 -> 3: Card 2 se retira; Card 3 toma el frente =====
-          cardsTl.to(featureCards[2], { y: -50, scale: 0.98, autoAlpha: 0, zIndex: 12, duration: 0.85 }, "card3_enter");
-          cardsTl.to(featureCards[3], { y: 0, scale: 1, autoAlpha: 1, zIndex: 10, borderColor: "rgba(255,255,255,0.12)", duration: 0.85 }, "card3_enter");
-          cardsTl.to({}, { duration: 0.4 });
-
-          // ===== PASO 4: CARD 3 (04 Instalación incluida) =====
-          const img3 = featureCards[3].querySelector(".feature-img");
-          const h3_3 = featureCards[3].querySelector("h3");
-          const p3 = featureCards[3].querySelector("p");
-          if (img3) cardsTl.to(img3, { opacity: 0.85, duration: 1.0 }, "card3_photo");
-          if (h3_3) cardsTl.to(h3_3, { y: 65, duration: 1.0 }, "card3_photo");
-          if (p3) cardsTl.to(p3, { opacity: 0, duration: 1.0 }, "card3_photo");
-          cardsTl.to(featureCards[3], { borderColor: "#af8f1a", duration: 1.0 }, "card3_photo");
-          cardsTl.to({}, { duration: 0.6 }); // Pausa final para apreciar Card 4 antes de continuar a Trabajos
-        }
+          );
+        });
 
         // --- 2. Timeline vertical en #proceso ---
         const timeline = document.querySelector(".process-timeline-container");
@@ -806,4 +738,450 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  // ==========================================================================
+  // MADERIN: CATÁLOGO INFANTIL E-COMMERCE & MODAL INTERACTIVO
+  // ==========================================================================
+  function initMaderinEcommerce() {
+    const grid = document.getElementById("maderinProductGrid");
+    const modal = document.getElementById("maderinProductModal");
+    if (!grid || !modal) return;
+
+    // Catálogo de 8 productos destacados para Maderin
+    const maderinProducts = [
+      {
+        id: "cama-casita",
+        category: "camas",
+        categoryLabel: "Camas Montessori",
+        sku: "MAD-CAM-01",
+        name: "Cama Casita Montessori",
+        subtitle: "Estructura en techo a dos aguas",
+        desc: "Estructura baja inspirada en la metodología Montessori que promueve la libertad de movimiento y autonomía de tu pequeño, con bordes cuidadosamente redondeados y selladores ecológicos no tóxicos.",
+        price: 480,
+        oldPrice: 550,
+        discount: "Ahorra S/ 70",
+        badge: "Más Vendido",
+        rating: 4.9,
+        reviewsCount: 38,
+        dimensions: "90 × 190 × 145 cm (1 Plaza)",
+        material: "Pino selecto secado al horno",
+        ageRange: "2 a 10 años",
+        deliveryTime: "5 a 7 días hábiles",
+        finish: "Laca selladora al agua no tóxica",
+        colors: [
+          { name: "Pino Natural", hex: "#D8BC94" },
+          { name: "Blanco Nieve", hex: "#FFFFFF" },
+          { name: "Gris Nórdico", hex: "#D1D5DB" },
+          { name: "Rosa Pastel", hex: "#FBCFE8" }
+        ],
+        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 34V20l18-12 18 12v14"/><path d="M6 34h36M12 34v6M36 34v6"/><path d="M12 24h24"/></svg>`
+      },
+      {
+        id: "cama-baja",
+        category: "camas",
+        categoryLabel: "Camas Montessori",
+        sku: "MAD-CAM-02",
+        name: "Cama Baja con Barandilla",
+        subtitle: "Nivel de piso con baranda protectora",
+        desc: "Ideal como primera cama para la transición de cuna. Barandilla de seguridad perimetral con entrada frontal despejada y esquinas suavemente biseladas para máxima protección.",
+        price: 420,
+        oldPrice: 480,
+        discount: "Ahorra S/ 60",
+        badge: "Primera Cama",
+        rating: 4.8,
+        reviewsCount: 24,
+        dimensions: "90 × 190 × 35 cm (1 Plaza)",
+        material: "Madera Pino 100% macizo",
+        ageRange: "18 meses a 7 años",
+        deliveryTime: "4 a 6 días hábiles",
+        finish: "Bordes biselados y sellador mate",
+        colors: [
+          { name: "Pino Natural", hex: "#D8BC94" },
+          { name: "Blanco Nieve", hex: "#FFFFFF" },
+          { name: "Gris Cálido", hex: "#E5E7EB" }
+        ],
+        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 32V18h10v6h16v-6h10v14"/><line x1="6" y1="32" x2="42" y2="32"/><line x1="6" y1="32" x2="6" y2="40"/><line x1="42" y1="32" x2="42" y2="40"/><path d="M12 24v8M20 24v8M28 24v8M36 24v8"/></svg>`
+      },
+      {
+        id: "librero-frontal",
+        category: "guardado",
+        categoryLabel: "Guardado & Orden",
+        sku: "MAD-GUA-01",
+        name: "Librero Frontal Montessori",
+        subtitle: "3 niveles de cuentos a la vista",
+        desc: "Los niños eligen sus lecturas por la portada. Este librero a su altura estimula la autonomía, el hábito lector diario y el orden en su habitación sin riesgo de caídas.",
+        price: 140,
+        oldPrice: 165,
+        discount: "Ahorra S/ 25",
+        badge: "Lectura Temprana",
+        rating: 5.0,
+        reviewsCount: 42,
+        dimensions: "75 × 30 × 80 cm",
+        material: "MDF 15mm + Pino macizo",
+        ageRange: "1 a 8 años",
+        deliveryTime: "3 a 5 días hábiles",
+        finish: "Esmalte satinado lavable",
+        colors: [
+          { name: "Pino Natural", hex: "#D8BC94" },
+          { name: "Blanco Nieve", hex: "#FFFFFF" },
+          { name: "Verde Menta", hex: "#A7F3D0" },
+          { name: "Rosa Pastel", hex: "#FBCFE8" }
+        ],
+        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="10" width="32" height="30" rx="2"/><line x1="8" y1="20" x2="40" y2="20"/><line x1="8" y1="30" x2="40" y2="30"/><line x1="12" y1="18" x2="36" y2="18"/><line x1="12" y1="28" x2="36" y2="28"/></svg>`
+      },
+      {
+        id: "organizador-juguetes",
+        category: "guardado",
+        categoryLabel: "Guardado & Orden",
+        sku: "MAD-GUA-02",
+        name: "Organizador de Juguetes 6 Gavetas",
+        subtitle: "Módulo bajo con gavetas ligeras",
+        desc: "Facilita la clasificación de juguetes, bloques y manualidades. Gavetas ultra-ligeras que los pequeños pueden mover y acomodar de forma 100% independiente.",
+        price: 195,
+        oldPrice: 230,
+        discount: "Ahorra S/ 35",
+        badge: "Autonomía",
+        rating: 4.9,
+        reviewsCount: 31,
+        dimensions: "85 × 32 × 65 cm",
+        material: "Melamina Pelíkano 18mm",
+        ageRange: "2 a 9 años",
+        deliveryTime: "4 a 6 días hábiles",
+        finish: "Cantos gruesos termo-adheridos",
+        colors: [
+          { name: "Blanco Nórdico", hex: "#FFFFFF" },
+          { name: "Pino Natural", hex: "#D8BC94" },
+          { name: "Gris Claro", hex: "#E5E7EB" }
+        ],
+        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="32" height="32" rx="2"/><line x1="8" y1="24" x2="40" y2="24"/><line x1="24" y1="8" x2="24" y2="40"/><rect x="12" y="12" width="8" height="8" rx="1"/><rect x="28" y="12" width="8" height="8" rx="1"/><rect x="12" y="28" width="8" height="8" rx="1"/><rect x="28" y="28" width="8" height="8" rx="1"/></svg>`
+      },
+      {
+        id: "torre-aprendizaje",
+        category: "accesorios",
+        categoryLabel: "Accesorios & Estimulación",
+        sku: "MAD-ACC-01",
+        name: "Torre de Aprendizaje Regulable",
+        subtitle: "3 alturas de piso con barra de seguridad",
+        desc: "Permite al niño alcanzar la mesada de cocina o mesa con total estabilidad para cocinar, lavarse las manos y participar activamente en las tareas del hogar.",
+        price: 175,
+        oldPrice: 210,
+        discount: "Ahorra S/ 35",
+        badge: "Favorito Padres",
+        rating: 4.9,
+        reviewsCount: 56,
+        dimensions: "42 × 40 × 90 cm",
+        material: "Madera pino selecto 20mm",
+        ageRange: "18 meses a 5 años",
+        deliveryTime: "3 a 5 días hábiles",
+        finish: "Base antideslizante y cantos redondeados",
+        colors: [
+          { name: "Pino Natural", hex: "#D8BC94" },
+          { name: "Blanco Nieve", hex: "#FFFFFF" },
+          { name: "Gris Nórdico", hex: "#D1D5DB" }
+        ],
+        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 42L18 8h12l6 34"/><line x1="15" y1="28" x2="33" y2="28"/><line x1="16" y1="20" x2="32" y2="20"/><line x1="18" y1="12" x2="30" y2="12"/><path d="M12 42h24"/></svg>`
+      },
+      {
+        id: "mesa-silla",
+        category: "escritorio",
+        categoryLabel: "Escritorios & Mesas",
+        sku: "MAD-ESC-01",
+        name: "Mesa + Silla Ergonómica Infantil",
+        subtitle: "Set de estudio y juego boleado",
+        desc: "Mesa cuadrada con esquinas boleadas y silla robusta de soporte lumbar ergonómico. Superficie tratada para fácil limpieza ante témperas, plumones y plastilinas.",
+        price: 240,
+        oldPrice: 280,
+        discount: "Ahorra S/ 40",
+        badge: "Set Ergonómico",
+        rating: 4.8,
+        reviewsCount: 19,
+        dimensions: "Mesa 60×60×48 cm · Silla 30×30×52 cm",
+        material: "Madera pino + Cubierta lavable",
+        ageRange: "2 a 7 años",
+        deliveryTime: "4 a 6 días hábiles",
+        finish: "Laca protectora poliuretano mate",
+        colors: [
+          { name: "Pino Natural", hex: "#D8BC94" },
+          { name: "Blanco + Pino", hex: "#F3F4F6" },
+          { name: "Rosa Pastel", hex: "#FBCFE8" },
+          { name: "Verde Menta", hex: "#A7F3D0" }
+        ],
+        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="16" width="24" height="6" rx="1"/><line x1="10" y1="22" x2="10" y2="38"/><line x1="26" y1="22" x2="26" y2="38"/><path d="M34 14v24M34 26h8v12M42 26v-6"/></svg>`
+      },
+      {
+        id: "escritorio-gaveta",
+        category: "escritorio",
+        categoryLabel: "Escritorios & Mesas",
+        sku: "MAD-ESC-02",
+        name: "Escritorio Escolar con Gaveta",
+        subtitle: "Amplio espacio para tareas y libros",
+        desc: "Diseñado para los primeros años de primaria. Cuenta con cajón silencioso con tope de seguridad, canal para lápices y estructura reforzada de pino macizo.",
+        price: 260,
+        oldPrice: 310,
+        discount: "Ahorra S/ 50",
+        badge: "Primaria",
+        rating: 4.9,
+        reviewsCount: 22,
+        dimensions: "80 × 50 × 62 cm",
+        material: "Pino macizo + MDF laqueado",
+        ageRange: "4 a 10 años",
+        deliveryTime: "5 a 7 días hábiles",
+        finish: "Rieles telescópicos y acabado mate",
+        colors: [
+          { name: "Pino Natural", hex: "#D8BC94" },
+          { name: "Blanco Nieve", hex: "#FFFFFF" },
+          { name: "Gris Cálido", hex: "#E5E7EB" }
+        ],
+        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="16" width="36" height="8" rx="1"/><line x1="10" y1="24" x2="10" y2="40"/><line x1="38" y1="24" x2="38" y2="40"/><line x1="18" y1="20" x2="30" y2="20"/></svg>`
+      },
+      {
+        id: "perchero-tipi",
+        category: "accesorios",
+        categoryLabel: "Accesorios & Estimulación",
+        sku: "MAD-ACC-02",
+        name: "Perchero Tipi con Zapatero",
+        subtitle: "Colgador bajito con base organizadora",
+        desc: "Permite a los pequeños colgar sus casacas, mochilas y ordenar su calzado al volver a casa. Estructura triangular tipo tipi súper estable que no se tambalea.",
+        price: 95,
+        oldPrice: 115,
+        discount: "Ahorra S/ 20",
+        badge: "Compacto",
+        rating: 4.8,
+        reviewsCount: 17,
+        dimensions: "40 × 40 × 110 cm",
+        material: "Madera pino 100% macizo",
+        ageRange: "2 a 9 años",
+        deliveryTime: "2 a 4 días hábiles",
+        finish: "Lijado fino al tacto y sellador ecológico",
+        colors: [
+          { name: "Pino Natural", hex: "#D8BC94" },
+          { name: "Blanco Nieve", hex: "#FFFFFF" },
+          { name: "Bicolor (Pino/Blanco)", hex: "#EADCC9" }
+        ],
+        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 42L24 6l8 36"/><line x1="19" y1="22" x2="29" y2="22"/><line x1="14" y1="36" x2="34" y2="36"/></svg>`
+      }
+    ];
+
+    // Elementos del Modal
+    const modalBackdrop = modal.querySelector(".ecom-modal-backdrop") || document.getElementById("maderinModalBackdrop");
+    const modalCloseBtn = modal.querySelector(".ecom-modal-close") || document.getElementById("maderinModalCloseBtn");
+    const modalPrevBtn = document.getElementById("mModalPrevBtn") || document.getElementById("modalPrevProduct");
+    const modalNextBtn = document.getElementById("mModalNextBtn") || document.getElementById("modalNextProduct");
+    const modalCounterEl = document.getElementById("mModalCounter") || document.getElementById("modalNavCounter");
+    const modalVisualEl = document.getElementById("mModalVisual") || document.getElementById("modalProductVisual");
+    const modalBadge = document.getElementById("mModalBadge");
+    const modalColorIndicator = document.getElementById("mModalActiveColorLabel") || document.getElementById("modalSelectedColorIndicator");
+    const modalColorText = document.getElementById("mModalSelectedColorText");
+    const modalCatTag = document.getElementById("mModalCategory") || document.getElementById("modalCatTag");
+    const modalSku = document.getElementById("mModalSku") || document.getElementById("modalSku");
+    const modalTitle = document.getElementById("mModalTitle") || document.getElementById("modalTitle");
+    const modalRatingNum = document.getElementById("mModalRatingVal") || document.getElementById("modalRatingNum");
+    const modalReviewsCount = document.getElementById("mModalReviews") || document.getElementById("modalReviewsCount");
+    const modalCurrentPrice = document.getElementById("mModalPrice") || document.getElementById("modalCurrentPrice");
+    const modalOldPrice = document.getElementById("mModalOldPrice") || document.getElementById("modalOldPrice");
+    const modalDiscountTag = document.getElementById("mModalDiscount") || document.getElementById("modalDiscountTag");
+    const modalDesc = document.getElementById("mModalDesc") || document.getElementById("modalDesc");
+    const modalColorSwatches = document.getElementById("mModalColorSwatches") || document.getElementById("modalColorSwatches");
+    const modalSpecAge = document.getElementById("mModalAge") || document.getElementById("modalSpecAge");
+    const modalSpecDimensions = document.getElementById("mModalDimensions") || document.getElementById("modalSpecDimensions");
+    const modalSpecMaterial = document.getElementById("mModalMaterial") || document.getElementById("modalSpecMaterial");
+    const modalSpecDelivery = document.getElementById("mModalDelivery") || document.getElementById("modalSpecDelivery");
+    const modalQtyDisplay = document.getElementById("mModalQtyVal") || document.getElementById("modalQtyDisplay");
+    const qtyMinusBtn = document.getElementById("mModalQtyMinus") || document.getElementById("qtyMinusBtn");
+    const qtyPlusBtn = document.getElementById("mModalQtyPlus") || document.getElementById("qtyPlusBtn");
+    const modalWhatsAppBtn = document.getElementById("mModalWaOrderBtn") || document.getElementById("modalWhatsAppBtn");
+    const modalWhatsAppBtnText = document.getElementById("mModalWaBtnText");
+
+    // Estado del modal
+    let currentModalIndex = 0;
+    let selectedQuantity = 1;
+    let selectedColor = "";
+
+    // ------------------------------------------------------------------------
+    // LÓGICA DEL MODAL DE PRODUCTO
+    // ------------------------------------------------------------------------
+    function openModalForProduct(productId) {
+      const idx = maderinProducts.findIndex(p => p.id === productId);
+      if (idx === -1) return;
+      currentModalIndex = idx;
+      selectedQuantity = 1;
+      populateModal(maderinProducts[currentModalIndex]);
+      modal.classList.add("open");
+      document.body.style.overflow = "hidden";
+      modal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeModal() {
+      modal.classList.remove("open");
+      document.body.style.overflow = "";
+      modal.setAttribute("aria-hidden", "true");
+    }
+
+    function populateModal(product) {
+      if (!product) return;
+
+      // Resetear estado
+      selectedColor = product.colors && product.colors.length ? product.colors[0].name : "Pino Natural";
+      selectedQuantity = 1;
+
+      // Navegación
+      if (modalCounterEl) {
+        const currentNum = String(currentModalIndex + 1).padStart(2, "0");
+        const totalNum = String(maderinProducts.length).padStart(2, "0");
+        modalCounterEl.textContent = `${currentNum} / ${totalNum}`;
+      }
+
+      // Visual & Badge
+      if (modalVisualEl) {
+        modalVisualEl.innerHTML = product.svg || "";
+      }
+      if (modalBadge) {
+        modalBadge.textContent = product.badge || "Destacado";
+      }
+      if (modalColorIndicator) {
+        modalColorIndicator.textContent = selectedColor;
+      }
+      if (modalColorText) {
+        modalColorText.textContent = selectedColor;
+      }
+
+      // Información de encabezado
+      if (modalCatTag) modalCatTag.textContent = product.categoryLabel;
+      if (modalSku) modalSku.textContent = `SKU: ${product.sku}`;
+      if (modalTitle) modalTitle.textContent = product.name;
+      if (modalRatingNum) modalRatingNum.textContent = product.rating.toFixed(1);
+      if (modalReviewsCount) modalReviewsCount.textContent = `(${product.reviewsCount} opiniones verificadas)`;
+
+      // Precio
+      if (modalCurrentPrice) modalCurrentPrice.textContent = `S/ ${product.price}`;
+      if (modalOldPrice) modalOldPrice.textContent = `S/ ${product.oldPrice}`;
+      if (modalDiscountTag) modalDiscountTag.textContent = product.discount;
+
+      // Descripción
+      if (modalDesc) modalDesc.textContent = product.desc;
+
+      // Muestras de color
+      if (modalColorSwatches) {
+        modalColorSwatches.innerHTML = "";
+        product.colors.forEach((color, i) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = `color-swatch-btn ${i === 0 ? "active" : ""}`;
+          btn.innerHTML = `<span class="swatch-circle" style="background: ${color.hex};"></span><span>${color.name}</span>`;
+          btn.addEventListener("click", () => {
+            modalColorSwatches.querySelectorAll(".color-swatch-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            selectedColor = color.name;
+            if (modalColorIndicator) modalColorIndicator.textContent = selectedColor;
+            if (modalColorText) modalColorText.textContent = selectedColor;
+            updateWhatsAppButton(product);
+          });
+          modalColorSwatches.appendChild(btn);
+        });
+      }
+
+      // Especificaciones
+      if (modalSpecAge) modalSpecAge.textContent = product.ageRange;
+      if (modalSpecDimensions) modalSpecDimensions.textContent = product.dimensions;
+      if (modalSpecMaterial) modalSpecMaterial.textContent = product.material;
+      if (modalSpecDelivery) modalSpecDelivery.textContent = product.deliveryTime;
+
+      // Cantidad y Botón de WhatsApp
+      updateQuantityUI();
+      updateWhatsAppButton(product);
+    }
+
+    function updateQuantityUI() {
+      if (modalQtyDisplay) modalQtyDisplay.textContent = selectedQuantity;
+      if (qtyMinusBtn) qtyMinusBtn.disabled = selectedQuantity <= 1;
+      if (qtyPlusBtn) qtyPlusBtn.disabled = selectedQuantity >= 10;
+    }
+
+    function updateWhatsAppButton(product) {
+      if (!modalWhatsAppBtn || !product) return;
+      const total = product.price * selectedQuantity;
+      const qtyText = selectedQuantity > 1 ? ` (${selectedQuantity} unidades)` : "";
+      const message = `Hola Maderin, deseo consultar y pedir el producto: "${product.name}"${qtyText} en acabado ${selectedColor} (Precio: S/ ${total}). ¿Tienen disponibilidad y fecha de entrega?`;
+      
+      modalWhatsAppBtn.href = waLink(message);
+      modalWhatsAppBtn.setAttribute("target", "_blank");
+      modalWhatsAppBtn.setAttribute("rel", "noopener");
+      
+      if (modalWhatsAppBtnText) {
+        modalWhatsAppBtnText.textContent = `Pedir por WhatsApp (S/ ${total})`;
+      } else {
+        const iconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>`;
+        modalWhatsAppBtn.innerHTML = `${iconSvg} Pedir por WhatsApp (S/ ${total})`;
+      }
+    }
+
+    // Controles de cantidad
+    if (qtyMinusBtn) {
+      qtyMinusBtn.addEventListener("click", () => {
+        if (selectedQuantity > 1) {
+          selectedQuantity--;
+          updateQuantityUI();
+          updateWhatsAppButton(maderinProducts[currentModalIndex]);
+        }
+      });
+    }
+
+    if (qtyPlusBtn) {
+      qtyPlusBtn.addEventListener("click", () => {
+        if (selectedQuantity < 10) {
+          selectedQuantity++;
+          updateQuantityUI();
+          updateWhatsAppButton(maderinProducts[currentModalIndex]);
+        }
+      });
+    }
+
+    // Navegación dentro del modal (Anterior / Siguiente)
+    if (modalPrevBtn) {
+      modalPrevBtn.addEventListener("click", () => {
+        currentModalIndex = (currentModalIndex - 1 + maderinProducts.length) % maderinProducts.length;
+        populateModal(maderinProducts[currentModalIndex]);
+      });
+    }
+
+    if (modalNextBtn) {
+      modalNextBtn.addEventListener("click", () => {
+        currentModalIndex = (currentModalIndex + 1) % maderinProducts.length;
+        populateModal(maderinProducts[currentModalIndex]);
+      });
+    }
+
+    // Cierre del modal
+    if (modalCloseBtn) modalCloseBtn.addEventListener("click", closeModal);
+    if (modalBackdrop) modalBackdrop.addEventListener("click", closeModal);
+
+    // Teclado (Escape, Flechas)
+    document.addEventListener("keydown", (e) => {
+      if (!modal.classList.contains("open")) return;
+      if (e.key === "Escape") closeModal();
+      if (e.key === "ArrowLeft" && modalPrevBtn) modalPrevBtn.click();
+      if (e.key === "ArrowRight" && modalNextBtn) modalNextBtn.click();
+    });
+
+    // Delegación de clics en las tarjetas del catálogo
+    grid.addEventListener("click", (e) => {
+      // Si hizo clic en el botón directo de WhatsApp de la tarjeta, no abrir modal
+      const waBtn = e.target.closest(".btn-wa-icon");
+      if (waBtn) {
+        e.stopPropagation();
+        return;
+      }
+
+      const card = e.target.closest(".compact-card");
+      if (card) {
+        const productId = card.getAttribute("data-id");
+        if (productId) {
+          openModalForProduct(productId);
+        }
+      }
+    });
+  }
+
+  // Inicializar Catálogo E-commerce Maderin si estamos en maderin.html
+  initMaderinEcommerce();
 });

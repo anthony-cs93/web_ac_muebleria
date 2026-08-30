@@ -114,113 +114,525 @@
   </div>
 </section>
 
-<!-- ============ CATÁLOGO ============ -->
-<!-- SECCIÓN CATÁLOGO: grid de productos con filtros por categoría -->
-<section id="productos" class="on-paper2 reveal">
+<!-- ============ CATÁLOGO E-COMMERCE ============ -->
+<!-- SECCIÓN CATÁLOGO: catálogo estilo e-commerce compacto con filtros, buscador, ordenamiento y modales de producto -->
+<section id="productos" class="on-paper2 reveal maderin-catalog-section">
   <div class="container">
-    <div class="head-row">
+    <div class="head-row catalog-header-row">
       <div>
-        <span class="eyebrow">Catálogo Infantil</span>
-        <h2 class="section-title">Elige, escríbenos y coordinamos tu entrega.</h2>
+        <span class="eyebrow">Catálogo Infantil E-commerce</span>
+        <h2 class="section-title">Mobiliario pensado para su tamaño y autonomía.</h2>
       </div>
-      <p class="section-lede">Haz clic en cualquier pieza para ver especificaciones y detalles de confección.</p>
-    </div>
-    <!-- Filtros: botones que muestran/ocultan cards por data-category -->
-    <div class="filter-row" id="maderinFilters">
-      <button class="filter-chip active" data-filter="todos">Todos</button>
-      <button class="filter-chip" data-filter="camas">Camas</button>
-      <button class="filter-chip" data-filter="guardado">Guardado y orden</button>
-      <button class="filter-chip" data-filter="escritorio">Escritorios</button>
+      <p class="section-lede">Selecciona cualquier pieza para abrir su ficha técnica interactiva, personalizar acabados y coordinar tu pedido directo por WhatsApp.</p>
     </div>
 
-    <div class="product-grid" id="maderinProductGrid">
-      <article class="product-card reveal" data-category="camas">
-        <div class="product-thumb">
-          <span class="sample-badge">Popular Montessori</span>
-          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 32V18h10v6h16v-6h10v14"/><line x1="6" y1="32" x2="42" y2="32"/><line x1="6" y1="32" x2="6" y2="40"/><line x1="42" y1="32" x2="42" y2="40"/></svg>
+    <!-- Grilla Compacta de Productos E-commerce (8 items) -->
+    <div class="product-grid compact-ecom-grid" id="maderinProductGrid">
+      <!-- Los productos se inicializan con estructura accesible y se enlazan al dataset interactivo de modales -->
+      <!-- 01: Cama Casita Montessori -->
+      <article class="product-card compact-card reveal" data-id="cama-casita" data-category="camas" data-price="480" data-name="Cama Casita Montessori" role="button" tabindex="0" aria-label="Ver detalles de Cama Casita Montessori">
+        <div class="product-thumb compact-thumb">
+          <span class="sample-badge promo">Más Vendido</span>
+          <div class="thumb-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 34V20l18-12 18 12v14"/><path d="M6 34h36M12 34v6M36 34v6"/><path d="M12 24h24"/></svg>
+          </div>
+          <div class="thumb-quick-hint">
+            <span class="quick-hint-pill">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+              Ficha rápida
+            </span>
+          </div>
         </div>
-        <div class="product-body">
-          <h3>Cama Montessori</h3>
-          <p class="desc">Estructura baja de madera, ideal desde los 2 años. Incluye baranda de seguridad.</p>
-          <div class="product-specs"><span>90 × 190 cm</span><span>Pino</span></div>
-          <div class="product-price">S/ 450 <small>/ unidad</small></div>
-          <button class="btn btn-wa btn-sm" data-wa-message="Hola, quiero pedir la Cama Montessori de Maderin. ¿Me ayudan con precio y disponibilidad?">Pedir por WhatsApp</button>
+        <div class="product-body compact-body">
+          <div class="p-card-header">
+            <span class="p-card-cat">Camas Montessori</span>
+            <div class="p-card-rating">
+              <span class="stars">★★★★★</span>
+              <span class="rating-val">4.9</span>
+            </div>
+          </div>
+          <h3 class="p-card-name">Cama Casita Montessori</h3>
+          <p class="desc">Estructura baja a ras de suelo con techo a dos aguas. Máxima seguridad y autonomía.</p>
+          <div class="product-footer-row">
+            <div class="p-pricing">
+              <div class="p-price-row">
+                <span class="p-current-price">S/ 480</span>
+                <span class="p-old-price">S/ 550</span>
+              </div>
+              <span class="p-discount-tag">Ahorra S/ 70</span>
+            </div>
+            <div class="p-actions-group">
+              <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
+              <button class="btn btn-wa-icon btn-quick-wa" data-product-id="cama-casita" title="Pedir directo por WhatsApp" aria-label="Pedir por WhatsApp">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
+              </button>
+            </div>
+          </div>
         </div>
       </article>
 
-      <article class="product-card reveal" data-category="guardado">
-        <div class="product-thumb">
-          <span class="sample-badge">Seguridad Infantil</span>
-          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="10" y="8" width="28" height="10" rx="1"/><rect x="10" y="20" width="28" height="10" rx="1"/><rect x="10" y="32" width="28" height="8" rx="1"/></svg>
+      <!-- 02: Cama Baja con Barandilla -->
+      <article class="product-card compact-card reveal" data-id="cama-baja" data-category="camas" data-price="420" data-name="Cama Baja con Barandilla" role="button" tabindex="0" aria-label="Ver detalles de Cama Baja con Barandilla">
+        <div class="product-thumb compact-thumb">
+          <span class="sample-badge">Primera Cama</span>
+          <div class="thumb-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 32V18h10v6h16v-6h10v14"/><line x1="6" y1="32" x2="42" y2="32"/><line x1="6" y1="32" x2="6" y2="40"/><line x1="42" y1="32" x2="42" y2="40"/><path d="M12 24v8M20 24v8M28 24v8M36 24v8"/></svg>
+          </div>
+          <div class="thumb-quick-hint">
+            <span class="quick-hint-pill">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+              Ficha rápida
+            </span>
+          </div>
         </div>
-        <div class="product-body">
-          <h3>Velador infantil</h3>
-          <p class="desc">Velador de un cajón con esquinas redondeadas y acabado mate.</p>
-          <div class="product-specs"><span>35 × 30 × 45 cm</span><span>MDF</span></div>
-          <div class="product-price">S/ 120 <small>/ unidad</small></div>
-          <button class="btn btn-wa btn-sm" data-wa-message="Hola, quiero pedir el Velador infantil de Maderin. ¿Me ayudan con precio y disponibilidad?">Pedir por WhatsApp</button>
+        <div class="product-body compact-body">
+          <div class="p-card-header">
+            <span class="p-card-cat">Camas Montessori</span>
+            <div class="p-card-rating">
+              <span class="stars">★★★★★</span>
+              <span class="rating-val">4.8</span>
+            </div>
+          </div>
+          <h3 class="p-card-name">Cama Baja con Barandilla</h3>
+          <p class="desc">Barandilla en 3 lados con acceso frontal despejado para fácil transición de cuna.</p>
+          <div class="product-footer-row">
+            <div class="p-pricing">
+              <div class="p-price-row">
+                <span class="p-current-price">S/ 420</span>
+                <span class="p-old-price">S/ 480</span>
+              </div>
+              <span class="p-discount-tag">Ahorra S/ 60</span>
+            </div>
+            <div class="p-actions-group">
+              <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
+              <button class="btn btn-wa-icon btn-quick-wa" data-product-id="cama-baja" title="Pedir directo por WhatsApp" aria-label="Pedir por WhatsApp">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
+              </button>
+            </div>
+          </div>
         </div>
       </article>
 
-      <article class="product-card reveal" data-category="guardado">
-        <div class="product-thumb">
-          <span class="sample-badge">Set × 3</span>
-          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><line x1="8" y1="14" x2="40" y2="14"/><line x1="8" y1="24" x2="40" y2="24"/><line x1="8" y1="34" x2="40" y2="34"/><path d="M8 14v20M40 14v20"/></svg>
+      <!-- 03: Librero Frontal Montessori -->
+      <article class="product-card compact-card reveal" data-id="librero-frontal" data-category="guardado" data-price="140" data-name="Librero Frontal Montessori (3 Niveles)" role="button" tabindex="0" aria-label="Ver detalles de Librero Frontal">
+        <div class="product-thumb compact-thumb">
+          <span class="sample-badge">Lectura Temprana</span>
+          <div class="thumb-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="10" width="32" height="30" rx="2"/><line x1="8" y1="20" x2="40" y2="20"/><line x1="8" y1="30" x2="40" y2="30"/><line x1="12" y1="18" x2="36" y2="18"/><line x1="12" y1="28" x2="36" y2="28"/></svg>
+          </div>
+          <div class="thumb-quick-hint">
+            <span class="quick-hint-pill">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+              Ficha rápida
+            </span>
+          </div>
         </div>
-        <div class="product-body">
-          <h3>Repisa flotante infantil</h3>
-          <p class="desc">Set de 3 repisas para libros y peluches, con fijación oculta a pared.</p>
-          <div class="product-specs"><span>60 × 15 cm c/u</span><span>Pino</span></div>
-          <div class="product-price">S/ 95 <small>/ set</small></div>
-          <button class="btn btn-wa btn-sm" data-wa-message="Hola, quiero pedir la Repisa flotante infantil de Maderin. ¿Me ayudan con precio y disponibilidad?">Pedir por WhatsApp</button>
+        <div class="product-body compact-body">
+          <div class="p-card-header">
+            <span class="p-card-cat">Guardado & Orden</span>
+            <div class="p-card-rating">
+              <span class="stars">★★★★★</span>
+              <span class="rating-val">5.0</span>
+            </div>
+          </div>
+          <h3 class="p-card-name">Librero Frontal Montessori</h3>
+          <p class="desc">Portadas de cuentos a la vista de los niños para estimular el amor por la lectura.</p>
+          <div class="product-footer-row">
+            <div class="p-pricing">
+              <div class="p-price-row">
+                <span class="p-current-price">S/ 140</span>
+                <span class="p-old-price">S/ 165</span>
+              </div>
+              <span class="p-discount-tag">Ahorra S/ 25</span>
+            </div>
+            <div class="p-actions-group">
+              <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
+              <button class="btn btn-wa-icon btn-quick-wa" data-product-id="librero-frontal" title="Pedir directo por WhatsApp" aria-label="Pedir por WhatsApp">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
+              </button>
+            </div>
+          </div>
         </div>
       </article>
 
-      <article class="product-card reveal" data-category="guardado">
-        <div class="product-thumb">
+      <!-- 04: Organizador de Juguetes 6 Gavetas -->
+      <article class="product-card compact-card reveal" data-id="organizador-juguetes" data-category="guardado" data-price="195" data-name="Organizador de Juguetes 6 Gavetas" role="button" tabindex="0" aria-label="Ver detalles de Organizador de Juguetes">
+        <div class="product-thumb compact-thumb">
           <span class="sample-badge">Autonomía</span>
-          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="10" y="10" width="28" height="28" rx="2"/><line x1="10" y1="20" x2="38" y2="20"/><line x1="24" y1="20" x2="24" y2="38"/></svg>
+          <div class="thumb-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="32" height="32" rx="2"/><line x1="8" y1="24" x2="40" y2="24"/><line x1="24" y1="8" x2="24" y2="40"/><rect x="12" y="12" width="8" height="8" rx="1"/><rect x="28" y="12" width="8" height="8" rx="1"/><rect x="12" y="28" width="8" height="8" rx="1"/><rect x="28" y="28" width="8" height="8" rx="1"/></svg>
+          </div>
+          <div class="thumb-quick-hint">
+            <span class="quick-hint-pill">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+              Ficha rápida
+            </span>
+          </div>
         </div>
-        <div class="product-body">
-          <h3>Organizador de juguetes</h3>
-          <p class="desc">Cubos apilables con separadores, fáciles de limpiar y mover.</p>
-          <div class="product-specs"><span>60 × 30 × 50 cm</span><span>MDF</span></div>
-          <div class="product-price">S/ 160 <small>/ unidad</small></div>
-          <button class="btn btn-wa btn-sm" data-wa-message="Hola, quiero pedir el Organizador de juguetes de Maderin. ¿Me ayudan con precio y disponibilidad?">Pedir por WhatsApp</button>
+        <div class="product-body compact-body">
+          <div class="p-card-header">
+            <span class="p-card-cat">Guardado & Orden</span>
+            <div class="p-card-rating">
+              <span class="stars">★★★★★</span>
+              <span class="rating-val">4.9</span>
+            </div>
+          </div>
+          <h3 class="p-card-name">Organizador de Juguetes</h3>
+          <p class="desc">Cubos y gavetas ligeras para que guarden sus bloques y juguetes por sí mismos.</p>
+          <div class="product-footer-row">
+            <div class="p-pricing">
+              <div class="p-price-row">
+                <span class="p-current-price">S/ 195</span>
+                <span class="p-old-price">S/ 230</span>
+              </div>
+              <span class="p-discount-tag">Ahorra S/ 35</span>
+            </div>
+            <div class="p-actions-group">
+              <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
+              <button class="btn btn-wa-icon btn-quick-wa" data-product-id="organizador-juguetes" title="Pedir directo por WhatsApp" aria-label="Pedir por WhatsApp">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
+              </button>
+            </div>
+          </div>
         </div>
       </article>
 
-      <article class="product-card reveal" data-category="escritorio">
-        <div class="product-thumb">
-          <span class="sample-badge">Ergonomía</span>
-          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="6" y="18" width="36" height="6"/><line x1="10" y1="24" x2="10" y2="38"/><line x1="38" y1="24" x2="38" y2="38"/></svg>
+      <!-- 05: Torre de Aprendizaje Regulable -->
+      <article class="product-card compact-card reveal" data-id="torre-aprendizaje" data-category="accesorios" data-price="175" data-name="Torre de Aprendizaje Regulable" role="button" tabindex="0" aria-label="Ver detalles de Torre de Aprendizaje">
+        <div class="product-thumb compact-thumb">
+          <span class="sample-badge promo">Favorito Padres</span>
+          <div class="thumb-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 42L18 8h12l6 34"/><line x1="15" y1="28" x2="33" y2="28"/><line x1="16" y1="20" x2="32" y2="20"/><line x1="18" y1="12" x2="30" y2="12"/><path d="M12 42h24"/></svg>
+          </div>
+          <div class="thumb-quick-hint">
+            <span class="quick-hint-pill">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+              Ficha rápida
+            </span>
+          </div>
         </div>
-        <div class="product-body">
-          <h3>Escritorio infantil</h3>
-          <p class="desc">Superficie amplia con cajón, altura pensada para primaria.</p>
-          <div class="product-specs"><span>80 × 50 × 60 cm</span><span>Pino</span></div>
-          <div class="product-price">S/ 220 <small>/ unidad</small></div>
-          <button class="btn btn-wa btn-sm" data-wa-message="Hola, quiero pedir el Escritorio infantil de Maderin. ¿Me ayudan con precio y disponibilidad?">Pedir por WhatsApp</button>
+        <div class="product-body compact-body">
+          <div class="p-card-header">
+            <span class="p-card-cat">Accesorios & Estimulación</span>
+            <div class="p-card-rating">
+              <span class="stars">★★★★★</span>
+              <span class="rating-val">4.9</span>
+            </div>
+          </div>
+          <h3 class="p-card-name">Torre de Aprendizaje Regulable</h3>
+          <p class="desc">3 niveles de altura para cocinar, lavarse y participar en familia de forma segura.</p>
+          <div class="product-footer-row">
+            <div class="p-pricing">
+              <div class="p-price-row">
+                <span class="p-current-price">S/ 175</span>
+                <span class="p-old-price">S/ 210</span>
+              </div>
+              <span class="p-discount-tag">Ahorra S/ 35</span>
+            </div>
+            <div class="p-actions-group">
+              <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
+              <button class="btn btn-wa-icon btn-quick-wa" data-product-id="torre-aprendizaje" title="Pedir directo por WhatsApp" aria-label="Pedir por WhatsApp">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
+              </button>
+            </div>
+          </div>
         </div>
       </article>
 
-      <article class="product-card reveal" data-category="guardado">
-        <div class="product-thumb">
-          <span class="sample-badge">Práctico</span>
-          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M18 8h12v10c0 6-12 6-12 0Z"/><line x1="24" y1="18" x2="24" y2="40"/><line x1="16" y1="40" x2="32" y2="40"/></svg>
+      <!-- 06: Mesa y Silla Ergonómica Infantil -->
+      <article class="product-card compact-card reveal" data-id="mesa-silla" data-category="escritorio" data-price="240" data-name="Mesa y Silla Ergonómica Infantil" role="button" tabindex="0" aria-label="Ver detalles de Mesa y Silla">
+        <div class="product-thumb compact-thumb">
+          <span class="sample-badge">Set Ergonómico</span>
+          <div class="thumb-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="16" width="24" height="6" rx="1"/><line x1="10" y1="22" x2="10" y2="38"/><line x1="26" y1="22" x2="26" y2="38"/><path d="M34 14v24M34 26h8v12M42 26v-6"/></svg>
+          </div>
+          <div class="thumb-quick-hint">
+            <span class="quick-hint-pill">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+              Ficha rápida
+            </span>
+          </div>
         </div>
-        <div class="product-body">
-          <h3>Percha infantil</h3>
-          <p class="desc">Percha de pie a la altura de los niños, para que aprendan a ordenar solos.</p>
-          <div class="product-specs"><span>35 × 35 × 90 cm</span><span>Pino</span></div>
-          <div class="product-price">S/ 85 <small>/ unidad</small></div>
-          <button class="btn btn-wa btn-sm" data-wa-message="Hola, quiero pedir la Percha infantil de Maderin. ¿Me ayudan con precio y disponibilidad?">Pedir por WhatsApp</button>
+        <div class="product-body compact-body">
+          <div class="p-card-header">
+            <span class="p-card-cat">Escritorios & Mesas</span>
+            <div class="p-card-rating">
+              <span class="stars">★★★★★</span>
+              <span class="rating-val">4.8</span>
+            </div>
+          </div>
+          <h3 class="p-card-name">Mesa + Silla Ergonómica</h3>
+          <p class="desc">Set completo para juego, arte y estudio. Esquinas suaves y fácil limpieza.</p>
+          <div class="product-footer-row">
+            <div class="p-pricing">
+              <div class="p-price-row">
+                <span class="p-current-price">S/ 240</span>
+                <span class="p-old-price">S/ 280</span>
+              </div>
+              <span class="p-discount-tag">Ahorra S/ 40</span>
+            </div>
+            <div class="p-actions-group">
+              <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
+              <button class="btn btn-wa-icon btn-quick-wa" data-product-id="mesa-silla" title="Pedir directo por WhatsApp" aria-label="Pedir por WhatsApp">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 07: Escritorio Escolar con Gaveta -->
+      <article class="product-card compact-card reveal" data-id="escritorio-gaveta" data-category="escritorio" data-price="260" data-name="Escritorio Escolar con Gaveta" role="button" tabindex="0" aria-label="Ver detalles de Escritorio Escolar">
+        <div class="product-thumb compact-thumb">
+          <span class="sample-badge">Primaria</span>
+          <div class="thumb-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="16" width="36" height="8" rx="1"/><line x1="10" y1="24" x2="10" y2="40"/><line x1="38" y1="24" x2="38" y2="40"/><line x1="18" y1="20" x2="30" y2="20"/></svg>
+          </div>
+          <div class="thumb-quick-hint">
+            <span class="quick-hint-pill">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+              Ficha rápida
+            </span>
+          </div>
+        </div>
+        <div class="product-body compact-body">
+          <div class="p-card-header">
+            <span class="p-card-cat">Escritorios & Mesas</span>
+            <div class="p-card-rating">
+              <span class="stars">★★★★★</span>
+              <span class="rating-val">4.9</span>
+            </div>
+          </div>
+          <h3 class="p-card-name">Escritorio con Gaveta</h3>
+          <p class="desc">Superficie amplia con cajón de rieles silenciosos para libros y útiles escolares.</p>
+          <div class="product-footer-row">
+            <div class="p-pricing">
+              <div class="p-price-row">
+                <span class="p-current-price">S/ 260</span>
+                <span class="p-old-price">S/ 310</span>
+              </div>
+              <span class="p-discount-tag">Ahorra S/ 50</span>
+            </div>
+            <div class="p-actions-group">
+              <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
+              <button class="btn btn-wa-icon btn-quick-wa" data-product-id="escritorio-gaveta" title="Pedir directo por WhatsApp" aria-label="Pedir por WhatsApp">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 08: Perchero Tipi Infantil -->
+      <article class="product-card compact-card reveal" data-id="perchero-tipi" data-category="accesorios" data-price="95" data-name="Perchero Tipi con Zapatero" role="button" tabindex="0" aria-label="Ver detalles de Perchero Tipi">
+        <div class="product-thumb compact-thumb">
+          <span class="sample-badge">Compacto</span>
+          <div class="thumb-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 42L24 6l8 36"/><line x1="19" y1="22" x2="29" y2="22"/><line x1="14" y1="36" x2="34" y2="36"/></svg>
+          </div>
+          <div class="thumb-quick-hint">
+            <span class="quick-hint-pill">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+              Ficha rápida
+            </span>
+          </div>
+        </div>
+        <div class="product-body compact-body">
+          <div class="p-card-header">
+            <span class="p-card-cat">Accesorios & Estimulación</span>
+            <div class="p-card-rating">
+              <span class="stars">★★★★★</span>
+              <span class="rating-val">4.8</span>
+            </div>
+          </div>
+          <h3 class="p-card-name">Perchero Tipi con Zapatero</h3>
+          <p class="desc">Colgador bajito para mochilas y casacas con base organizadora de calzado.</p>
+          <div class="product-footer-row">
+            <div class="p-pricing">
+              <div class="p-price-row">
+                <span class="p-current-price">S/ 95</span>
+                <span class="p-old-price">S/ 115</span>
+              </div>
+              <span class="p-discount-tag">Ahorra S/ 20</span>
+            </div>
+            <div class="p-actions-group">
+              <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
+              <button class="btn btn-wa-icon btn-quick-wa" data-product-id="perchero-tipi" title="Pedir directo por WhatsApp" aria-label="Pedir por WhatsApp">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
+              </button>
+            </div>
+          </div>
         </div>
       </article>
     </div>
   </div>
 </section>
 
+<!-- ============ MODAL DE PRODUCTO E-COMMERCE (MADERIN) ============ -->
+<div class="ecom-product-modal" id="maderinProductModal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Ficha técnica de producto infantil">
+  <div class="ecom-modal-backdrop" id="maderinModalBackdrop"></div>
+  <div class="ecom-modal-dialog">
+    <!-- Botón de Cerrar Modal -->
+    <button class="ecom-modal-close" id="maderinModalCloseBtn" aria-label="Cerrar ventana de producto" title="Cerrar (Esc)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+
+    <div class="ecom-modal-grid">
+      <!-- Columna Izquierda: Vista Gráfica & Galería E-commerce -->
+      <div class="ecom-modal-media-col">
+        <div class="ecom-main-preview" id="maderinModalPreviewWrap">
+          <div class="preview-badge-stack">
+            <span class="preview-badge" id="mModalBadge">Más Vendido</span>
+            <span class="preview-cert-badge">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+              No tóxico
+            </span>
+          </div>
+
+          <div class="preview-visual" id="mModalVisual">
+            <!-- Icono SVG representativo del producto activo -->
+            <svg id="mModalSvg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 34V20l18-12 18 12v14"/><path d="M6 34h36M12 34v6M36 34v6"/><path d="M12 24h24"/></svg>
+          </div>
+
+          <!-- Color seleccionado en vivo indicador -->
+          <div class="preview-color-indicator">
+            <span>Color visual:</span>
+            <strong id="mModalActiveColorLabel">Pino Natural</strong>
+          </div>
+        </div>
+
+        <!-- Barra de navegación rápida entre items dentro del modal -->
+        <div class="ecom-modal-nav-bar">
+          <button class="modal-nav-btn prev" id="mModalPrevBtn" aria-label="Producto anterior" title="Anterior (←)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+            <span>Anterior</span>
+          </button>
+          <div class="modal-nav-counter" id="mModalCounter">01 / 10</div>
+          <button class="modal-nav-btn next" id="mModalNextBtn" aria-label="Producto siguiente" title="Siguiente (→)">
+            <span>Siguiente</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+
+        <!-- Micro-garantías de producto -->
+        <div class="ecom-guarantees-list">
+          <div class="guarantee-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>1 año de garantía estructural</span>
+          </div>
+          <div class="guarantee-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>
+            <span>Cantos y esquinas redondeadas</span>
+          </div>
+          <div class="guarantee-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <span>Envíos a todo Lima y provincias</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna Derecha: Información, Configuración de Compra & WhatsApp -->
+      <div class="ecom-modal-info-col">
+        <div class="ecom-modal-header">
+          <div class="header-top-meta">
+            <span class="m-cat-tag" id="mModalCategory">Camas Montessori</span>
+            <span class="m-sku" id="mModalSku">SKU: MAD-CAM-01</span>
+          </div>
+          <h2 class="ecom-title" id="mModalTitle">Cama Casita Montessori</h2>
+          <div class="ecom-rating-row">
+            <div class="stars-gold">★★★★★</div>
+            <span class="rating-num" id="mModalRatingVal">4.9</span>
+            <span class="rating-reviews" id="mModalReviews">(38 familias satisfechas)</span>
+          </div>
+        </div>
+
+        <!-- Precios y Descuento -->
+        <div class="ecom-price-box">
+          <div class="price-main-wrap">
+            <span class="price-current" id="mModalPrice">S/ 480</span>
+            <span class="price-old" id="mModalOldPrice">S/ 550</span>
+            <span class="price-discount-pill" id="mModalDiscount">Ahorra S/ 70</span>
+          </div>
+          <span class="price-note">Precio con IGV incluido · Confección artesanal</span>
+        </div>
+
+        <p class="ecom-desc" id="mModalDesc">Estructura baja inspirada en la metodología Montessori que promueve la libertad de movimiento y autonomía de tu pequeño, con bordes redondeados y selladores ecológicos no tóxicos.</p>
+
+        <!-- Selector de Color / Acabado -->
+        <div class="ecom-option-group">
+          <label class="option-label">
+            <span>Color / Acabado:</span>
+            <strong id="mModalSelectedColorText">Pino Natural</strong>
+          </label>
+          <div class="color-swatches-row" id="mModalColorSwatches">
+            <!-- Se llena dinámicamente con swatches de color -->
+          </div>
+        </div>
+
+        <!-- Selector de Cantidad -->
+        <div class="ecom-option-group">
+          <label class="option-label"><span>Cantidad:</span></label>
+          <div class="quantity-picker">
+            <button class="qty-btn" id="mModalQtyMinus" aria-label="Disminuir cantidad" disabled>&minus;</button>
+            <span class="qty-display" id="mModalQtyVal">1</span>
+            <button class="qty-btn" id="mModalQtyPlus" aria-label="Aumentar cantidad">&plus;</button>
+          </div>
+        </div>
+
+        <!-- Ficha Técnica Resumida -->
+        <div class="ecom-specs-grid">
+          <div class="ecom-spec-card">
+            <span class="spec-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            </span>
+            <div class="spec-text">
+              <span class="spec-name">Dimensiones</span>
+              <strong class="spec-val" id="mModalDimensions">90 × 190 × 145 cm</strong>
+            </div>
+          </div>
+
+          <div class="ecom-spec-card">
+            <span class="spec-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            </span>
+            <div class="spec-text">
+              <span class="spec-name">Material</span>
+              <strong class="spec-val" id="mModalMaterial">Pino selecto secado al horno</strong>
+            </div>
+          </div>
+
+          <div class="ecom-spec-card">
+            <span class="spec-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </span>
+            <div class="spec-text">
+              <span class="spec-name">Edad recomendada</span>
+              <strong class="spec-val" id="mModalAge">2 a 10 años</strong>
+            </div>
+          </div>
+
+          <div class="ecom-spec-card">
+            <span class="spec-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+            <div class="spec-text">
+              <span class="spec-name">Tiempo estimado</span>
+              <strong class="spec-val" id="mModalDelivery">5 a 7 días hábiles</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botón de Compra por WhatsApp Configurado -->
+        <div class="ecom-actions-wrap">
+          <a href="#" class="btn btn-wa btn-ecom-cta" id="mModalWaOrderBtn" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.82.49 3.53 1.35 5L2 22l5.16-1.33A9.96 9.96 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm4.95 14.05c-.21.58-1.2 1.13-1.67 1.2-.47.07-.94.13-2.8-.62-2.22-.9-3.66-3.15-3.77-3.3-.11-.15-.9-1.2-.9-2.29s.57-1.63.77-1.85c.2-.22.44-.28.59-.28.15 0 .3 0 .43.01.14.01.33-.05.51.39.19.45.64 1.57.7 1.69.06.12.1.26.02.42-.08.16-.12.26-.24.4-.12.14-.25.31-.36.42-.12.12-.25.25-.11.49.14.24.63 1.04 1.35 1.68.93.83 1.71 1.09 1.95 1.21.24.12.38.1.52-.06.14-.16.6-.7.76-.94.16-.24.32-.2.53-.12.21.08 1.34.63 1.57.74.23.11.38.17.44.27.06.1.06.58-.15 1.16z"/></svg>
+            <span id="mModalWaBtnText">Pedir por WhatsApp (S/ 480)</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </main>
 
 <!-- ============ FOOTER ============ -->

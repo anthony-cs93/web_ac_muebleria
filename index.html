@@ -12,32 +12,39 @@
 <!-- theme-ac: aplica el tema Flat Design de AC Mueblería (bordes rectos, carbón/amarillo) -->
 <body class="theme-ac">
 
+<!-- Barra de progreso superior -->
+<div id="scrollProgress" class="scroll-progress-bar"></div>
+
 <!-- ============ NAV ============ -->
 <!-- NAV: barra de navegación sticky con logo, links y botón WhatsApp -->
-<nav class="nav">
+<nav class="nav" id="mainNav">
   <div class="nav-inner">
-    <a href="#top" class="brand"><img src="public/ac_muebleria/logo-h.png" alt="AC Mueblería" class="brand-logo"></a>
+    <a href="#top" class="brand" id="navBrand"><img src="public/ac_muebleria/logo-h.png" alt="AC Mueblería" class="brand-logo"></a>
     <!-- Links de navegación: anclan a secciones de esta misma página -->
-    <ul class="nav-links">
-      <li><a href="#elegirnos">Por qué elegirnos</a></li>
-      <li><a href="#trabajos">Trabajos</a></li>
-      <li><a href="#proceso">Cómo trabajamos</a></li>
-      <li><a href="#marcas">Nuestras marcas</a></li>
-      <li><a href="#contacto">Contacto</a></li>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#trabajos" id="navLinkTrabajos">Trabajos</a></li>
+      <li><a href="#elegirnos" id="navLinkElegirnos">Por qué elegirnos</a></li>
+      <li><a href="#proceso" id="navLinkProceso">Cómo trabajamos</a></li>
+      <li><a href="#marcas" id="navLinkMarcas">Nuestras marcas</a></li>
     </ul>
     <!-- Botón WhatsApp: data-wa-message define el mensaje prellenado al abrir chat -->
     <div class="nav-cta">
-      <a class="btn btn-wa btn-cta" data-wa-message="Hola, quiero cotizar un mueble a medida con AC Mueblería.">
+      <a class="btn btn-wa btn-cta" id="navWaBtn" data-wa-message="Hola, quiero cotizar un mueble a medida con AC Mueblería.">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
         <span class="long">Cotiza por WhatsApp</span>
       </a>
     </div>
     <!-- Botón hamburguesa: solo visible en móvil (≤860px) -->
-    <button class="nav-toggle" aria-label="Abrir menú">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
     </button>
   </div>
 </nav>
+
+<!-- Backdrop para menú móvil -->
+<div id="navBackdrop" class="nav-backdrop"></div>
 
 <!-- ============ HERO ============ -->
 <!-- HERO: pantalla completa con imagen de fondo, degradado overlay y texto -->
@@ -64,9 +71,9 @@
         </div>
         <!-- Badges: estadísticas clave (+300 proyectos, 100% propia, a medida) -->
         <div class="hero-badges">
-          <div class="hero-badge"><b>+300</b>proyectos entregados</div>
-          <div class="hero-badge"><b>100%</b>fabricación propia</div>
-          <div class="hero-badge"><b>a medida</b>en cada milímetro</div>
+          <div class="hero-badge"><b class="hero-counter" data-target="300" data-prefix="+">+300</b>proyectos entregados</div>
+          <div class="hero-badge"><b class="hero-counter" data-target="100" data-suffix="%">100%</b>fabricación propia</div>
+          <div class="hero-badge"><b class="hero-counter-text" data-text="a medida">a medida</b>en cada milímetro</div>
         </div>
       </div>
     </div>
@@ -74,8 +81,8 @@
 </header>
 
 <!-- ============ POR QUÉ ELEGIRNOS ============ -->
-<!-- SECCIÓN FEATURES: 4 cards con imagen de fondo que aparece en hover -->
-<section id="elegirnos" class="reveal">
+<!-- SECCIÓN FEATURES: 4 cards con imagen de fondo que aparece en hover (desktop) / animación secuencial en móvil -->
+<section id="elegirnos">
   <div class="container">
     <div class="head-row">
       <div>
@@ -84,9 +91,9 @@
       </div>
     </div>
   </div>
-  <div class="container">
+  <div class="container features-container">
     <div class="features-grid">
-      <!-- Cada feature: icono SVG + número + título + descripción + imagen de fondo (aparece en hover) -->
+      <!-- Cada feature: icono SVG + número + título + descripción + imagen de fondo -->
       <div class="feature-card">
         <div class="feature-img" style="background-image:url('public/ac_muebleria/diseño.png')"></div>
         <svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 40 28 20l6 6L14 46"/><path d="M26 18l4-4 8 8-4 4"/><path d="M34 10l4-4 4 4-4 4"/></svg>
@@ -120,7 +127,7 @@
 </section>
 
 <!-- ============ TRABAJOS ============ -->
-<!-- SECCIÓN PORTAFOLIO: grid de proyectos con filtros por categoría -->
+<!-- SECCIÓN PORTAFOLIO: Carrusel de fotos limpio y responsive + Modal emergente con ficha técnica -->
 <section id="trabajos" class="on-paper2 reveal">
   <div class="container">
     <div class="head-row">
@@ -128,98 +135,313 @@
         <span class="eyebrow">Trabajos realizados</span>
         <h2 class="section-title">Proyectos pensados para cada ambiente.</h2>
       </div>
-    </div>
-    <!-- Filtros: botones que muestran/ocultan cards por data-category -->
-    <div class="filter-row">
-      <button class="filter-chip active" data-filter="todos">Todos</button>
-      <button class="filter-chip" data-filter="cocinas">Cocinas</button>
-      <button class="filter-chip" data-filter="closets">Closets y vestidores</button>
-      <button class="filter-chip" data-filter="tv">Muebles de TV</button>
-      <button class="filter-chip" data-filter="dormitorio">Organizadores</button>
-      <button class="filter-chip" data-filter="oficina">Oficina</button>
+      <p class="section-lede">Explora nuestros proyectos terminados. Haz clic en cualquier foto para abrir la ficha técnica con medidas, materiales y cotizar.</p>
     </div>
 
-    <div class="work-grid">
-      <!-- Nota: reemplaza estas fotos de ejemplo por fotos reales de tus proyectos -->
-      <!-- Cada trabajo: imagen + título + materiales + descripción + ubicación/dimensiones -->
-      <article class="work-card" data-category="cocinas">
-        <div class="work-thumb">
-          <img src="public/ac_muebleria/trabajos/cocina-01.png" alt="Cocina en L | Capri + Cuarzo negro">
-        </div>
-        <div class="work-body">
-          <h2>Cocina en L</h2>
-           <h3>Melamina Capri + Cuarzo negro</h3>
-          <p>Módulos altos y bajos en melamina Capri RH, tiradores ocultos y cubierta de Cuarzo negro.</p>
-          <div class="work-meta"><span>Independencia</span><span>450 × 60 cm</span></div>
-        </div>
-      </article>
+    <!-- Carrusel de fotos limpio y fluido con flechas flotantes laterales -->
+    <div class="works-carousel-wrapper" id="worksCarouselWrapper">
+      <!-- Botón Flotante Lateral Izquierdo -->
+      <button class="carousel-float-arrow prev" id="carouselPrevBtn" aria-label="Ver proyectos anteriores" title="Anterior">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
 
-      <article class="work-card" data-category="closets">
-        <div class="work-thumb">
-          <img src="public/ac_muebleria/trabajos/vestidor-01.png" alt="Closet modular: Toquilla">
-        </div>
-        <div class="work-body">
-          <h2>Closet modular</h2>
-           <h3>Melmina Toquilla + Jaladores de aluminio</h3>
-          <p>Closet con iluminación LED interna, sabanera superior, cajonera y doble zona de percheros.</p>
-          <div class="work-meta"><span>Los Olivos</span><span>150 × 240 × 55 cm</span></div>
-        </div>
-      </article>
+      <!-- Botón Flotante Lateral Derecho -->
+      <button class="carousel-float-arrow next" id="carouselNextBtn" aria-label="Ver siguientes proyectos" title="Siguiente">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
 
-      <article class="work-card" data-category="tv">
-        <div class="work-thumb">
-          <img src="public/ac_muebleria/trabajos/mueble-tv-01.png" alt="Mueble de TV flotante con luz LED">
-        </div>
-        <div class="work-body">
-          <h2>Mueble de TV flotante</h2>
-          <h3>Melamina blanca + Wall panel + SPC</h3>
-          <p>Repisas abiertas y compartimento cerrado para consolas y cables.</p>
-          <div class="work-meta"><span>SJL</span><span>240 × 40 × 45 cm</span></div>
-        </div>
-      </article>
+      <div class="works-carousel-viewport" id="worksCarouselViewport" tabindex="0" role="region" aria-label="Carrusel de proyectos">
+        <div class="works-carousel-track" id="worksCarouselTrack">
+          <!-- Card 01: Cocina en L -->
+          <article class="project-card" data-index="0" role="button" tabindex="0" aria-label="Abrir detalles de Cocina en L">
+            <div class="project-card-media">
+              <img src="public/ac_muebleria/trabajos/cocina-01.png" alt="Cocina en L | Melamina Capri + Cuarzo negro" class="project-card-img" loading="lazy">
+              <div class="project-card-overlay"></div>
+              <div class="project-badge-top">
+                <span class="p-badge-cat">Cocinas</span>
+                <span class="p-badge-num">01</span>
+              </div>
+              <div class="project-card-action-hint">
+                <span class="action-hint-pill">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                  Ver detalles
+                </span>
+              </div>
+            </div>
+            <div class="project-card-footer">
+              <div class="p-card-text">
+                <h3 class="p-card-title">Cocina en L</h3>
+                <span class="p-card-sub">Capri + Cuarzo negro</span>
+              </div>
+              <span class="p-card-loc">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Independencia
+              </span>
+            </div>
+          </article>
 
-      <article class="work-card" data-category="dormitorio">
-        <div class="work-thumb">
-          <img src="public/ac_muebleria/trabajos/organizador-01.png" alt="Mueble organizador: Melamina blanca + jaladores negros">
-        </div>
-        <div class="work-body">
-          <h2>Mueble organizador</h2>
-           <h3>Melamina blanca + jaladores negros</h3>
-          <p>Mueble a medida para almacenaje debajo de escalera + recibidor elegante.</p>
-          <div class="work-meta"><span>Comas</span><span>140 × 180 × 100 cm</span></div>
-        </div>
-      </article>
+          <!-- Card 02: Closet modular -->
+          <article class="project-card" data-index="1" role="button" tabindex="0" aria-label="Abrir detalles de Closet modular">
+            <div class="project-card-media">
+              <img src="public/ac_muebleria/trabajos/vestidor-01.png" alt="Closet modular: Melamina Toquilla" class="project-card-img" loading="lazy">
+              <div class="project-card-overlay"></div>
+              <div class="project-badge-top">
+                <span class="p-badge-cat">Closets & Vestidores</span>
+                <span class="p-badge-num">02</span>
+              </div>
+              <div class="project-card-action-hint">
+                <span class="action-hint-pill">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                  Ver detalles
+                </span>
+              </div>
+            </div>
+            <div class="project-card-footer">
+              <div class="p-card-text">
+                <h3 class="p-card-title">Closet modular</h3>
+                <span class="p-card-sub">Melamina Toquilla + LED</span>
+              </div>
+              <span class="p-card-loc">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Los Olivos
+              </span>
+            </div>
+          </article>
 
-      <article class="work-card" data-category="oficina">
-        <div class="work-thumb">
-          <img src="public/ac_muebleria/trabajos/escritorio-01.png" alt="Escritorio en L con cajonera">
-        </div>
-        <div class="work-body">
-          <h2>Oficina en casa</h2>
-          <h3>Melamina Espresso + Plomo</h3>
-          <p>Muebles de oficina, escritorio y mueble archivador con acabados de alta calidad.</p>
-          <div class="work-meta"><span>Carabyllo</span><span>180 × 240 cm</span></div>
-        </div>
-      </article>
+          <!-- Card 03: Mueble de TV flotante -->
+          <article class="project-card" data-index="2" role="button" tabindex="0" aria-label="Abrir detalles de Mueble de TV flotante">
+            <div class="project-card-media">
+              <img src="public/ac_muebleria/trabajos/mueble-tv-01.png" alt="Mueble de TV flotante con Wall panel" class="project-card-img" loading="lazy">
+              <div class="project-card-overlay"></div>
+              <div class="project-badge-top">
+                <span class="p-badge-cat">Muebles de TV</span>
+                <span class="p-badge-num">03</span>
+              </div>
+              <div class="project-card-action-hint">
+                <span class="action-hint-pill">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                  Ver detalles
+                </span>
+              </div>
+            </div>
+            <div class="project-card-footer">
+              <div class="p-card-text">
+                <h3 class="p-card-title">Mueble de TV flotante</h3>
+                <span class="p-card-sub">Blanco + Wall Panel + SPC</span>
+              </div>
+              <span class="p-card-loc">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                SJL
+              </span>
+            </div>
+          </article>
 
-      <article class="work-card" data-category="cocinas">
-        <div class="work-thumb">
-          <img src="public/ac_muebleria/trabajos/isla-cocina-01.png" alt="Isla de cocina con barra desayunadora">
+          <!-- Card 04: Mueble organizador -->
+          <article class="project-card" data-index="3" role="button" tabindex="0" aria-label="Abrir detalles de Mueble organizador">
+            <div class="project-card-media">
+              <img src="public/ac_muebleria/trabajos/organizador-01.png" alt="Mueble organizador bajo escalera" class="project-card-img" loading="lazy">
+              <div class="project-card-overlay"></div>
+              <div class="project-badge-top">
+                <span class="p-badge-cat">Organizadores</span>
+                <span class="p-badge-num">04</span>
+              </div>
+              <div class="project-card-action-hint">
+                <span class="action-hint-pill">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                  Ver detalles
+                </span>
+              </div>
+            </div>
+            <div class="project-card-footer">
+              <div class="p-card-text">
+                <h3 class="p-card-title">Mueble organizador</h3>
+                <span class="p-card-sub">Blanco + Jaladores negros</span>
+              </div>
+              <span class="p-card-loc">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Comas
+              </span>
+            </div>
+          </article>
+
+          <!-- Card 05: Oficina en casa -->
+          <article class="project-card" data-index="4" role="button" tabindex="0" aria-label="Abrir detalles de Oficina en casa">
+            <div class="project-card-media">
+              <img src="public/ac_muebleria/trabajos/escritorio-01.png" alt="Oficina en casa: Escritorio en L" class="project-card-img" loading="lazy">
+              <div class="project-card-overlay"></div>
+              <div class="project-badge-top">
+                <span class="p-badge-cat">Oficina en Casa</span>
+                <span class="p-badge-num">05</span>
+              </div>
+              <div class="project-card-action-hint">
+                <span class="action-hint-pill">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                  Ver detalles
+                </span>
+              </div>
+            </div>
+            <div class="project-card-footer">
+              <div class="p-card-text">
+                <h3 class="p-card-title">Oficina en casa</h3>
+                <span class="p-card-sub">Espresso + Plomo RH</span>
+              </div>
+              <span class="p-card-loc">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Carabayllo
+              </span>
+            </div>
+          </article>
+
+          <!-- Card 06: Mueble bar -->
+          <article class="project-card" data-index="5" role="button" tabindex="0" aria-label="Abrir detalles de Mueble bar">
+            <div class="project-card-media">
+              <img src="public/ac_muebleria/trabajos/isla-cocina-01.png" alt="Mueble bar con iluminación y vitrinas" class="project-card-img" loading="lazy">
+              <div class="project-card-overlay"></div>
+              <div class="project-badge-top">
+                <span class="p-badge-cat">Bares & Cocinas</span>
+                <span class="p-badge-num">06</span>
+              </div>
+              <div class="project-card-action-hint">
+                <span class="action-hint-pill">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                  Ver detalles
+                </span>
+              </div>
+            </div>
+            <div class="project-card-footer">
+              <div class="p-card-text">
+                <h3 class="p-card-title">Mueble bar</h3>
+                <span class="p-card-sub">Espresso + Puertas vidriadas</span>
+              </div>
+              <span class="p-card-loc">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                La Molina
+              </span>
+            </div>
+          </article>
         </div>
-        <div class="work-body">
-          <h2>Mueble bar</h2>
-           <h3>Melamina Espresso y Gris + Cuarzo.</h3>
-          <p>Mueble bar con iluminación LED, puertas vidriadas con sistema cierre lento.</p>
-          <div class="work-meta"><span>La Molina</span><span>170 × 240 x 50 cm</span></div>
+      </div>
+
+      <!-- Paginación con dots interactivos y mensaje táctil -->
+      <div class="carousel-bottom-bar">
+        <div class="carousel-dots" id="carouselDots">
+          <!-- Dots generados/sincronizados dinámicamente -->
         </div>
-      </article>
+        <div class="carousel-hint-mobile">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <span>Desliza para ver más</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
+<!-- ============ MODAL EMERGENTE DE DETALLES DEL PROYECTO ============ -->
+<div class="project-modal" id="projectModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalProjectTitle">
+  <div class="project-modal-backdrop" id="projectModalBackdrop"></div>
+  <div class="project-modal-dialog">
+    <!-- Botón de cierre -->
+    <button class="modal-close-btn" id="modalCloseBtn" aria-label="Cerrar ventana emergente" title="Cerrar (Esc)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+
+    <!-- Contenido del modal -->
+    <div class="modal-content-grid">
+      <!-- Columna Izquierda: Fotografía de alta definición + Controles de navegación -->
+      <div class="modal-media-col">
+        <div class="modal-img-wrap">
+          <img src="public/ac_muebleria/trabajos/cocina-01.png" alt="Fotografía del proyecto" id="modalImg" class="modal-img">
+          <div class="modal-img-overlay"></div>
+          <div class="modal-badge-tag">
+            <span class="badge-cat" id="modalCategory">Cocinas</span>
+            <span class="badge-num" id="modalCounter">01 / 06</span>
+          </div>
+        </div>
+        <!-- Navegación entre proyectos dentro del modal -->
+        <div class="modal-nav-toolbar">
+          <button class="modal-nav-arrow prev" id="modalPrevBtn" aria-label="Proyecto anterior" title="Anterior (←)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
+            <span>Anterior</span>
+          </button>
+          <div class="modal-nav-dots" id="modalNavDots"></div>
+          <button class="modal-nav-arrow next" id="modalNextBtn" aria-label="Siguiente proyecto" title="Siguiente (→)">
+            <span>Siguiente</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Columna Derecha: Ficha Técnica & Botón Cotizar -->
+      <div class="modal-info-col">
+        <div class="modal-header">
+          <span class="modal-pretitle" id="modalPretitle">Proyecto realizado en Lima</span>
+          <h2 class="modal-title" id="modalProjectTitle">Cocina en L</h2>
+          <h3 class="modal-subtitle" id="modalProjectSubtitle">Melamina Capri + Cuarzo negro</h3>
+        </div>
+
+        <p class="modal-desc" id="modalDesc">Módulos altos y bajos en melamina Capri RH resistente a la humedad, tiradores gola ocultos y cubierta de Cuarzo negro pulido.</p>
+
+        <!-- Especificaciones técnicas detalladas -->
+        <div class="modal-specs-section">
+          <h4 class="specs-title">Ficha Técnica</h4>
+          <div class="modal-specs-grid">
+            <div class="modal-spec-card">
+              <span class="m-spec-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </span>
+              <div class="m-spec-details">
+                <span class="m-spec-label">Ubicación</span>
+                <strong class="m-spec-val" id="modalLocation">Independencia</strong>
+              </div>
+            </div>
+
+            <div class="modal-spec-card">
+              <span class="m-spec-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              </span>
+              <div class="m-spec-details">
+                <span class="m-spec-label">Dimensiones</span>
+                <strong class="m-spec-val" id="modalDimensions">450 × 60 cm</strong>
+              </div>
+            </div>
+
+            <div class="modal-spec-card">
+              <span class="m-spec-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+              </span>
+              <div class="m-spec-details">
+                <span class="m-spec-label">Material</span>
+                <strong class="m-spec-val" id="modalMaterial">Melamina Capri RH 18mm</strong>
+              </div>
+            </div>
+
+            <div class="modal-spec-card">
+              <span class="m-spec-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </span>
+              <div class="m-spec-details">
+                <span class="m-spec-label">Acabado</span>
+                <strong class="m-spec-val" id="modalFinish">Tiradores ocultos + Cuarzo</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botón de acción principal: Cotizar este diseño específico por WhatsApp -->
+        <div class="modal-actions">
+          <a href="#" class="btn btn-wa modal-btn-wa" id="modalWaBtn" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.82.49 3.53 1.35 5L2 22l5.16-1.33A9.96 9.96 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm4.95 14.05c-.21.58-1.2 1.13-1.67 1.2-.47.07-.94.13-2.8-.62-2.22-.9-3.66-3.15-3.77-3.3-.11-.15-.9-1.2-.9-2.29s.57-1.63.77-1.85c.2-.22.44-.28.59-.28.15 0 .3 0 .43.01.14.01.33-.05.51.39.19.45.64 1.57.7 1.69.06.12.1.26.02.42-.08.16-.12.26-.24.4-.12.14-.25.31-.36.42-.12.12-.25.25-.11.49.14.24.63 1.04 1.35 1.68.93.83 1.71 1.09 1.95 1.21.24.12.38.1.52-.06.14-.16.6-.7.76-.94.16-.24.32-.2.53-.12.21.08 1.34.63 1.57.74.23.11.38.17.44.27.06.1.06.58-.15 1.16z"/></svg>
+            <span>Cotizar este proyecto por WhatsApp</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ============ PROCESO ============ -->
 <!-- SECCIÓN PROCESO: timeline interactivo de 5 pasos (desktop horizontal, móvil vertical) -->
-<section id="proceso" class="reveal">
+<section id="proceso">
   <div class="container">
     <div class="head-row">
       <div>
@@ -287,19 +509,19 @@
     </div>
     <div class="brands-grid">
       <!-- Cada marca: etiqueta + logo + descripción + enlace "Ver catálogo" -->
-      <a class="brand-card" href="maderin.html">
+      <a class="brand-card" href="maderin.html" id="brandCardMaderin">
         <span class="tag">Mobiliario Infantil</span>
         <img class="brand-logo" src="public/maderin/logo-white.png" alt="Maderin" />
         <p>Mobiliario infantil personalizado para los más pequeños de la casa.</p>
         <span class="go">Ver catálogo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </a>
-      <a class="brand-card" href="cdm.html">
+      <a class="brand-card" href="cdm.html" id="brandCardCdm">
         <span class="tag">Detalles para el hogar</span>
         <img class="brand-logo" src="public/cdm/logo-white.png" alt="Corazón de Madera" />
         <p>Detalles y regalos personalizados en madera y melamina.</p>
         <span class="go">Ver catálogo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </a>
-      <a class="brand-card" href="https://modulax-landing.vercel.app/" target="_blank" rel="noopener">
+      <a class="brand-card" href="https://modulax-landing.vercel.app/" target="_blank" rel="noopener" id="brandCardModulax">
         <span class="tag">Cotizador de mobiliario</span>
         <img class="brand-logo" src="public/logo-modulax.svg" alt="Modulax" />
         <p>Cotizador de mobiliario en melamina: cotiza todo en minutos.</p>
@@ -318,7 +540,7 @@
         <div class="footer-brand"><img src="public/ac_muebleria/logo-h.png" alt="AC Mueblería" class="footer-logo"></div>
         <p>Diseño y fabricación de mobiliario personalizado.</p>
         <div style="margin-top:22px;">
-          <a class="btn btn-wa" data-wa-message="Hola, quiero cotizar un mueble a medida con AC Mueblería.">
+          <a class="btn btn-wa" id="footerWaBtn" data-wa-message="Hola, quiero cotizar un mueble a medida con AC Mueblería.">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
             Escríbenos por WhatsApp
           </a>
@@ -326,29 +548,39 @@
       </div>
       <div class="footer-col">
         <h4>Navegación</h4>
-        <a href="#elegirnos">Por qué elegirnos</a>
         <a href="#trabajos">Trabajos</a>
+        <a href="#elegirnos">Por qué elegirnos</a>
         <a href="#proceso">Cómo trabajamos</a>
         <a href="#marcas">Nuestras marcas</a>
       </div>  
       <div class="footer-col">
         <h4>Nuestras marcas</h4>
-        <a href="maderin.html">Maderin</a>
-        <a href="cdm.html">Corazón de Madera</a>
+        <a href="maderin.html">Maderin — Mobiliario Infantil</a>
+        <a href="cdm.html">Corazón de Madera — Regalos</a>
         <a href="https://modulax-landing.vercel.app/" target="_blank" rel="noopener">Cotizador Modulax</a>
       </div>
     </div>
     <div class="footer-bottom">
       <span>© 2026 AC Mueblería. Todos los derechos reservados.</span>
-      <span>WhatsApp: +51 943 613 883</span>
+      <span>WhatsApp: +51 943 613 883 · Lima, Perú</span>
     </div>
   </div>
 </footer>
 
+<!-- Botón Volver Arriba -->
+<button id="backToTop" class="back-to-top" aria-label="Volver arriba">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+
 <!-- WhatsApp flotante: botón fijo abajo-derecha, abre chat con mensaje prellenado -->
-<a class="wa-float" data-wa-float data-wa-message="Hola, quiero más información sobre AC Mueblería." aria-label="Escríbenos por WhatsApp" target="_blank" rel="noopener">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
-</a>
+<div class="wa-float-wrap">
+  <div class="wa-float-tooltip">
+    <span class="wa-status-dot"></span> ¿Tienes una idea? Escríbenos
+  </div>
+  <a class="wa-float" id="mainWaFloat" data-wa-float data-wa-message="Hola, quiero más información sobre AC Mueblería y cotizar un proyecto." aria-label="Escríbenos por WhatsApp" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
+  </a>
+</div>
 
 <!-- Scripts: GSAP + ScrollTrigger para animaciones, main.js para lógica -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>

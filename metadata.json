@@ -1,0 +1,6 @@
+{
+  "name": "AC Mueblería",
+  "description": "Sitio web para AC Mueblería - Mobiliario a medida, cocinas, closets y proyectos de carpintería.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

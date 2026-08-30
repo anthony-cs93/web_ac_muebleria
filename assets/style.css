@@ -1229,10 +1229,18 @@ body.theme-ac .product-card {
   transition: border-color 0.25s ease, background-color 0.25s ease;
 }
 body.theme-ac .feature-card:hover,
-body.theme-ac .work-card:hover,
 body.theme-ac .testi-card:hover {
   transform: none !important;  /* sin elevación */
   border-color: var(--accent); /* solo cambia borde a amarillo */
+  box-shadow: none !important;
+}
+/* Work cards — animación hover tipo feature-card CDM (elevación sin redondeo) */
+body.theme-ac .work-card {
+  transition: border-color .2s ease, transform .2s ease, background-color .25s ease;
+}
+body.theme-ac .work-card:hover {
+  transform: translateY(-3px) !important;  /* sube 3px, igual que CDM */
+  border-color: var(--accent); /* borde amarillo */
   box-shadow: none !important;
 }
 body.theme-ac .feature-card:hover .feature-img {

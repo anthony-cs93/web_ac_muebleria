@@ -2430,6 +2430,10 @@ body.theme-ac #proceso {
     transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 0;
   }
+  body.theme-ac #elegirnos .feature-card[data-feature-index="0"] .feature-img { background-image: url('/public/ac_muebleria/diseño.png'); }
+  body.theme-ac #elegirnos .feature-card[data-feature-index="1"] .feature-img { background-image: url('/public/ac_muebleria/materiales.png'); }
+  body.theme-ac #elegirnos .feature-card[data-feature-index="2"] .feature-img { background-image: url('/public/ac_muebleria/fabricacion.png'); }
+  body.theme-ac #elegirnos .feature-card[data-feature-index="3"] .feature-img { background-image: url('/public/ac_muebleria/instalacion.png'); }
   body.theme-ac #elegirnos .feature-card .feature-img::after {
     content: "";
     position: absolute;
@@ -2697,6 +2701,10 @@ body.theme-ac .process-step.active .process-content {
     transition: opacity 0.55s ease, transform 0.65s ease;
     z-index: 0;
   }
+  body.theme-ac #elegirnos .feature-card[data-feature-index="0"] .feature-img { background-image: url('/public/ac_muebleria/diseño.png'); }
+  body.theme-ac #elegirnos .feature-card[data-feature-index="1"] .feature-img { background-image: url('/public/ac_muebleria/materiales.png'); }
+  body.theme-ac #elegirnos .feature-card[data-feature-index="2"] .feature-img { background-image: url('/public/ac_muebleria/fabricacion.png'); }
+  body.theme-ac #elegirnos .feature-card[data-feature-index="3"] .feature-img { background-image: url('/public/ac_muebleria/instalacion.png'); }
   body.theme-ac #elegirnos .feature-card .feature-img::after {
     content: "";
     position: absolute;

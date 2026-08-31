@@ -1235,15 +1235,24 @@ body.theme-ac .nav-links a:hover {
   color: var(--accent);  /* hover amarillo */
 }
 
-/* Hero Flat — carbón puro, acentos amarillos */
+/* Hero Flat — carbón puro, acentos amarillos, altura reducida y proporcionada */
 body.theme-ac .hero {
   background: var(--off-black);  /* carbón */
+  min-height: 72vh;
+  padding: 56px 0 46px;
+  box-sizing: border-box;
 }
 body.theme-ac .hero-copy h1 em {
   color: var(--accent);  /* palabra destacada amarilla */
 }
 body.theme-ac .hero-badges {
   border-color: var(--line-on-dark);  /* separador muy sutil */
+  margin-top: 30px;
+  padding-top: 18px;
+  gap: 36px;
+}
+body.theme-ac .hero-actions {
+  margin-top: 24px;
 }
 body.theme-ac .hero-badge b {
   color: var(--accent);  /* número del badge amarillo */
@@ -1296,41 +1305,21 @@ body.theme-ac .product-card {
   box-shadow: none !important;            /* sin sombra */
   transition: border-color 0.25s ease, background-color 0.25s ease;
 }
-body.theme-ac .feature-card:hover,
 body.theme-ac .work-card:hover,
 body.theme-ac .testi-card:hover {
   transform: none !important;  /* sin elevación */
   border-color: var(--accent); /* solo cambia borde a amarillo */
   box-shadow: none !important;
 }
-body.theme-ac .feature-card:hover .feature-img {
-  opacity: 0.8;  /* imagen aparece al 80% en hover */
-}
-body.theme-ac .feature-card:hover .feature-img::after {
-  opacity: 0.2;  /* overlay de la imagen más transparente */
-}
-body.theme-ac .feature-card:hover h3 {
-  transform: translateY(75px);  /* título se desplaza hacia abajo */
-}
-body.theme-ac .feature-card:hover p {
-  opacity: 0;  /* descripción desaparece en hover */
-}
 body.theme-ac .feature-card h3,
 body.theme-ac .work-body h3,
 body.theme-ac .testi-card p.quote {
   color: var(--paper);  /* títulos crema */
 }
-body.theme-ac .feature-card h3 {
-  transition: transform 0.35s ease;  /* animación del título */
-}
-body.theme-ac .feature-card p,
 body.theme-ac .work-body p,
 body.theme-ac .testi-who,
 body.theme-ac .testi-note {
   color: rgba(242,236,223,.6);  /* texto crema suave */
-}
-body.theme-ac .feature-card p {
-  transition: opacity 0.35s ease;  /* animación de desvanecimiento */
 }
 body.theme-ac .feature-num {
   color: var(--accent-muted);  /* número dorado apagado */
@@ -2356,8 +2345,8 @@ body.theme-ac #proceso {
   }
   body.theme-ac #elegirnos .feature-card {
     position: relative;
-    min-height: 380px;
-    padding: 42px 30px 38px;
+    min-height: 400px;
+    padding: 34px 28px 30px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -2365,47 +2354,115 @@ body.theme-ac #proceso {
     border: 1px solid var(--line-on-dark);
     border-radius: 8px !important;
     overflow: hidden;
-    transition: border-color 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: border-color 0.4s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
   }
-  body.theme-ac #elegirnos .feature-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-6px) !important;
-    box-shadow: 0 20px 42px rgba(0, 0, 0, 0.65) !important;
+
+  body.theme-ac #elegirnos .feature-card-header {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 24px;
+    pointer-events: none;
   }
   body.theme-ac #elegirnos .feature-card .feature-icon {
-    width: 44px;
-    height: 44px;
-    margin-bottom: 20px;
+    width: 42px;
+    height: 42px;
     color: var(--accent);
+    margin: 0;
+    transition: transform 0.4s ease, color 0.3s ease;
   }
   body.theme-ac #elegirnos .feature-card .feature-num {
+    font-family: var(--font-display);
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.05em;
     color: var(--accent);
+    margin: 0;
   }
+
+  body.theme-ac #elegirnos .feature-card-body {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: flex-start;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  body.theme-ac #elegirnos .feature-card .feature-title,
   body.theme-ac #elegirnos .feature-card h3 {
     font-size: 22px;
-    line-height: 1.28;
-    margin-top: 18px;
+    line-height: 1.25;
+    margin: 0 0 12px 0;
     color: var(--paper);
-    transform: none !important;
+    transform: translateY(0);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease, text-shadow 0.4s ease;
+    will-change: transform;
   }
+  body.theme-ac #elegirnos .feature-card .feature-desc,
   body.theme-ac #elegirnos .feature-card p {
     font-size: 14.5px;
     line-height: 1.6;
-    margin-top: 12px;
+    margin: 0;
     color: rgba(242, 236, 223, 0.75);
-    opacity: 1 !important;
+    max-height: 140px;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+    will-change: transform, opacity;
   }
+
   body.theme-ac #elegirnos .feature-card .feature-img {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
     opacity: 0;
-    transform: scale(1.04);
-    transition: opacity 0.4s ease, transform 0.4s ease;
+    transform: scale(1.08);
+    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 0;
   }
-  body.theme-ac #elegirnos .feature-card:hover .feature-img {
-    opacity: 0.35;
+  body.theme-ac #elegirnos .feature-card .feature-img::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(16, 16, 16, 0.78) 0%, rgba(16, 16, 16, 0.22) 42%, rgba(12, 12, 12, 0.94) 100%);
+  }
+
+  /* Estado normal y hover sutil */
+  body.theme-ac #elegirnos .feature-card:hover {
+    border-color: rgba(175, 143, 26, 0.4);
+    transform: translateY(-3px);
+  }
+
+  /* Estado Descubierto / Revelado en Desktop (activado al pasar la mitad de la pantalla) */
+  body.theme-ac #elegirnos .feature-card.is-discovered {
+    border-color: rgba(175, 143, 26, 0.85);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 42px rgba(0, 0, 0, 0.7) !important;
+  }
+  body.theme-ac #elegirnos .feature-card.is-discovered .feature-img {
+    opacity: 1;
     transform: scale(1);
+  }
+  body.theme-ac #elegirnos .feature-card.is-discovered .feature-desc {
+    opacity: 0;
+    transform: translateY(14px);
+    pointer-events: none;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  body.theme-ac #elegirnos .feature-card.is-discovered .feature-title,
+  body.theme-ac #elegirnos .feature-card.is-discovered h3 {
+    transform: translateY(var(--title-travel, 205px));
+    color: #FFFFFF;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95);
   }
 
   body.theme-ac #proceso {
@@ -2515,6 +2572,16 @@ body.theme-ac .process-step.active .process-content {
 
 /* --- Mobile y Tablet: vertical (pasos apilados y tarjetas verticales) --- */
 @media (max-width: 980px) {
+  body.theme-ac .hero {
+    min-height: auto;
+    padding: 48px 0 40px;
+  }
+  body.theme-ac .hero-badges {
+    margin-top: 24px;
+    padding-top: 16px;
+    gap: 24px;
+  }
+
   /* Elegirnos en móvil: todos los cards en forma vertical con desplazamiento fluido */
   body.theme-ac #elegirnos {
     min-height: auto;
@@ -2548,11 +2615,11 @@ body.theme-ac .process-step.active .process-content {
     right: auto;
     width: 100%;
     height: auto;
-    min-height: 200px;
+    min-height: 240px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    padding: 28px 24px 26px;
+    justify-content: space-between;
+    padding: 26px 22px 24px;
     background: #191919;
     border: 1px solid rgba(255, 255, 255, 0.12);
     box-sizing: border-box;
@@ -2562,35 +2629,100 @@ body.theme-ac .process-step.active .process-content {
     opacity: 1;
     transform: none;
     visibility: visible;
+    transition: border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
   }
-  body.theme-ac #elegirnos .feature-card .feature-img {
-    opacity: 0.22;
-    transform: none;
-    transition: opacity 0.3s ease;
-  }
-  body.theme-ac #elegirnos .feature-card h3 {
-    font-size: 19px;
-    line-height: 1.3;
-    margin-top: 12px;
-    transform: none !important;
-    color: var(--paper);
-  }
-  body.theme-ac #elegirnos .feature-card p {
-    font-size: 14px;
-    margin-top: 8px;
-    line-height: 1.55;
-    opacity: 1 !important;
-    color: rgba(242, 236, 223, 0.78);
+  body.theme-ac #elegirnos .feature-card-header {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 18px;
+    pointer-events: none;
   }
   body.theme-ac #elegirnos .feature-card .feature-icon {
     width: 36px;
     height: 36px;
-    margin-bottom: 8px;
+    margin: 0;
     color: var(--accent);
   }
   body.theme-ac #elegirnos .feature-card .feature-num {
+    font-family: var(--font-display);
     font-size: 15px;
+    font-weight: 700;
     color: var(--accent);
+    margin: 0;
+  }
+  body.theme-ac #elegirnos .feature-card-body {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: flex-start;
+    width: 100%;
+    pointer-events: none;
+  }
+  body.theme-ac #elegirnos .feature-card .feature-title,
+  body.theme-ac #elegirnos .feature-card h3 {
+    font-size: 20px;
+    line-height: 1.28;
+    margin: 0 0 8px 0;
+    color: var(--paper);
+    transform: translateY(0);
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), color 0.35s ease, text-shadow 0.35s ease;
+    will-change: transform;
+  }
+  body.theme-ac #elegirnos .feature-card .feature-desc,
+  body.theme-ac #elegirnos .feature-card p {
+    font-size: 14px;
+    line-height: 1.55;
+    margin: 0;
+    color: rgba(242, 236, 223, 0.78);
+    max-height: 120px;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+    will-change: transform, opacity;
+  }
+  body.theme-ac #elegirnos .feature-card .feature-img {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transform: scale(1.08);
+    transition: opacity 0.55s ease, transform 0.65s ease;
+    z-index: 0;
+  }
+  body.theme-ac #elegirnos .feature-card .feature-img::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(16, 16, 16, 0.78) 0%, rgba(16, 16, 16, 0.25) 42%, rgba(12, 12, 12, 0.94) 100%);
+  }
+
+  /* Estado Descubierto / Revelado en Móvil (activado al pasar la mitad de la pantalla) */
+  body.theme-ac #elegirnos .feature-card.is-discovered {
+    border-color: rgba(175, 143, 26, 0.85);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.6);
+  }
+  body.theme-ac #elegirnos .feature-card.is-discovered .feature-img {
+    opacity: 1;
+    transform: scale(1);
+  }
+  body.theme-ac #elegirnos .feature-card.is-discovered .feature-desc {
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  body.theme-ac #elegirnos .feature-card.is-discovered .feature-title,
+  body.theme-ac #elegirnos .feature-card.is-discovered h3 {
+    transform: translateY(var(--title-travel, 85px));
+    color: #FFFFFF;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95);
   }
 
   body.theme-ac .process-h-line { display: none; } /* oculta línea horizontal */

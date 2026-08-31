@@ -69,11 +69,10 @@
           </a>
           <a class="btn btn-ghost-dark" href="#trabajos">Ver nuestros trabajos</a>
         </div>
-        <!-- Badges: estadísticas clave (+300 proyectos, 100% propia, a medida) -->
+        <!-- Badges: estadísticas clave (+300 proyectos, 100% propia) -->
         <div class="hero-badges">
           <div class="hero-badge"><b class="hero-counter" data-target="300" data-prefix="+">+300</b>proyectos entregados</div>
           <div class="hero-badge"><b class="hero-counter" data-target="100" data-suffix="%">100%</b>fabricación propia</div>
-          <div class="hero-badge"><b class="hero-counter-text" data-text="a medida">a medida</b>en cada milímetro</div>
         </div>
       </div>
     </div>
@@ -94,33 +93,49 @@
   <div class="container features-container">
     <div class="features-grid">
       <!-- Cada feature: icono SVG + número + título + descripción + imagen de fondo -->
-      <div class="feature-card">
+      <div class="feature-card" data-feature-index="0">
         <div class="feature-img" style="background-image:url('public/ac_muebleria/diseño.png')"></div>
-        <svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 40 28 20l6 6L14 46"/><path d="M26 18l4-4 8 8-4 4"/><path d="M34 10l4-4 4 4-4 4"/></svg>
-        <div class="feature-num">01</div>
-        <h3>Diseño a tu medida</h3>
-        <p>Cada mueble se proyecta según tu espacio real, no al revés. Tomamos medidas exactas antes de fabricar.</p>
+        <div class="feature-card-header">
+          <svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 40 28 20l6 6L14 46"/><path d="M26 18l4-4 8 8-4 4"/><path d="M34 10l4-4 4 4-4 4"/></svg>
+          <div class="feature-num">01</div>
+        </div>
+        <div class="feature-card-body">
+          <h3 class="feature-title">Diseño a tu medida</h3>
+          <p class="feature-desc">Cada mueble se proyecta según tu espacio real, no al revés. Tomamos medidas exactas antes de fabricar.</p>
+        </div>
       </div>
-      <div class="feature-card">
+      <div class="feature-card" data-feature-index="1">
         <div class="feature-img" style="background-image:url('public/ac_muebleria/materiales.png')"></div>
-        <svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 6 6 15v18l18 9 18-9V15Z"/><path d="M6 15l18 9 18-9"/><path d="M24 24v18"/></svg>
-        <div class="feature-num">02</div>
-        <h3>Materiales de calidad</h3>
-        <p>Melamina, MDF y maderas seleccionadas, con proveedores de confianza y acabados que duran.</p>
+        <div class="feature-card-header">
+          <svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 6 6 15v18l18 9 18-9V15Z"/><path d="M6 15l18 9 18-9"/><path d="M24 24v18"/></svg>
+          <div class="feature-num">02</div>
+        </div>
+        <div class="feature-card-body">
+          <h3 class="feature-title">Materiales de calidad</h3>
+          <p class="feature-desc">Melamina, MDF y maderas seleccionadas, con proveedores de confianza y acabados que duran.</p>
+        </div>
       </div>
-      <div class="feature-card">
+      <div class="feature-card" data-feature-index="2">
         <div class="feature-img" style="background-image:url('public/ac_muebleria/fabricacion.png')"></div>
-        <svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="14" width="32" height="24" rx="1"/><path d="M8 22h32"/><path d="M16 30h6M26 30h6"/></svg>
-        <div class="feature-num">03</div>
-        <h3>Fabricación propia</h3>
-        <p>Todo se produce en nuestro taller, bajo nuestro control de calidad, de principio a fin.</p>
+        <div class="feature-card-header">
+          <svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="14" width="32" height="24" rx="1"/><path d="M8 22h32"/><path d="M16 30h6M26 30h6"/></svg>
+          <div class="feature-num">03</div>
+        </div>
+        <div class="feature-card-body">
+          <h3 class="feature-title">Fabricación propia</h3>
+          <p class="feature-desc">Todo se produce en nuestro taller, bajo nuestro control de calidad, de principio a fin.</p>
+        </div>
       </div>
-      <div class="feature-card">
+      <div class="feature-card" data-feature-index="3">
         <div class="feature-img" style="background-image:url('public/ac_muebleria/instalacion.png')"></div>
-        <svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 27l7 7L39 11"/></svg>
-        <div class="feature-num">04</div>
-        <h3>Instalación incluida</h3>
-        <p>Entregamos tu mueble listo para usar en su lugar, sin sorpresas ni cobros extra de último momento.</p>
+        <div class="feature-card-header">
+          <svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 27l7 7L39 11"/></svg>
+          <div class="feature-num">04</div>
+        </div>
+        <div class="feature-card-body">
+          <h3 class="feature-title">Instalación incluida</h3>
+          <p class="feature-desc">Entregamos tu mueble listo para usar en su lugar, sin sorpresas ni cobros extra de último momento.</p>
+        </div>
       </div>
     </div>
   </div>

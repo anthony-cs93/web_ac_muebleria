@@ -1182,6 +1182,90 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // --- Revelado interactivo de imágenes al hacer scroll en "Por qué elegirnos" ---
+  // La card original se muestra tal cual hasta la mitad de la pantalla; pasado la mitad se descubre la imagen.
+  function initWhyChooseUsScrollReveal() {
+    const section = document.getElementById("elegirnos");
+    if (!section) return;
+
+    const cards = Array.from(section.querySelectorAll(".feature-card"));
+    if (!cards.length) return;
+
+    // Calcular dinámicamente la distancia exacta que recorre el título hasta el fondo del card
+    function computeTitleTravel() {
+      cards.forEach((card) => {
+        const header = card.querySelector(".feature-card-header");
+        const title = card.querySelector(".feature-title") || card.querySelector("h3");
+        if (title) {
+          const cardStyle = window.getComputedStyle(card);
+          const padTop = parseFloat(cardStyle.paddingTop) || 30;
+          const padBottom = parseFloat(cardStyle.paddingBottom) || 30;
+          const headerH = header ? header.offsetHeight : 44;
+          const availableH = card.clientHeight - headerH - padTop - padBottom;
+          const travel = Math.max(50, availableH - title.offsetHeight);
+          card.style.setProperty("--title-travel", travel + "px");
+        }
+      });
+    }
+
+    // Permitir clic para alternar manualmente si el usuario lo desea
+    cards.forEach((card) => {
+      card.addEventListener("click", () => {
+        card.classList.toggle("is-discovered");
+      });
+    });
+
+    let ticking = false;
+    function updateCardsOnScroll() {
+      // 45% de la altura de la pantalla (calibración óptima de revelado al avanzar en el viewport)
+      const triggerThreshold = window.innerHeight * 0.45;
+      cards.forEach((card) => {
+        const rect = card.getBoundingClientRect();
+        const cardCenterY = rect.top + (rect.height / 2);
+        // Si el centro de la tarjeta ya cruzó el 45% de la pantalla hacia arriba
+        if (cardCenterY <= triggerThreshold && rect.bottom > 0) {
+          card.classList.add("is-discovered");
+        } else {
+          card.classList.remove("is-discovered");
+        }
+      });
+      ticking = false;
+    }
+
+    function onScrollOrResize() {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          computeTitleTravel();
+          updateCardsOnScroll();
+        });
+        ticking = true;
+      }
+    }
+
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize, { passive: true });
+
+    // Medición y evaluación inmediata inicial
+    computeTitleTravel();
+    updateCardsOnScroll();
+
+    // Sincronización con GSAP ScrollTrigger al 45% de la pantalla
+    if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
+      cards.forEach((card) => {
+        ScrollTrigger.create({
+          trigger: card,
+          start: "center 45%",
+          end: "bottom -200%",
+          onToggle: (self) => (self.isActive ? card.classList.add("is-discovered") : card.classList.remove("is-discovered")),
+          onLeaveBack: () => card.classList.remove("is-discovered")
+        });
+      });
+    }
+  }
+
+  // Inicializar Por qué elegirnos scroll reveal
+  initWhyChooseUsScrollReveal();
+
   // Inicializar Catálogo E-commerce Maderin si estamos en maderin.html
   initMaderinEcommerce();
 });

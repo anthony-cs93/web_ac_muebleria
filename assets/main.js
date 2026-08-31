@@ -1191,7 +1191,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const cards = Array.from(section.querySelectorAll(".feature-card"));
     if (!cards.length) return;
 
-    // Calcular dinámicamente la distancia exacta que recorre el título hasta el fondo del card
+    // Calcular dinámicamente la distancia exacta que recorre el título dejando un margen respecto a la base
     function computeTitleTravel() {
       cards.forEach((card) => {
         const header = card.querySelector(".feature-card-header");
@@ -1202,7 +1202,10 @@ document.addEventListener("DOMContentLoaded", () => {
           const padBottom = parseFloat(cardStyle.paddingBottom) || 30;
           const headerH = header ? header.offsetHeight : 44;
           const availableH = card.clientHeight - headerH - padTop - padBottom;
-          const travel = Math.max(50, availableH - title.offsetHeight);
+          // Margen adicional de separación respecto a la base de la tarjeta (28px en desktop, 18px en móvil)
+          const isMobile = window.innerWidth <= 980;
+          const extraBottomMargin = isMobile ? 18 : 28;
+          const travel = Math.max(30, availableH - title.offsetHeight - extraBottomMargin);
           card.style.setProperty("--title-travel", travel + "px");
         }
       });

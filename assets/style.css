@@ -2345,8 +2345,9 @@ body.theme-ac #proceso {
   }
   body.theme-ac #elegirnos .feature-card {
     position: relative;
-    min-height: 400px;
-    padding: 34px 28px 30px;
+    aspect-ratio: 1 / 1;
+    min-height: unset;
+    padding: 28px 24px 22px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -2366,19 +2367,19 @@ body.theme-ac #proceso {
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
     pointer-events: none;
   }
   body.theme-ac #elegirnos .feature-card .feature-icon {
-    width: 42px;
-    height: 42px;
+    width: 38px;
+    height: 38px;
     color: var(--accent);
     margin: 0;
     transition: transform 0.4s ease, color 0.3s ease;
   }
   body.theme-ac #elegirnos .feature-card .feature-num {
     font-family: var(--font-display);
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     letter-spacing: 0.05em;
     color: var(--accent);
@@ -2398,9 +2399,9 @@ body.theme-ac #proceso {
 
   body.theme-ac #elegirnos .feature-card .feature-title,
   body.theme-ac #elegirnos .feature-card h3 {
-    font-size: 22px;
+    font-size: 20px;
     line-height: 1.25;
-    margin: 0 0 12px 0;
+    margin: 0 0 8px 0;
     color: var(--paper);
     transform: translateY(0);
     transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease, text-shadow 0.4s ease;
@@ -2408,8 +2409,8 @@ body.theme-ac #proceso {
   }
   body.theme-ac #elegirnos .feature-card .feature-desc,
   body.theme-ac #elegirnos .feature-card p {
-    font-size: 14.5px;
-    line-height: 1.6;
+    font-size: 13.5px;
+    line-height: 1.5;
     margin: 0;
     color: rgba(242, 236, 223, 0.75);
     max-height: 140px;
@@ -2460,7 +2461,7 @@ body.theme-ac #proceso {
   }
   body.theme-ac #elegirnos .feature-card.is-discovered .feature-title,
   body.theme-ac #elegirnos .feature-card.is-discovered h3 {
-    transform: translateY(var(--title-travel, 205px));
+    transform: translateY(var(--title-travel, 175px));
     color: #FFFFFF;
     text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95);
   }
@@ -2720,7 +2721,7 @@ body.theme-ac .process-step.active .process-content {
   }
   body.theme-ac #elegirnos .feature-card.is-discovered .feature-title,
   body.theme-ac #elegirnos .feature-card.is-discovered h3 {
-    transform: translateY(var(--title-travel, 85px));
+    transform: translateY(var(--title-travel, 70px));
     color: #FFFFFF;
     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95);
   }

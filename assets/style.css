@@ -4066,5 +4066,115 @@ body.theme-ac .process-step.active .process-content {
   height: 22px;
 }
 
+/* ==========================================================================
+   MODAL DE COTIZACIÓN (AC Mueblería) — cotizador express
+   ========================================================================== */
+.quote-modal-dialog {
+  max-width: 620px;
+}
+.quote-modal-body {
+  padding: 34px 34px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.quote-modal-body .modal-header { margin-bottom: 0; }
+.quote-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.quote-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.quote-label {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: rgba(242,236,223,.6);
+}
+.quote-req { color: var(--accent); }
+.quote-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.quote-chip {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 9px 16px;
+  border: 1px solid var(--line-on-dark);
+  border-radius: 10px;
+  background: rgba(255,255,255,.03);
+  color: rgba(242,236,223,.72);
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease, color .2s ease;
+}
+.quote-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.quote-chip.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--off-black);
+  font-weight: 600;
+}
+.quote-chips.quote-chips-error .quote-chip { border-color: rgba(224,164,164,.55); }
+.quote-dim-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.quote-dim {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.quote-dim > span {
+  font-size: 12px;
+  color: rgba(242,236,223,.55);
+}
+.quote-input,
+.quote-textarea {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--paper);
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--line-on-dark);
+  border-radius: 8px;
+  padding: 11px 13px;
+  outline: none;
+  transition: border-color .2s ease, background .2s ease;
+}
+.quote-input::placeholder,
+.quote-textarea::placeholder { color: rgba(242,236,223,.34); }
+.quote-input:focus,
+.quote-textarea:focus {
+  border-color: var(--accent);
+  background: rgba(255,255,255,.06);
+}
+.quote-textarea {
+  resize: vertical;
+  min-height: 84px;
+  line-height: 1.5;
+}
+.quote-hint {
+  margin: 0;
+  font-size: 12.5px;
+  color: #e3a7a7;
+}
+.quote-modal-body .modal-actions { margin-top: 4px; }
+
+@media (max-width: 560px) {
+  .quote-modal-body { padding: 30px 20px 24px; }
+  .quote-dim-grid { grid-template-columns: 1fr; }
+}
+
 
 

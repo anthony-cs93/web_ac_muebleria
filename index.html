@@ -36,9 +36,9 @@
     </ul>
     <!-- Botón WhatsApp: data-wa-message define el mensaje prellenado al abrir chat -->
     <div class="nav-cta">
-      <a class="btn btn-wa btn-cta" id="navWaBtn" data-wa-message="Hola, quiero cotizar un mueble a medida con AC Mueblería.">
+      <a class="btn btn-wa btn-cta" id="navWaBtn" data-quote-open data-wa-message="Hola, quiero cotizar un mueble a medida con AC Mueblería.">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
-        <span class="long">Cotiza por WhatsApp</span>
+        <span class="long">Cotiza tu proyecto</span>
       </a>
     </div>
     <!-- Botón hamburguesa: solo visible en móvil (≤860px) -->
@@ -76,7 +76,7 @@
         <p class="section-lede">Cocinas, closets, muebles de TV y proyectos completos, fabricados en nuestro taller de principio a fin.</p>
         <!-- Botones CTA: WhatsApp (primario) y Ver trabajos (ghost dark) -->
         <div class="hero-actions">
-          <a class="btn btn-wa" data-wa-message="Hola, quiero cotizar un mueble a medida con AC Mueblería.">
+          <a class="btn btn-wa" id="heroQuoteBtn" data-quote-open data-wa-message="Hola, quiero cotizar un mueble a medida con AC Mueblería.">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
             Cotiza tu proyecto
           </a>
@@ -468,6 +468,93 @@
   </div>
 </div>
 
+<!-- ============ MODAL DE COTIZACIÓN ============ -->
+<!-- MODAL: cotizador express — elige tipo de proyecto, medidas y datos para enviar por WhatsApp -->
+<div class="project-modal quote-modal" id="quoteModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="quoteModalTitle">
+  <div class="project-modal-backdrop" id="quoteModalBackdrop"></div>
+  <div class="project-modal-dialog quote-modal-dialog">
+    <!-- Botón de cierre -->
+    <button class="modal-close-btn" id="quoteModalCloseBtn" aria-label="Cerrar cotizador" title="Cerrar (Esc)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+
+    <div class="quote-modal-body">
+      <div class="modal-header">
+        <span class="modal-pretitle">Cotizador express</span>
+        <h2 class="modal-title" id="quoteModalTitle">Cotiza tu proyecto</h2>
+        <p class="modal-desc">Elige el tipo de mueble, indica medidas aproximadas y te enviamos la cotización por WhatsApp.</p>
+      </div>
+
+      <form class="quote-form" id="quoteForm" novalidate>
+        <!-- Tipo de proyecto (obligatorio) -->
+        <div class="quote-field">
+          <span class="quote-label">Tipo de proyecto <span class="quote-req">*</span></span>
+          <div class="quote-chips" id="quoteTypeChips" role="group" aria-label="Tipo de proyecto">
+            <button type="button" class="quote-chip" data-value="Cocina" aria-pressed="false">Cocina</button>
+            <button type="button" class="quote-chip" data-value="Closet" aria-pressed="false">Closet</button>
+            <button type="button" class="quote-chip" data-value="Escritorio" aria-pressed="false">Escritorio</button>
+            <button type="button" class="quote-chip" data-value="Centro de TV" aria-pressed="false">Centro de TV</button>
+            <button type="button" class="quote-chip" data-value="Organizador" aria-pressed="false">Organizador</button>
+            <button type="button" class="quote-chip" data-value="Mueble bar" aria-pressed="false">Mueble bar</button>
+          </div>
+          <p class="quote-hint" id="quoteTypeHint" hidden>Elige un tipo de proyecto para continuar.</p>
+        </div>
+
+        <!-- Medidas aproximadas -->
+        <div class="quote-field">
+          <span class="quote-label">Medidas aproximadas (cm)</span>
+          <div class="quote-dim-grid">
+            <label class="quote-dim">
+              <span>Ancho</span>
+              <input type="number" min="0" step="1" inputmode="numeric" class="quote-input" id="quoteWidth" placeholder="Ej. 300">
+            </label>
+            <label class="quote-dim">
+              <span>Alto</span>
+              <input type="number" min="0" step="1" inputmode="numeric" class="quote-input" id="quoteHeight" placeholder="Ej. 240">
+            </label>
+            <label class="quote-dim">
+              <span>Profundidad</span>
+              <input type="number" min="0" step="1" inputmode="numeric" class="quote-input" id="quoteDepth" placeholder="Ej. 60">
+            </label>
+          </div>
+        </div>
+
+        <!-- Nombre -->
+        <div class="quote-field">
+          <label class="quote-label" for="quoteName">Nombre</label>
+          <input type="text" class="quote-input" id="quoteName" placeholder="¿Cómo te llamas?" autocomplete="name">
+        </div>
+
+        <!-- Material / acabado -->
+        <div class="quote-field">
+          <label class="quote-label" for="quoteMaterial">Material o acabado preferido</label>
+          <input type="text" class="quote-input" id="quoteMaterial" placeholder="Ej. Melamina blanca mate, MDF, madera">
+        </div>
+
+        <!-- Zona / distrito -->
+        <div class="quote-field">
+          <label class="quote-label" for="quoteZone">Zona o distrito</label>
+          <input type="text" class="quote-input" id="quoteZone" placeholder="Ej. Los Olivos, Lima">
+        </div>
+
+        <!-- Detalles adicionales -->
+        <div class="quote-field">
+          <label class="quote-label" for="quoteDetails">Detalles adicionales</label>
+          <textarea class="quote-textarea" id="quoteDetails" rows="3" placeholder="Cuéntanos lo que tengas en mente: distribución, colores, referencias, fecha estimada..."></textarea>
+        </div>
+      </form>
+
+      <!-- Acción final: arma el mensaje y abre WhatsApp -->
+      <div class="modal-actions">
+        <a href="#" class="btn btn-wa modal-btn-wa" id="quoteWaBtn" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.82.49 3.53 1.35 5L2 22l5.16-1.33A9.96 9.96 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm4.95 14.05c-.21.58-1.2 1.13-1.67 1.2-.47.07-.94.13-2.8-.62-2.22-.9-3.66-3.15-3.77-3.3-.11-.15-.9-1.2-.9-2.29s.57-1.63.77-1.85c.2-.22.44-.28.59-.28.15 0 .3 0 .43.01.14.01.33-.05.51.39.19.45.64 1.57.7 1.69.06.12.1.26.02.42-.08.16-.12.26-.24.4-.12.14-.25.31-.36.42-.12.12-.25.25-.11.49.14.24.63 1.04 1.35 1.68.93.83 1.71 1.09 1.95 1.21.24.12.38.1.52-.06.14-.16.6-.7.76-.94.16-.24.32-.2.53-.12.21.08 1.34.63 1.57.74.23.11.38.17.44.27.06.1.06.58-.15 1.16z"/></svg>
+          <span>Cotizar por WhatsApp</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ============ PROCESO ============ -->
 <!-- SECCIÓN PROCESO: timeline interactivo de 5 pasos (desktop horizontal, móvil vertical) -->
 <section id="proceso">
@@ -569,9 +656,9 @@
         <div class="footer-brand"><img src="public/ac_muebleria/logo-h.png" alt="AC Mueblería" class="footer-logo"></div>
         <p>Diseño y fabricación de mobiliario personalizado.</p>
         <div style="margin-top:22px;">
-          <a class="btn btn-wa" id="footerWaBtn" data-wa-message="Hola, quiero cotizar un mueble a medida con AC Mueblería.">
+          <a class="btn btn-wa" id="footerWaBtn" data-quote-open data-wa-message="Hola, quiero cotizar un mueble a medida con AC Mueblería.">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
-            Escríbenos por WhatsApp
+            Cotiza tu proyecto
           </a>
         </div>
       </div>

@@ -1195,6 +1195,138 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // --- Modal de cotización (AC Mueblería) ---
+  // Los botones con [data-quote-open] abren un cotizador express que arma el
+  // mensaje de WhatsApp con tipo de proyecto, medidas y datos del cliente.
+  function initQuoteModal() {
+    const modal = document.getElementById("quoteModal");
+    if (!modal) return;
+
+    const backdrop = document.getElementById("quoteModalBackdrop");
+    const closeBtn = document.getElementById("quoteModalCloseBtn");
+    const form = document.getElementById("quoteForm");
+    const chipsWrap = document.getElementById("quoteTypeChips");
+    const chips = chipsWrap ? Array.from(chipsWrap.querySelectorAll(".quote-chip")) : [];
+    const typeHint = document.getElementById("quoteTypeHint");
+    const widthEl = document.getElementById("quoteWidth");
+    const heightEl = document.getElementById("quoteHeight");
+    const depthEl = document.getElementById("quoteDepth");
+    const nameEl = document.getElementById("quoteName");
+    const materialEl = document.getElementById("quoteMaterial");
+    const zoneEl = document.getElementById("quoteZone");
+    const detailsEl = document.getElementById("quoteDetails");
+    const waBtn = document.getElementById("quoteWaBtn");
+    const triggers = document.querySelectorAll("[data-quote-open]");
+
+    let selectedType = "";
+
+    function buildMessage() {
+      const lines = ["Hola AC Mueblería, quiero cotizar un proyecto:"];
+      lines.push(`• Tipo: ${selectedType || "por definir"}`);
+
+      const dims = [widthEl, heightEl, depthEl]
+        .map((el) => (el && el.value ? el.value.trim() : ""))
+        .filter(Boolean);
+      if (dims.length) lines.push(`• Medidas aprox. (cm): ${dims.join(" × ")}`);
+
+      const name = nameEl && nameEl.value.trim();
+      if (name) lines.push(`• Nombre: ${name}`);
+      const material = materialEl && materialEl.value.trim();
+      if (material) lines.push(`• Material/acabado: ${material}`);
+      const zone = zoneEl && zoneEl.value.trim();
+      if (zone) lines.push(`• Zona: ${zone}`);
+      const details = detailsEl && detailsEl.value.trim();
+      if (details) lines.push(`• Detalles: ${details}`);
+
+      return lines.join("\n");
+    }
+
+    function updateLink() {
+      if (waBtn) waBtn.href = waLink(buildMessage());
+    }
+
+    function selectType(value) {
+      selectedType = value;
+      chips.forEach((chip) => {
+        const on = chip.getAttribute("data-value") === value;
+        chip.classList.toggle("active", on);
+        chip.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      if (typeHint) typeHint.hidden = true;
+      if (chipsWrap) chipsWrap.classList.remove("quote-chips-error");
+      updateLink();
+    }
+
+    function openModal() {
+      modal.classList.add("active");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("modal-open");
+      if (typeHint) typeHint.hidden = true;
+      if (chipsWrap) chipsWrap.classList.remove("quote-chips-error");
+      updateLink();
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function closeModal() {
+      modal.classList.remove("active");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("modal-open");
+    }
+
+    function resetForm() {
+      if (form) form.reset();
+      selectedType = "";
+      chips.forEach((chip) => {
+        chip.classList.remove("active");
+        chip.setAttribute("aria-pressed", "false");
+      });
+    }
+
+    // Abrir desde los botones marcados (nav, hero y footer)
+    triggers.forEach((trigger) => {
+      trigger.addEventListener("click", (event) => {
+        event.preventDefault();
+        openModal();
+      });
+    });
+
+    // Selección única de tipo de proyecto
+    chips.forEach((chip) => {
+      chip.addEventListener("click", () => selectType(chip.getAttribute("data-value")));
+    });
+
+    // Mantener el enlace de WhatsApp sincronizado con el formulario
+    if (form) {
+      form.addEventListener("input", updateLink);
+      form.addEventListener("change", updateLink);
+    }
+
+    // Cierre: botón X, backdrop y tecla Escape
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+    if (backdrop) backdrop.addEventListener("click", closeModal);
+    window.addEventListener("keydown", (event) => {
+      if (modal.classList.contains("active") && event.key === "Escape") closeModal();
+    });
+
+    // Enviar: exige el tipo de proyecto y luego abre WhatsApp
+    if (waBtn) {
+      waBtn.addEventListener("click", (event) => {
+        if (!selectedType) {
+          event.preventDefault();
+          if (typeHint) typeHint.hidden = false;
+          if (chipsWrap) chipsWrap.classList.add("quote-chips-error");
+          if (chips[0]) chips[0].focus();
+          return;
+        }
+        // El href ya está actualizado; se abre en una pestaña nueva.
+        window.setTimeout(() => {
+          closeModal();
+          resetForm();
+        }, 250);
+      });
+    }
+  }
+
   // --- Revelado interactivo de imágenes al hacer scroll en "Por qué elegirnos" ---
   // La card original se muestra tal cual hasta la mitad de la pantalla; pasado la mitad se descubre la imagen.
   function initWhyChooseUsScrollReveal() {
@@ -1284,4 +1416,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Inicializar Catálogo E-commerce Maderin si estamos en maderin.html
   initMaderinEcommerce();
+
+  // Inicializar el modal de cotización de AC Mueblería (si existe en la página)
+  initQuoteModal();
 });

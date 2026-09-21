@@ -7,6 +7,13 @@
 <link rel="icon" type="image/png" href="public/logo_favicon.png">
 <title>AC Mueblería — Mobiliario a tu medida</title>
 <meta name="description" content="AC Mueblería diseña y fabrica mobiliario a medida: cocinas, closets, muebles de TV y proyectos completos. Conoce nuestro trabajo y cotiza por WhatsApp.">
+<!-- Preconnect a Google Fonts: adelanta la descarga de tipografías -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Preload de la imagen del hero (LCP) — versión AVIF responsive -->
+<link rel="preload" as="image" type="image/avif" href="public/ac_muebleria/hero-img-1024.avif"
+      imagesrcset="public/ac_muebleria/hero-img-640.avif 640w, public/ac_muebleria/hero-img-1024.avif 1024w, public/ac_muebleria/hero-img-1600.avif 1600w, public/ac_muebleria/hero-img-1717.avif 1717w"
+      imagesizes="100vw">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <!-- theme-ac: aplica el tema Flat Design de AC Mueblería (bordes rectos, carbón/amarillo) -->
@@ -51,10 +58,16 @@
 <header class="hero" id="top">
   <!-- Imagen de fondo: cubre todo el hero, se recorta con object-fit -->
   <div class="hero-bg">
-    <img src="public/ac_muebleria/hero-img.png" alt="Taller de fabricación AC Mueblería" class="hero-bg-img">
+    <picture>
+      <source type="image/avif" sizes="100vw"
+        srcset="public/ac_muebleria/hero-img-640.avif 640w, public/ac_muebleria/hero-img-1024.avif 1024w, public/ac_muebleria/hero-img-1600.avif 1600w, public/ac_muebleria/hero-img-1717.avif 1717w">
+      <source type="image/webp" sizes="100vw"
+        srcset="public/ac_muebleria/hero-img-640.webp 640w, public/ac_muebleria/hero-img-1024.webp 1024w, public/ac_muebleria/hero-img-1600.webp 1600w, public/ac_muebleria/hero-img-1717.webp 1717w">
+      <img src="public/ac_muebleria/hero-img.png" alt="Taller de fabricación AC Mueblería" class="hero-bg-img" width="1717" height="916" fetchpriority="high" decoding="async">
+    </picture>
+    <!-- Overlay: degradado carbón a transparente para legibilidad del texto -->
+    <div class="hero-overlay"></div>
   </div>
-  <!-- Overlay: degradado carbón a transparente para legibilidad del texto -->
-  <div class="hero-overlay"></div>
   <div class="container">
     <!-- Texto del hero: título, subtítulo, botones CTA y badges estadísticos -->
     <div class="hero-grid">
@@ -69,6 +82,7 @@
           </a>
           <a class="btn btn-ghost-dark" href="#trabajos">Ver nuestros trabajos</a>
         </div>
+        <p class="hero-microcopy">Respuesta en minutos · Cotización sin compromiso</p>
         <!-- Badges: estadísticas clave (+300 proyectos, 100% propia) -->
         <div class="hero-badges">
           <div class="hero-badge"><b class="hero-counter" data-target="300" data-prefix="+">+300</b>proyectos entregados</div>
@@ -77,6 +91,10 @@
       </div>
     </div>
   </div>
+  <a class="hero-scroll-cue" href="#elegirnos" aria-label="Descubre más">
+    <span class="hero-scroll-cue-label">Descubre más</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+  </a>
 </header>
 
 <!-- ============ POR QUÉ ELEGIRNOS ============ -->

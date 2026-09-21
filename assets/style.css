@@ -34,6 +34,7 @@
   --cols-features: repeat(4,1fr);  /* grid de features: 4 columnas */
   --cols-products: repeat(3,1fr);  /* grid de productos: 3 columnas */
   --cols-footer: 1.3fr 1fr 1fr;    /* grid footer: columna izquierda más ancha */
+  --nav-h: 92px;                   /* altura de la barra de navegación sticky */
   --hero-pad: 30px 0 30px;         /* padding del hero desktop */
   --hero-h1: clamp(38px,5.2vw,64px); /* tamaño del título hero responsive */
   --badges-gap: 26px;              /* espacio entre badges del hero */
@@ -123,8 +124,9 @@ body.theme-maderin .btn-ghost:hover {
 /* Hero — imagen de fondo + degradado azul */
 body.theme-maderin .hero {
   color: #fff;
-  min-height: 100dvh;  /* altura mínima = pantalla completa */
-  padding: 0;
+  min-height: 100vh;                          /* fallback */
+  min-height: calc(100svh - var(--nav-h));    /* pantalla completa descontando el nav */
+  padding: 0 0 88px;                          /* reserva espacio para el scroll cue */
 }
 body.theme-maderin .hero-overlay {
   background: linear-gradient(
@@ -332,6 +334,13 @@ body.theme-maderin .wa-float:hover { transform: none !important; background: col
 body.theme-maderin .hero-bg-img{
   object-position: 80% bottom;
 }
+/* Encuadre del hero por marca — mantiene al sujeto visible junto al texto */
+body.theme-ac .hero-bg-img{
+  object-position: 70% 42%;
+}
+body.theme-cdm .hero-bg-img{
+  object-position: 78% 45%;
+}
 
 
 /* ==========================================================================
@@ -375,6 +384,7 @@ body.theme-cdm{
 body.theme-cdm .hero{
   background: var(--off-black);  /* fondo oliva muy oscuro */
   color: var(--paper);            /* texto crema */
+  padding-bottom: 88px;           /* reserva espacio para el scroll cue */
 }
 body.theme-cdm .hero .container{
   position: relative;
@@ -859,7 +869,8 @@ section{ padding:50px 0; }
 /* =========================== Hero =========================== */
 .hero{
   position:relative;
-  min-height:100vh;          /* altura mínima = pantalla completa */
+  min-height:100vh;                            /* fallback navegadores sin svh */
+  min-height:calc(100svh - var(--nav-h));      /* pantalla completa descontando el nav */
   background:var(--off-black); /* fondo oscuro por defecto */
   color:var(--paper);
   overflow:hidden;            /* recorta imagen de fondo */
@@ -868,6 +879,9 @@ section{ padding:50px 0; }
 }
 .hero-bg{
   position:absolute; inset:0; z-index:0;  /* detrás de todo */
+}
+.hero-bg picture{
+  display:block; width:100%; height:100%; /* <picture> ocupa todo el hero */
 }
 .hero-bg-img{
   width:100%; height:100%;
@@ -891,13 +905,12 @@ section{ padding:50px 0; }
   font-size: var(--hero-h1);  /* clamp responsive del :root */
   line-height:1.04;           /* interlineado ajustado para títulos grandes */
   margin-top:5px;
-  margin-left:15px;           /* indentación sutil */
 }
 .hero-copy h1 em{ font-style:normal; color:var(--accent); } /* palabra destacada en acento */
 .hero-copy p.section-lede{ margin-top:20px; color:rgba(242,236,223,.75); font-size:17.5px; max-width:46ch; } /* subtítulo crema */
-.hero-actions{ display:flex; gap:14px; margin-top:34px; margin-left:15px; flex-wrap:wrap; } /* botones CTA */
+.hero-actions{ display:flex; gap:14px; margin-top:34px; flex-wrap:wrap; } /* botones CTA */
 .hero-badges{
-  display:flex; gap: var(--badges-gap); margin-top:52px; margin-left:15px; flex-wrap:wrap;
+  display:flex; gap: var(--badges-gap); margin-top:52px; flex-wrap:wrap;
   border-top:1px solid var(--line-on-dark); padding-top:24px; /* separador superior */
 }
 .hero-badge{ font-family:var(--font-mono); font-size:15px; color:rgba(242,236,223,.6); letter-spacing:.03em; } /* label badge */
@@ -917,6 +930,52 @@ body.theme-ac .hero .container{
   z-index:2;                     /* sobre el overlay */
   max-width:none;                /* sin límite de ancho */
   padding: 0 clamp(28px, 6vw, 110px); /* padding horizontal responsive */
+}
+
+/* Microcopy bajo los CTA del hero — refuerza la conversión */
+.hero-microcopy{
+  margin-top:14px;
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  letter-spacing:.02em;
+  color:rgba(242,236,223,.62);
+}
+body.theme-maderin .hero-microcopy{ font-family:var(--font-body); font-size:13px; color:rgba(255,255,255,.62); }
+body.theme-cdm .hero-microcopy{ color:rgba(247,242,230,.6); }
+
+/* Indicador de scroll — invita a bajar al primer viewport */
+.hero-scroll-cue{
+  position:absolute;
+  left:50%;
+  bottom:20px;
+  transform:translateX(-50%);
+  z-index:3;
+  display:inline-flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  color:rgba(242,236,223,.6);
+  transition:color .2s ease;
+}
+.hero-scroll-cue-label{
+  font-family:var(--font-mono);
+  font-size:10.5px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.hero-scroll-cue svg{
+  width:20px; height:20px;
+  animation:heroCueBounce 1.8s ease-in-out infinite;
+}
+.hero-scroll-cue:hover{ color:var(--accent); }
+body.theme-maderin .hero-scroll-cue{ color:rgba(255,255,255,.6); }
+body.theme-maderin .hero-scroll-cue:hover{ color:#fff; }
+body.theme-cdm .hero-scroll-cue{ color:rgba(247,242,230,.6); }
+body.theme-cdm .hero-scroll-cue:hover{ color:var(--accent-2); }
+
+@keyframes heroCueBounce{
+  0%,100%{ transform:translateY(0); opacity:.55; }
+  50%{ transform:translateY(5px); opacity:1; }
 }
 
 /* =========================== Features =========================== */
@@ -1165,16 +1224,19 @@ footer{ background:var(--espresso-3); color:rgba(242,236,223,.7); padding:60px 0
   .hero-visual{ display:none; }    /* oculta imagen decorativa del hero */
 
   body.theme-cdm .hero-overlay{
-    background: linear-gradient(to right, rgba(46,47,26,.88) 0%, rgba(46,47,26,.62) 50%, rgba(46,47,26,.10) 100%);
+    background: linear-gradient(to bottom, rgba(46,47,26,.82) 0%, rgba(46,47,26,.66) 45%, rgba(46,47,26,.9) 100%);
   }
   body.theme-maderin .hero-overlay{
-    background: linear-gradient(to right, rgba(45,52,102,.88) 0%, rgba(45,52,102,.62) 50%, rgba(45,52,102,.10) 100%);
+    background: linear-gradient(to bottom, rgba(45,52,102,.82) 0%, rgba(45,52,102,.64) 45%, rgba(45,52,102,.9) 100%);
   }
   body.theme-maderin .hero-bg-img{
-    object-position: 60% 0;  /* recorta la imagen más a la derecha */
+    object-position: 68% 32%;  /* mantiene el mueble y a la niña en cuadro */
   }
   body.theme-cdm .hero-bg-img{
-    object-position: 60% 0;  /* recorta la imagen más a la derecha */
+    object-position: 72% 30%;  /* mantiene el organizador en cuadro */
+  }
+  body.theme-ac .hero-bg-img{
+    object-position: 72% 30%;  /* mantiene al carpintero en cuadro */
   }
 }
 
@@ -1235,11 +1297,12 @@ body.theme-ac .nav-links a:hover {
   color: var(--accent);  /* hover amarillo */
 }
 
-/* Hero Flat — carbón puro, acentos amarillos, altura reducida y proporcionada */
+/* Hero Flat — carbón puro, acentos amarillos, pantalla completa */
 body.theme-ac .hero {
   background: var(--off-black);  /* carbón */
-  min-height: 72vh;
-  padding: 56px 0 46px;
+  min-height: 100vh;                          /* fallback */
+  min-height: calc(100svh - var(--nav-h));    /* pantalla completa descontando el nav */
+  padding: 56px 0 72px;
   box-sizing: border-box;
 }
 body.theme-ac .hero-copy h1 em {
@@ -2578,8 +2641,9 @@ body.theme-ac .process-step.active .process-content {
 /* --- Mobile y Tablet: vertical (pasos apilados y tarjetas verticales) --- */
 @media (max-width: 980px) {
   body.theme-ac .hero {
-    min-height: auto;
-    padding: 48px 0 40px;
+    min-height: 100vh;                          /* fallback */
+    min-height: calc(100svh - var(--nav-h));    /* pantalla completa descontando el nav */
+    padding: 48px 0 72px;
   }
   body.theme-ac .hero-badges {
     margin-top: 24px;

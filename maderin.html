@@ -7,6 +7,13 @@
 <link rel="icon" type="image/png" href="public/logo_favicon.png">
 <title>Maderin — Mobiliario infantil | AC Mueblería</title>
 <meta name="description" content="Maderin fabrica mobiliario infantil listo para tu hogar: camas, veladores, repisas y organizadores. Pide por WhatsApp.">
+<!-- Preconnect a Google Fonts: adelanta la descarga de tipografías -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Preload de la imagen del hero (LCP) — versión AVIF responsive -->
+<link rel="preload" as="image" type="image/avif" href="public/maderin/hero-1024.avif"
+      imagesrcset="public/maderin/hero-640.avif 640w, public/maderin/hero-1024.avif 1024w, public/maderin/hero-1519.avif 1519w"
+      imagesizes="100vw">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <!-- theme-maderin: aplica la variante azul suave para mobiliario infantil -->
@@ -51,7 +58,13 @@
 <!-- HERO: pantalla completa con imagen de fondo, degradado azul y texto blanco -->
 <header class="hero" id="top">
   <div class="hero-bg">
-    <img src="public/maderin/hero.png" alt="" class="hero-bg-img">
+    <picture>
+      <source type="image/avif" sizes="100vw"
+        srcset="public/maderin/hero-640.avif 640w, public/maderin/hero-1024.avif 1024w, public/maderin/hero-1519.avif 1519w">
+      <source type="image/webp" sizes="100vw"
+        srcset="public/maderin/hero-640.webp 640w, public/maderin/hero-1024.webp 1024w, public/maderin/hero-1519.webp 1519w">
+      <img src="public/maderin/hero.png" alt="Niña ordenando su ropa en un mueble infantil Maderin" class="hero-bg-img" width="1519" height="887" fetchpriority="high" decoding="async">
+    </picture>
     <!-- Overlay: degradado azul para legibilidad del texto blanco -->
     <div class="hero-overlay"></div>
   </div>
@@ -66,14 +79,20 @@
           <a class="btn btn-wa" href="#productos" id="heroCtaBtn">Ver catálogo infantil</a>
           <a class="btn btn-ghost-dark" href="https://www.instagram.com/maderin.pe/" target="_blank" rel="noopener" id="heroIgBtn">Síguenos en Instagram</a>
         </div>
+        <p class="hero-microcopy">Pedidos por WhatsApp · Entrega en Lima</p>
         <!-- Badges: materiales de calidad y diseño infantil -->
         <div class="hero-badges">
           <div class="hero-badge reveal"><b>Materiales seguros</b>Madera pino y melamina no tóxica</div>
           <div class="hero-badge reveal"><b>Diseño Montessori</b>Pensado para jugar y crecer</div>
+          <div class="hero-badge reveal"><b>Hecho en Lima</b>en nuestro taller propio</div>
         </div>
       </div>
     </div>
   </div>
+  <a class="hero-scroll-cue" href="#productos" aria-label="Ver catálogo">
+    <span class="hero-scroll-cue-label">Ver catálogo</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+  </a>
 </header>
 
 <!-- ============ SOBRE MADERIN ============ -->

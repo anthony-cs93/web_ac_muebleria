@@ -7,6 +7,13 @@
 <link rel="icon" type="image/png" href="public/logo_favicon.png">
 <title>Corazón de Madera — Detalles y regalos | AC Mueblería</title>
 <meta name="description" content="Corazón de Madera crea regalos y detalles personalizados en madera y melamina. Pide por WhatsApp.">
+<!-- Preconnect a Google Fonts: adelanta la descarga de tipografías -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Preload de la imagen del hero (LCP) — versión AVIF responsive -->
+<link rel="preload" as="image" type="image/avif" href="public/cdm/hero-1024.avif"
+      imagesrcset="public/cdm/hero-640.avif 640w, public/cdm/hero-1024.avif 1024w, public/cdm/hero-1536.avif 1536w"
+      imagesizes="100vw">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <!-- theme-cdm: aplica la variante oliva/champán para detalles y regalos -->
@@ -50,7 +57,13 @@
 <!-- HERO: pantalla completa con imagen de fondo, degradado oliva y texto crema -->
 <header class="hero" id="top">
   <div class="hero-bg">
-    <img src="public/cdm/hero.png" alt="" class="hero-bg-img">
+    <picture>
+      <source type="image/avif" sizes="100vw"
+        srcset="public/cdm/hero-640.avif 640w, public/cdm/hero-1024.avif 1024w, public/cdm/hero-1536.avif 1536w">
+      <source type="image/webp" sizes="100vw"
+        srcset="public/cdm/hero-640.webp 640w, public/cdm/hero-1024.webp 1024w, public/cdm/hero-1536.webp 1536w">
+      <img src="public/cdm/hero.png" alt="Organizador de llaves personalizado con nombres en madera" class="hero-bg-img" width="1536" height="1024" fetchpriority="high" decoding="async">
+    </picture>
     <!-- Overlay: degradado oliva oscuro para legibilidad del texto crema -->
     <div class="hero-overlay"></div>
   </div>
@@ -65,6 +78,7 @@
           <a class="btn btn-wa" href="#productos">Ver productos</a>
           <a class="btn btn-ghost-dark" href="https://www.instagram.com/corazondemadera.pe/" target="_blank" rel="noopener">Síguenos en Instagram</a>
         </div>
+        <p class="hero-microcopy">Pedidos por WhatsApp · Personalización incluida</p>
         <!-- Badges: personalización, entrega rápida, hecho a mano -->
         <div class="hero-badges">
           <div class="hero-badge reveal"><b>Personalizado</b>con nombres y fechas</div>
@@ -74,6 +88,10 @@
       </div>
     </div>
   </div>
+  <a class="hero-scroll-cue" href="#productos" aria-label="Ver catálogo">
+    <span class="hero-scroll-cue-label">Ver catálogo</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+  </a>
 </header>
 
 <!-- ============ SOBRE CDM ============ -->

@@ -583,65 +583,78 @@ document.addEventListener("DOMContentLoaded", () => {
           scrollTrigger: {
             trigger: procesoSection,
             start: "top top",
-            end: "+=1400",
+            end: () => "+=" + Math.round(window.innerHeight * 1.1),
             pin: true,
-            scrub: 0.4,
+            scrub: 0.5,
             anticipatePin: 1,
             invalidateOnRefresh: true,
+            fastScrollEnd: true,
+            // Snap: se asienta en cada paso (1 scroll ≈ 1 paso)
+            snap: {
+              snapTo: [0, 0.1667, 0.3333, 0.5, 0.6667, 0.8333, 1],
+              duration: { min: 0.15, max: 0.45 },
+              delay: 0.04,
+              ease: "power2.inOut",
+              inertia: false,
+            },
           }
         });
 
-        // 1. Línea horizontal de progreso: avanza de 0% a 100%
+        // Pausa inicial: retiene el pin para ver el paso 1 antes de avanzar
+        masterTl.to({}, { duration: 0.25 }, 0);
+
+        // 1. Línea horizontal de progreso: avanza de 0% a 100% (tras la pausa inicial)
         if (hProgress) {
           masterTl.to(hProgress, {
             width: "100%",
             ease: "none",
             duration: 1.0,
-          }, 0);
+          }, 0.25);
         }
 
-        // 2. Activación secuencial sincronizada con la llegada de la línea a cada punto
+        // 2. Activación secuencial: cada paso completa su fade justo en su punto de
+        //    snap para que quede resaltado al asentar el scroll.
         // Paso 1 (01): activo desde el inicio (t=0)
         if (steps[0]) {
           const dot = steps[0].querySelector(".process-dot");
           const content = steps[0].querySelector(".process-content");
-          masterTl.to(dot, { borderColor: "#af8f1a", color: "#af8f1a", backgroundColor: "#151515", duration: 0.05 }, 0);
-          masterTl.to(content, { opacity: 1, y: 0, duration: 0.05 }, 0);
+          masterTl.to(dot, { borderColor: "#af8f1a", color: "#af8f1a", backgroundColor: "#151515", duration: 0.08 }, 0);
+          masterTl.to(content, { opacity: 1, y: 0, duration: 0.12 }, 0);
         }
 
-        // Paso 2 (02): alcanzado al 25% de la línea
+        // Paso 2 (02): termina de activarse en su punto de snap
         if (steps[1]) {
           const dot = steps[1].querySelector(".process-dot");
           const content = steps[1].querySelector(".process-content");
-          masterTl.to(dot, { borderColor: "#af8f1a", color: "#af8f1a", backgroundColor: "#151515", duration: 0.08 }, 0.25);
-          masterTl.to(content, { opacity: 1, y: 0, duration: 0.12 }, 0.25);
+          masterTl.to(dot, { borderColor: "#af8f1a", color: "#af8f1a", backgroundColor: "#151515", duration: 0.08 }, 0.42);
+          masterTl.to(content, { opacity: 1, y: 0, duration: 0.12 }, 0.38);
         }
 
-        // Paso 3 (03): alcanzado al 50% de la línea
+        // Paso 3 (03): termina de activarse en su punto de snap
         if (steps[2]) {
           const dot = steps[2].querySelector(".process-dot");
           const content = steps[2].querySelector(".process-content");
-          masterTl.to(dot, { borderColor: "#af8f1a", color: "#af8f1a", backgroundColor: "#151515", duration: 0.08 }, 0.50);
-          masterTl.to(content, { opacity: 1, y: 0, duration: 0.12 }, 0.50);
+          masterTl.to(dot, { borderColor: "#af8f1a", color: "#af8f1a", backgroundColor: "#151515", duration: 0.08 }, 0.67);
+          masterTl.to(content, { opacity: 1, y: 0, duration: 0.12 }, 0.63);
         }
 
-        // Paso 4 (04): alcanzado al 75% de la línea
+        // Paso 4 (04): termina de activarse en su punto de snap
         if (steps[3]) {
           const dot = steps[3].querySelector(".process-dot");
           const content = steps[3].querySelector(".process-content");
-          masterTl.to(dot, { borderColor: "#af8f1a", color: "#af8f1a", backgroundColor: "#151515", duration: 0.08 }, 0.75);
-          masterTl.to(content, { opacity: 1, y: 0, duration: 0.12 }, 0.75);
+          masterTl.to(dot, { borderColor: "#af8f1a", color: "#af8f1a", backgroundColor: "#151515", duration: 0.08 }, 0.92);
+          masterTl.to(content, { opacity: 1, y: 0, duration: 0.12 }, 0.88);
         }
 
-        // Paso 5 (05): alcanzado al 98% de la línea
+        // Paso 5 (05): termina de activarse en su punto de snap (t=1.25 del timeline)
         if (steps[4]) {
           const dot = steps[4].querySelector(".process-dot");
           const content = steps[4].querySelector(".process-content");
-          masterTl.to(dot, { borderColor: "#af8f1a", color: "#af8f1a", backgroundColor: "#151515", duration: 0.08 }, 0.98);
-          masterTl.to(content, { opacity: 1, y: 0, duration: 0.12 }, 0.98);
+          masterTl.to(dot, { borderColor: "#af8f1a", color: "#af8f1a", backgroundColor: "#151515", duration: 0.08 }, 1.17);
+          masterTl.to(content, { opacity: 1, y: 0, duration: 0.12 }, 1.13);
         }
 
-        // Breve pausa para visualizar el proceso completo antes de soltar el pin
+        // Pausa final: deja ver el proceso completo antes de soltar el pin
         masterTl.to({}, { duration: 0.25 });
       },
 

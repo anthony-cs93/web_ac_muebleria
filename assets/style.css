@@ -2458,6 +2458,9 @@ body.theme-ac #proceso {
     justify-content: flex-start;
     width: 100%;
     pointer-events: none;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   body.theme-ac #elegirnos .feature-card .feature-title,
@@ -2488,8 +2491,8 @@ body.theme-ac #proceso {
     inset: 0;
     background-size: cover;
     background-position: center;
-    opacity: 0;
-    transform: scale(1.08);
+    opacity: 1;
+    transform: scale(1);
     transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 0;
   }
@@ -2501,36 +2504,20 @@ body.theme-ac #proceso {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(16, 16, 16, 0.78) 0%, rgba(16, 16, 16, 0.22) 42%, rgba(12, 12, 12, 0.94) 100%);
+    background: linear-gradient(180deg, rgba(16, 16, 16, 0.6) 0%, rgba(16, 16, 16, 0.12) 42%, rgba(12, 12, 12, 0.88) 100%);
   }
 
-  /* Estado normal y hover sutil */
+  /* Hover en Desktop: la imagen se oculta y aparece la info sobre el fondo oscuro */
   body.theme-ac #elegirnos .feature-card:hover {
     border-color: rgba(175, 143, 26, 0.4);
     transform: translateY(-3px);
   }
-
-  /* Estado Descubierto / Revelado en Desktop (activado al pasar la mitad de la pantalla) */
-  body.theme-ac #elegirnos .feature-card.is-discovered {
-    border-color: rgba(175, 143, 26, 0.85);
-    transform: translateY(-4px);
-    box-shadow: 0 20px 42px rgba(0, 0, 0, 0.7) !important;
-  }
-  body.theme-ac #elegirnos .feature-card.is-discovered .feature-img {
-    opacity: 1;
-    transform: scale(1);
-  }
-  body.theme-ac #elegirnos .feature-card.is-discovered .feature-desc {
+  body.theme-ac #elegirnos .feature-card:hover .feature-img {
     opacity: 0;
-    transform: translateY(14px);
-    pointer-events: none;
-    transition: opacity 0.35s ease, transform 0.35s ease;
   }
-  body.theme-ac #elegirnos .feature-card.is-discovered .feature-title,
-  body.theme-ac #elegirnos .feature-card.is-discovered h3 {
-    transform: translateY(var(--title-travel, 175px));
-    color: #FFFFFF;
-    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95);
+  body.theme-ac #elegirnos .feature-card:hover .feature-card-body {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   body.theme-ac #proceso {

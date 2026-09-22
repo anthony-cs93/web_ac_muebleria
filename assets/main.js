@@ -1327,8 +1327,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // --- Revelado interactivo de imágenes al hacer scroll en "Por qué elegirnos" ---
-  // La card original se muestra tal cual hasta la mitad de la pantalla; pasado la mitad se descubre la imagen.
+  // --- Revelado de imágenes en "Por qué elegirnos" ---
+  // Desktop: imagen siempre visible y al pasar el mouse se muestra la info sobre fondo oscuro (solo CSS).
+  // Móvil: revelado por scroll (se descubre la imagen al cruzar el 60% de la pantalla).
   function initWhyChooseUsScrollReveal() {
     const section = document.getElementById("elegirnos");
     if (!section) return;
@@ -1356,21 +1357,28 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // Permitir clic para alternar manualmente si el usuario lo desea
+    // Permitir clic para alternar manualmente (solo en móvil; en desktop la interacción es hover)
     cards.forEach((card) => {
       card.addEventListener("click", () => {
-        card.classList.toggle("is-discovered");
+        if (window.innerWidth <= 980) card.classList.toggle("is-discovered");
       });
     });
 
     let ticking = false;
     function updateCardsOnScroll() {
-      // 45% de la altura de la pantalla (calibración óptima de revelado al avanzar en el viewport)
-      const triggerThreshold = window.innerHeight * 0.45;
+      // En desktop el revelado es por hover: se limpia cualquier estado de scroll
+      const isMobile = window.innerWidth <= 980;
+      if (!isMobile) {
+        cards.forEach((card) => card.classList.remove("is-discovered"));
+        ticking = false;
+        return;
+      }
+      // Umbral de revelado en móvil: 60% (se revela apenas entra la tarjeta)
+      const triggerThreshold = window.innerHeight * 0.60;
       cards.forEach((card) => {
         const rect = card.getBoundingClientRect();
         const cardCenterY = rect.top + (rect.height / 2);
-        // Si el centro de la tarjeta ya cruzó el 45% de la pantalla hacia arriba
+        // Si el centro de la tarjeta ya cruzó el umbral de la pantalla hacia arriba
         if (cardCenterY <= triggerThreshold && rect.bottom > 0) {
           card.classList.add("is-discovered");
         } else {
@@ -1396,19 +1404,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Medición y evaluación inmediata inicial
     computeTitleTravel();
     updateCardsOnScroll();
-
-    // Sincronización con GSAP ScrollTrigger al 45% de la pantalla
-    if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
-      cards.forEach((card) => {
-        ScrollTrigger.create({
-          trigger: card,
-          start: "center 45%",
-          end: "bottom -200%",
-          onToggle: (self) => (self.isActive ? card.classList.add("is-discovered") : card.classList.remove("is-discovered")),
-          onLeaveBack: () => card.classList.remove("is-discovered")
-        });
-      });
-    }
   }
 
   // Inicializar Por qué elegirnos scroll reveal

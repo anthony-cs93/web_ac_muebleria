@@ -11,8 +11,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Preload de la imagen del hero (LCP) — versión AVIF responsive -->
+<link rel="preload" as="image" media="(max-width: 1024px)" type="image/avif" href="public/maderin/hero-mobile-1024.avif">
 <link rel="preload" as="image" type="image/avif" href="public/maderin/hero-1024.avif"
-      imagesrcset="public/maderin/hero-640.avif 640w, public/maderin/hero-1024.avif 1024w, public/maderin/hero-1519.avif 1519w"
+      imagesrcset="public/maderin/hero-640.avif 640w, public/maderin/hero-1024.avif 1024w, public/maderin/hero-1600.avif 1600w, public/maderin/hero-1916.avif 1916w"
       imagesizes="100vw">
 <link rel="stylesheet" href="assets/style.css">
 </head>
@@ -59,11 +60,15 @@
 <header class="hero" id="top">
   <div class="hero-bg">
     <picture>
+      <source media="(max-width: 1024px)" type="image/avif" sizes="100vw"
+        srcset="public/maderin/hero-mobile-640.avif 640w, public/maderin/hero-mobile-1024.avif 1024w, public/maderin/hero-mobile-1054.avif 1054w">
+      <source media="(max-width: 1024px)" type="image/webp" sizes="100vw"
+        srcset="public/maderin/hero-mobile-640.webp 640w, public/maderin/hero-mobile-1024.webp 1024w, public/maderin/hero-mobile-1054.webp 1054w">
       <source type="image/avif" sizes="100vw"
-        srcset="public/maderin/hero-640.avif 640w, public/maderin/hero-1024.avif 1024w, public/maderin/hero-1519.avif 1519w">
+        srcset="public/maderin/hero-640.avif 640w, public/maderin/hero-1024.avif 1024w, public/maderin/hero-1600.avif 1600w, public/maderin/hero-1916.avif 1916w">
       <source type="image/webp" sizes="100vw"
-        srcset="public/maderin/hero-640.webp 640w, public/maderin/hero-1024.webp 1024w, public/maderin/hero-1519.webp 1519w">
-      <img src="public/maderin/hero.png" alt="Niña ordenando su ropa en un mueble infantil Maderin" class="hero-bg-img" width="1519" height="887" fetchpriority="high" decoding="async">
+        srcset="public/maderin/hero-640.webp 640w, public/maderin/hero-1024.webp 1024w, public/maderin/hero-1600.webp 1600w, public/maderin/hero-1916.webp 1916w">
+      <img src="public/maderin/hero.png" alt="Niña ordenando su ropa en un mueble infantil Maderin" class="hero-bg-img" width="1916" height="821" fetchpriority="high" decoding="async">
     </picture>
     <!-- Overlay: degradado azul para legibilidad del texto blanco -->
     <div class="hero-overlay"></div>
@@ -72,8 +77,8 @@
     <div class="hero-grid">
       <div class="hero-copy reveal">
         <!-- Badge: indica que Maderin es una marca de AC Mueblería -->
-        <h1>Mobiliario infantil para <span class="hero-hl">fomentar su autonomía</span>.</h1>
-        <p class="section-lede">Mobiliario infantil Montessori diseñado para que los niños mejoren su independencia y crezcan a su propio ritmo con total seguridad.</p>
+        <h1>Mobiliario infantil<br class="br-mobile"> para<br class="br-tablet"> <span class="hero-hl">fomentar<br class="br-mobile"> su autonomía</span>.</h1>
+        <p class="section-lede">Mobiliario diseñado para que los niños mejoren su independencia y crezcan a su propio ritmo</p>
         <!-- Botones CTA: Ver productos (primario) y Instagram (ghost dark) -->
         <div class="hero-actions">
           <a class="btn btn-wa" href="#productos" id="heroCtaBtn">Ver catálogo infantil</a>
@@ -84,7 +89,6 @@
         <div class="hero-badges">
           <div class="hero-badge reveal"><b>Materiales seguros</b>Madera pino y melamina no tóxica</div>
           <div class="hero-badge reveal"><b>Diseño Montessori</b>Pensado para jugar y crecer</div>
-          <div class="hero-badge reveal"><b>Hecho en Lima</b>en nuestro taller propio</div>
         </div>
       </div>
     </div>

@@ -1207,6 +1207,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("quoteForm");
     const chipsWrap = document.getElementById("quoteTypeChips");
     const chips = chipsWrap ? Array.from(chipsWrap.querySelectorAll(".quote-chip")) : [];
+    const typeSelect = document.getElementById("quoteTypeSelect");
     const typeHint = document.getElementById("quoteTypeHint");
     const widthEl = document.getElementById("quoteWidth");
     const heightEl = document.getElementById("quoteHeight");
@@ -1252,6 +1253,7 @@ document.addEventListener("DOMContentLoaded", () => {
         chip.classList.toggle("active", on);
         chip.setAttribute("aria-pressed", on ? "true" : "false");
       });
+      if (typeSelect) typeSelect.value = value;
       if (typeHint) typeHint.hidden = true;
       if (chipsWrap) chipsWrap.classList.remove("quote-chips-error");
       updateLink();
@@ -1280,6 +1282,7 @@ document.addEventListener("DOMContentLoaded", () => {
         chip.classList.remove("active");
         chip.setAttribute("aria-pressed", "false");
       });
+      if (typeSelect) typeSelect.value = "";
     }
 
     // Abrir desde los botones marcados (nav, hero y footer)
@@ -1294,6 +1297,10 @@ document.addEventListener("DOMContentLoaded", () => {
     chips.forEach((chip) => {
       chip.addEventListener("click", () => selectType(chip.getAttribute("data-value")));
     });
+
+    if (typeSelect) {
+      typeSelect.addEventListener("change", () => selectType(typeSelect.value));
+    }
 
     // Mantener el enlace de WhatsApp sincronizado con el formulario
     if (form) {
@@ -1315,7 +1322,11 @@ document.addEventListener("DOMContentLoaded", () => {
           event.preventDefault();
           if (typeHint) typeHint.hidden = false;
           if (chipsWrap) chipsWrap.classList.add("quote-chips-error");
-          if (chips[0]) chips[0].focus();
+          if (typeSelect && typeSelect.offsetParent !== null) {
+            typeSelect.focus();
+          } else if (chips[0]) {
+            chips[0].focus();
+          }
           return;
         }
         // El href ya está actualizado; se abre en una pestaña nueva.

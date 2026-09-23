@@ -456,7 +456,6 @@
 
     <div class="quote-modal-body">
       <div class="modal-header">
-        <span class="modal-pretitle">Cotizador express</span>
         <h2 class="modal-title" id="quoteModalTitle">Cotiza tu proyecto</h2>
         <p class="modal-desc">Elige el tipo de mueble, indica medidas aproximadas y te enviamos la cotización por WhatsApp.</p>
       </div>
@@ -473,6 +472,15 @@
             <button type="button" class="quote-chip" data-value="Organizador" aria-pressed="false">Organizador</button>
             <button type="button" class="quote-chip" data-value="Mueble bar" aria-pressed="false">Mueble bar</button>
           </div>
+          <select class="quote-select" id="quoteTypeSelect" aria-label="Tipo de proyecto">
+            <option value="" disabled selected>Selecciona un tipo de proyecto</option>
+            <option value="Cocina">Cocina</option>
+            <option value="Closet">Closet</option>
+            <option value="Escritorio">Escritorio</option>
+            <option value="Centro de TV">Centro de TV</option>
+            <option value="Organizador">Organizador</option>
+            <option value="Mueble bar">Mueble bar</option>
+          </select>
           <p class="quote-hint" id="quoteTypeHint" hidden>Elige un tipo de proyecto para continuar.</p>
         </div>
 

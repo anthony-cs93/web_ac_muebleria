@@ -4041,7 +4041,10 @@ body.theme-ac .process-timeline-container {
    MODAL DE COTIZACIÓN (AC Mueblería) — cotizador express
    ========================================================================== */
 .quote-modal-dialog {
-  max-width: 620px;
+  max-width: 900px;
+}
+.quote-modal .modal-title {
+  color: var(--accent);
 }
 .quote-modal-body {
   padding: 34px 34px 28px;
@@ -4062,7 +4065,7 @@ body.theme-ac .process-timeline-container {
 }
 .quote-label {
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: 13px;
   letter-spacing: .05em;
   text-transform: uppercase;
   color: rgba(242,236,223,.6);
@@ -4096,6 +4099,27 @@ body.theme-ac .process-timeline-container {
   font-weight: 600;
 }
 .quote-chips.quote-chips-error .quote-chip { border-color: rgba(224,164,164,.55); }
+.quote-select {
+  display: none;
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--paper);
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--line-on-dark);
+  border-radius: 8px;
+  padding: 11px 13px;
+  outline: none;
+  transition: border-color .2s ease, background .2s ease;
+}
+.quote-select:focus {
+  border-color: var(--accent);
+  background: rgba(255,255,255,.06);
+}
+.quote-select option {
+  background: #161616;
+  color: var(--paper);
+}
 .quote-dim-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -4144,7 +4168,9 @@ body.theme-ac .process-timeline-container {
 
 @media (max-width: 560px) {
   .quote-modal-body { padding: 30px 20px 24px; }
-  .quote-dim-grid { grid-template-columns: 1fr; }
+  .quote-chips { display: none; }
+  .quote-select { display: block; }
+  .quote-dim-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
 }
 
 

@@ -1632,58 +1632,41 @@ body.theme-ac .work-meta {
   color: #121212;
 }
 
-.project-card-footer {
-  padding: 14px 16px;
-  background: #181818;
-  border-top: 1px solid var(--line-on-dark);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  flex: 1;
+.project-card-loc-hint {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 2;
+  opacity: 0.85;
+  transform: translateY(2px);
+  transition: all 0.25s ease;
 }
 
-.p-card-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
+.project-card:hover .project-card-loc-hint {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-.p-card-title {
-  font-family: var(--font-body);
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--paper);
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.25;
-}
-
-.p-card-sub {
-  font-size: 12px;
-  color: rgba(242,236,223,0.65);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.p-card-loc {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+.loc-pill {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
+  letter-spacing: 0.03em;
   color: var(--accent-muted);
-  flex-shrink: 0;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.06);
-  padding: 4px 7px;
+  background: rgba(18,18,18,0.88);
+  border-color: rgba(255,255,255,0.14);
 }
 
-.p-card-loc svg {
+.loc-pill svg {
+  color: var(--accent);
+}
+
+.project-card:hover .loc-pill {
+  background: rgba(18,18,18,0.92);
+  color: var(--accent-muted);
+  border-color: rgba(175, 143, 26, 0.45);
+}
+
+.project-card:hover .loc-pill svg {
   color: var(--accent);
 }
 
@@ -1771,7 +1754,7 @@ body.modal-open {
 .project-modal-dialog {
   position: relative;
   width: 100%;
-  max-width: 760px;
+  max-width: 900px;
   max-height: 90vh;
   background: #161616;
   border: 1px solid rgba(255,255,255,0.12);
@@ -1824,7 +1807,7 @@ body.modal-open {
 /* Contenido Grid 2 Columnas */
 .modal-content-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: 380px minmax(0, 1fr);
   min-height: unset;
   align-items: stretch;
 }
@@ -1836,6 +1819,7 @@ body.modal-open {
   flex-direction: column;
   justify-content: space-between;
   border-right: 1px solid var(--line-on-dark);
+  align-self: start;
 }
 
 .modal-img-wrap {
@@ -2787,7 +2771,7 @@ body.theme-ac .process-step.active .process-content {
 
   body.theme-ac .process-h-line { display: none; } /* oculta línea horizontal */
 
-  body.theme-ac .process-timeline-container {
+body.theme-ac .process-timeline-container {
     display: block;           /* apila los pasos */
     max-width: 760px;
     margin: 44px auto 0;

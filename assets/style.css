@@ -954,6 +954,16 @@ body.theme-ac .hero .container{
 }
 body.theme-maderin .hero-microcopy{ font-family:var(--font-body); font-size:13px; color:rgba(255,255,255,.62); }
 body.theme-cdm .hero-microcopy{ color:rgba(247,242,230,.6); }
+/* Microcopy con icono de reloj (AC): icono y texto en línea */
+body.theme-ac .hero-microcopy{
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+body.theme-ac .hero-microcopy svg{
+  width:14px; height:14px; flex:none;
+  color:var(--accent);
+}
 
 /* Indicador de scroll — invita a bajar al primer viewport */
 .hero-scroll-cue{

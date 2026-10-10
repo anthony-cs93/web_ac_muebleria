@@ -162,7 +162,7 @@ body.theme-maderin .hero-copy h1 em {
   font-style: normal;  /* sin cursiva */
   color: var(--accent-2); /* azul claro en la palabra destacada */
 }
-body.theme-maderin .hero-hl { color: #86CED5; font-style: italic; } /* color highlight turquesa en cursiva */
+body.theme-maderin .hero-hl { color: #FFD966; font-style: italic; } /* color highlight amarillo mantequilla en cursiva */
 body.theme-maderin .hero-copy .section-lede {
   color: rgba(255,255,255,.78);  /* texto secundario blanco */
   font-size: 17.5px;
@@ -4825,4 +4825,43 @@ body.theme-ac .process-timeline-container {
   body.theme-ac .nav-links.open,
   body.theme-ac .nav-links li,
   body.theme-ac .nav-links.open li { transition: none; }
+}
+
+/* Marcas (AC Mueblería) — cards algo más compactas que el original */
+body.theme-ac .brands-grid { gap: 20px; }
+body.theme-ac .brand-card { padding: 26px 24px; gap: 12px; }
+body.theme-ac .brand-card .tag { font-size: 13px; }
+body.theme-ac .brand-card .brand-logo { height: 40px; }
+body.theme-ac .brand-card p { font-size: 14px; line-height: 1.5; }
+@media (max-width: 980px) {
+  body.theme-ac .brands-grid { gap: 14px; }
+  body.theme-ac .brand-card { padding: 22px 22px; }
+  body.theme-ac .brand-card p { flex: 0 1 auto; }
+}
+
+/* Maderin — hero sin velo azul: scrim neutro oscuro + sombra de texto para mantener legibilidad */
+body.theme-maderin .hero-overlay {
+  background: linear-gradient(to right,
+    rgba(14, 14, 20, .72) 0%,
+    rgba(14, 14, 20, .55) 30%,
+    rgba(14, 14, 20, .25) 58%,
+    rgba(14, 14, 20, 0) 85%);
+}
+body.theme-maderin .hero-copy h1,
+body.theme-maderin .hero-copy .section-lede,
+body.theme-maderin .hero-microcopy,
+body.theme-maderin .hero-badge {
+  text-shadow: 0 1px 14px rgba(0, 0, 0, .45), 0 0 2px rgba(0, 0, 0, .35);
+}
+body.theme-maderin .hero-copy .section-lede,
+body.theme-maderin .hero-badge { color: rgba(255,255,255,.88); }
+body.theme-maderin .hero-badges { border-top-color: rgba(255,255,255,.3); }
+@media (max-width: 600px) {
+  body.theme-maderin .hero-overlay {
+    background: linear-gradient(to bottom,
+      rgba(14, 14, 20, .7) 0%,
+      rgba(14, 14, 20, .5) 35%,
+      rgba(14, 14, 20, .45) 60%,
+      rgba(14, 14, 20, .78) 100%);
+  }
 }

@@ -4876,6 +4876,37 @@ body.theme-maderin .hero-badges { border-top-color: rgba(255,255,255,.3); }
   body.theme-ac .wa-float-wrap:hover .wa-float-tooltip { transform: translateY(0); }
 }
 
+/* Maderin — botones del hero en amarillo mantequilla (texto oscuro para contraste) */
+body.theme-maderin .hero-actions .btn-wa {
+  background: #FFD966;
+  color: var(--ink);
+}
+body.theme-maderin .hero-actions .btn-wa:hover {
+  background: #FFE38F;
+}
+body.theme-maderin .hero-actions .btn-ghost-dark {
+  border-color: rgba(255, 217, 102, .75);
+}
+body.theme-maderin .hero-actions .btn-ghost-dark:hover {
+  border-color: #FFD966;
+  background: rgba(255, 217, 102, .14);
+}
+
+/* Maderin — botón "Escríbenos" del nav y WhatsApp flotante en amarillo mantequilla */
+body.theme-maderin .nav-cta .btn-wa {
+  background: #FFD966;
+  color: var(--ink);
+}
+body.theme-maderin .nav-cta .btn-wa:hover {
+  background: #FFE38F;
+}
+body.theme-maderin .wa-float {
+  background: #FFD966 !important;
+  color: var(--ink) !important;
+}
+body.theme-maderin .wa-float:hover {
+  background: #FFE38F !important;
+}
 
 /* Footer (AC Mueblería): 2 columnas y botones flotantes que se elevan sobre la barra inferior */
 body.theme-ac .footer-grid { grid-template-columns: 1.6fr 1fr; }

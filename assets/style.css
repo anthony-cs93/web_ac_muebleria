@@ -1312,6 +1312,9 @@ body.theme-ac .nav {
   border-bottom: 1px solid var(--line-on-dark);
   box-shadow: none !important;           /* sin sombra */
 }
+body.theme-ac {
+  --nav-mobile-bg: #1c1c1c;              /* menú móvil: gris carbón, un tono más claro que el topbar */
+}
 body.theme-ac .brand span {
   color: var(--accent) !important;  /* subtítulo amarillo */
 }
@@ -4414,21 +4417,8 @@ body.theme-ac .process-timeline-container {
 }
 
 /* ==========================================================================
-   MODAL DE COTIZACIÓN (AC Mueblería) — cotizador express
+   FORMULARIO DE COTIZACIÓN (AC Mueblería) — cotizador express
    ========================================================================== */
-.quote-modal-dialog {
-  max-width: 900px;
-}
-.quote-modal .modal-title {
-  color: var(--accent);
-}
-.quote-modal-body {
-  padding: 34px 34px 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-.quote-modal-body .modal-header { margin-bottom: 0; }
 .quote-form {
   display: flex;
   flex-direction: column;
@@ -4540,10 +4530,8 @@ body.theme-ac .process-timeline-container {
   font-size: 12.5px;
   color: #e3a7a7;
 }
-.quote-modal-body .modal-actions { margin-top: 4px; }
 
 @media (max-width: 560px) {
-  .quote-modal-body { padding: 30px 20px 24px; }
   .quote-chips { display: none; }
   .quote-select { display: block; }
   .quote-dim-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
@@ -4656,4 +4644,185 @@ body.theme-ac .process-timeline-container {
 }
 @media (prefers-reduced-motion: reduce) {
   .quote-sketch-stage path { animation: none; stroke-dashoffset: 0; }
+}
+
+/* El menú sticky no debe tapar el título al llegar por ancla */
+#cotizar { scroll-margin-top: 48px; }
+
+/* Topbar móvil (AC Mueblería): botón "Cotizar" de texto corto y hamburguesa separada */
+.btn-cta .short { display: none; }
+@media (max-width: 860px) {
+  .btn-cta .short { display: inline; }
+  body.theme-ac .nav-inner { gap: 4px; }
+  body.theme-ac .nav-toggle { padding: 12px; margin-right: 10px; min-height: 44px; }
+  body.theme-ac .nav-cta .btn-cta { padding: 11px 18px; font-size: 14px; }
+}
+
+/* Menú móvil (AC Mueblería): enlaces como bloques con más espacio vertical */
+@media (max-width: 860px) {
+  body.theme-ac .nav-links { padding: 6px 28px 14px; }
+  body.theme-ac .nav-links a {
+    display: block;
+    padding: 17px 0;
+    font-size: 17px;
+  }
+  body.theme-ac .nav-links li { width: 100%; }
+  body.theme-ac .nav-links li:last-child a { border-bottom: 0; }
+}
+
+/* Animación del despliegue del menú móvil (AC Mueblería): baja con fade y los enlaces entran escalonados */
+@keyframes navMenuIn {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes navLinkIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 860px) {
+  body.theme-ac .nav-links.open {
+    animation: navMenuIn .28s cubic-bezier(.22, 1, .36, 1) both;
+  }
+  body.theme-ac .nav-links.open li {
+    animation: navLinkIn .35s cubic-bezier(.22, 1, .36, 1) both;
+  }
+  body.theme-ac .nav-links.open li:nth-child(1) { animation-delay: .05s; }
+  body.theme-ac .nav-links.open li:nth-child(2) { animation-delay: .10s; }
+  body.theme-ac .nav-links.open li:nth-child(3) { animation-delay: .15s; }
+  body.theme-ac .nav-links.open li:nth-child(4) { animation-delay: .20s; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.theme-ac .nav-links.open,
+  body.theme-ac .nav-links.open li { animation: none; }
+}
+
+/* ==========================================================================
+   TOPBAR (AC Mueblería) — orden, tablet y panel móvil a pantalla completa
+   ========================================================================== */
+/* Accesos directos a marcas y CTA del panel: solo existen en móvil */
+.nav-brands, .nav-panel-cta { display: none; }
+
+/* Tablet y móvil (≤860px): botón a la izquierda de la hamburguesa */
+@media (max-width: 860px) {
+  body.theme-ac .nav-cta { order: 2; margin-left: auto; }
+  body.theme-ac .nav-toggle { order: 3; margin-left: 0; margin-right: 0; }
+  body.theme-ac .nav-links li:nth-child(4) a { border-bottom: 0; }
+  /* Tablet: el botón mantiene el texto completo */
+  body.theme-ac .nav-cta .btn-cta .long { display: inline; }
+  body.theme-ac .nav-cta .btn-cta .short { display: none; }
+  /* Hamburguesa -> X al abrir */
+  body.theme-ac .hamburger-bar { transition: transform .3s cubic-bezier(.22, 1, .36, 1), opacity .2s ease; }
+  body.theme-ac .nav-toggle[aria-expanded="true"] .hamburger-bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  body.theme-ac .nav-toggle[aria-expanded="true"] .hamburger-bar:nth-child(2) { opacity: 0; }
+  body.theme-ac .nav-toggle[aria-expanded="true"] .hamburger-bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+}
+
+/* Tablet y móvil (≤860px): panel a pantalla completa */
+@keyframes navPanelIn { from { opacity: 0; } to { opacity: 1; } }
+@media (max-width: 860px) {
+  body.theme-ac.nav-open { overflow: hidden; }
+  body.theme-ac.nav-open .wa-float, body.theme-ac.nav-open .back-to-top { display: none; }  /* no tapan el CTA del panel */
+
+  /* backdrop-filter crea un bloque contenedor para fixed: se quita mientras el panel está abierto */
+  body.theme-ac .nav:has(.nav-links.open) { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  /* logo, botón y hamburguesa quedan por encima del panel */
+  body.theme-ac .brand, body.theme-ac .nav-cta, body.theme-ac .nav-toggle { position: relative; z-index: 3; }
+
+  body.theme-ac .nav-links {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    height: 100vh; height: 100dvh;
+    z-index: 2;
+    padding: calc(var(--nav-h) + 8px) max(28px, calc((100% - 560px) / 2)) 28px;
+    border: 0;
+    overflow-y: auto;
+    flex-direction: column; align-items: stretch;
+  }
+  body.theme-ac .nav-links.open { animation: navPanelIn .25s ease both; }
+  body.theme-ac .nav-links a { font-size: 22px; padding: 18px 0; }
+
+  /* Marcas como accesos directos bajo "Nuestras marcas" */
+  body.theme-ac .nav-links .nav-brands {
+    display: flex; flex-direction: column; gap: 10px;
+    padding: 4px 0 20px;
+    border-bottom: 1px solid var(--nav-mobile-divider);
+  }
+  body.theme-ac .nav-links .nav-brands a {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+    padding: 14px 16px; font-size: 17px;
+    border: 1px solid var(--line-on-dark); border-radius: 10px;
+    background: rgba(255,255,255,.03);
+    color: var(--paper);
+  }
+  body.theme-ac .nav-links .nav-brands a span { font-size: 13px; font-weight: 400; color: rgba(242,236,223,.5); }
+  body.theme-ac .nav-links .nav-brands a:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* CTA grande al pie del panel */
+  body.theme-ac .nav-links .nav-panel-cta { display: block; margin-top: auto; padding-top: 28px; }
+  body.theme-ac .nav-links .nav-panel-cta a {
+    display: flex; justify-content: center; align-items: center;
+    width: 100%; min-height: 62px; padding: 18px 24px;
+    font-size: 18px; font-weight: 600; border: 1px solid var(--accent);
+    background: var(--accent); color: #fff; border-radius: 12px;
+  }
+  body.theme-ac .nav-links .nav-panel-cta a:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: #fff; }
+
+  /* Entrada escalonada de los elementos del panel */
+  body.theme-ac .nav-links.open li:nth-child(5) { animation-delay: .25s; }
+  body.theme-ac .nav-links.open li:nth-child(6) { animation-delay: .30s; }
+}
+
+/* Móvil (≤600px): sin botón "Cotizar" en el topbar; el CTA vive en el panel */
+@media (max-width: 600px) {
+  body.theme-ac .nav-cta { display: none; }
+  body.theme-ac .nav-toggle { margin-left: auto; }
+}
+
+/* Panel móvil/tablet: abre y cierra con transición (en vez de display none/flex, que no se puede animar al cerrar) */
+@media (max-width: 860px) {
+  /* sin backdrop-filter el panel fixed no depende del nav (el nav ya es casi opaco) */
+  body.theme-ac .nav { backdrop-filter: none; -webkit-backdrop-filter: none; }
+
+  body.theme-ac .nav-links,
+  body.theme-ac .nav-links.open {
+    display: flex;
+    animation: none;
+  }
+  body.theme-ac .nav-links {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .25s ease, visibility 0s linear .25s;   /* al cerrar: fundido y luego se oculta */
+  }
+  body.theme-ac .nav-links.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity .25s ease, visibility 0s;
+  }
+
+  /* Elementos del panel: entran escalonados al abrir y salen juntos al cerrar */
+  body.theme-ac .nav-links li,
+  body.theme-ac .nav-links.open li {
+    animation: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity .2s ease, transform .2s ease;
+  }
+  body.theme-ac .nav-links.open li {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity .35s cubic-bezier(.22, 1, .36, 1), transform .35s cubic-bezier(.22, 1, .36, 1);
+  }
+  body.theme-ac .nav-links.open li:nth-child(1) { transition-delay: .05s; }
+  body.theme-ac .nav-links.open li:nth-child(2) { transition-delay: .10s; }
+  body.theme-ac .nav-links.open li:nth-child(3) { transition-delay: .15s; }
+  body.theme-ac .nav-links.open li:nth-child(4) { transition-delay: .20s; }
+  body.theme-ac .nav-links.open li:nth-child(5) { transition-delay: .25s; }
+  body.theme-ac .nav-links.open li:nth-child(6) { transition-delay: .30s; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.theme-ac .nav-links,
+  body.theme-ac .nav-links.open,
+  body.theme-ac .nav-links li,
+  body.theme-ac .nav-links.open li { transition: none; }
 }

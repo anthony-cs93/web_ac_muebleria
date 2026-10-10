@@ -18,8 +18,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggle = document.querySelector(".nav-toggle");
   const links = document.querySelector(".nav-links");
   if (toggle && links){
-    toggle.addEventListener("click", () => links.classList.toggle("open"));
-    links.querySelectorAll("a").forEach(a => a.addEventListener("click", () => links.classList.remove("open")));
+    // Abre/cierra el menú; en móvil el panel es a pantalla completa, así que se bloquea el scroll del fondo
+    const setMenu = (open) => {
+      links.classList.toggle("open", open);
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
+      document.body.classList.toggle("nav-open", open);
+    };
+    toggle.addEventListener("click", () => setMenu(!links.classList.contains("open")));
+    links.querySelectorAll("a").forEach(a => a.addEventListener("click", () => setMenu(false)));
+    window.addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(false); });
+    window.addEventListener("resize", () => { if (window.innerWidth > 860) setMenu(false); });
   }
 
   // --- Fallback para imágenes no encontradas ---
@@ -1374,7 +1383,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const dims = dimEls.map((el) => (el && el.value ? el.value.trim() : "")).filter(Boolean);
       if (dims.length) lines.push(`• Medidas aprox. (cm): ${dims.join(" × ")}`);
       if (val("Name")) lines.push(`• Nombre: ${val("Name")}`);
-      if (val("Material")) lines.push(`• Material/acabado: ${val("Material")}`);
       if (val("Zone")) lines.push(`• Zona: ${val("Zone")}`);
       if (val("Details")) lines.push(`• Detalles: ${val("Details")}`);
       return lines.join("\n");
@@ -1441,41 +1449,27 @@ document.addEventListener("DOMContentLoaded", () => {
     return { reset, clearError, updateLink };
   }
 
-  // --- Modal de cotización ---
-  // Los botones con [data-quote-open] abren el cotizador en un modal.
-  function initQuoteModal() {
-    const modal = document.getElementById("quoteModal");
-    if (!modal) return;
-
-    const backdrop = document.getElementById("quoteModalBackdrop");
-    const closeBtn = document.getElementById("quoteModalCloseBtn");
-    const triggers = document.querySelectorAll("[data-quote-open]");
-
-    function closeModal() {
-      modal.classList.remove("active");
-      modal.setAttribute("aria-hidden", "true");
-      document.body.classList.remove("modal-open");
-    }
-
-    const quote = bindQuoteForm("quote", closeModal);
-    if (!quote) return;
-
-    function openModal() {
-      modal.classList.add("active");
-      modal.setAttribute("aria-hidden", "false");
-      document.body.classList.add("modal-open");
-      quote.clearError();
-      quote.updateLink();
-      if (closeBtn) closeBtn.focus();
-    }
-
-    triggers.forEach((trigger) => {
-      trigger.addEventListener("click", (event) => { event.preventDefault(); openModal(); });
-    });
-    if (closeBtn) closeBtn.addEventListener("click", closeModal);
-    if (backdrop) backdrop.addEventListener("click", closeModal);
-    window.addEventListener("keydown", (event) => {
-      if (modal.classList.contains("active") && event.key === "Escape") closeModal();
+  // Los botones "Cotiza tu proyecto" llevan a #cotizar. El timeline de "Cómo trabajamos"
+  // está pineado con GSAP y frena el scroll suave a medio camino, así que se corrige la
+  // posición al terminar hasta que la sección quede alineada.
+  function initQuoteAnchors() {
+    const target = document.getElementById("cotizar");
+    if (!target) return;
+    document.querySelectorAll('a[href="#cotizar"]').forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        history.replaceState(null, "", "#cotizar");
+        let tries = 0;
+        const align = () => {
+          const offset = target.getBoundingClientRect().top - parseFloat(getComputedStyle(target).scrollMarginTop || 0);
+          if (Math.abs(offset) > 8 && tries++ < 4) {
+            target.scrollIntoView({ behavior: tries === 1 ? "smooth" : "instant" });
+            window.setTimeout(align, tries === 1 ? 900 : 300);
+          }
+        };
+        target.scrollIntoView({ behavior: "smooth" });
+        window.setTimeout(align, 900);
+      });
     });
   }
 
@@ -1569,7 +1563,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Inicializar Catálogo E-commerce Maderin si estamos en maderin.html
   initMaderinEcommerce();
 
-  // Inicializar el modal de cotización de AC Mueblería (si existe en la página)
-  initQuoteModal();
   initQuoteSection();
+  initQuoteAnchors();
 });

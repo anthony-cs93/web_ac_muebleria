@@ -1557,6 +1557,20 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCardsOnScroll();
   }
 
+  // Botones flotantes: al llegar al pie de página se elevan para no tapar la barra inferior ("Diseño por ACM Studio")
+  const footerBottom = document.querySelector(".footer-bottom");
+  if (footerBottom) {
+    const updateFloatLift = () => {
+      const space = window.innerHeight - footerBottom.getBoundingClientRect().top; // alto visible de la barra inferior
+      const lift = Math.max(0, space + 12 - 22);                                     // 22px = margen base de los flotantes
+      document.documentElement.style.setProperty("--float-lift", lift + "px");
+    };
+    window.addEventListener("scroll", updateFloatLift, { passive: true });
+    window.addEventListener("resize", updateFloatLift);
+    window.addEventListener("load", updateFloatLift);
+    updateFloatLift();
+  }
+
   // Inicializar Por qué elegirnos scroll reveal
   initWhyChooseUsScrollReveal();
 

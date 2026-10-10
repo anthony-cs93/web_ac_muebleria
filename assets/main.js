@@ -208,7 +208,12 @@ document.addEventListener("DOMContentLoaded", () => {
         material: "Melamina Capri RH 18mm",
         finish: "Wall panel & Cuarzo",
         img: "public/ac_muebleria/trabajos/cocina-01.png",
-        waText: "Hola AC Mueblería, me interesa cotizar un proyecto similar a Cocina en L (Capri + Cuarzo negro)."
+        waText: "Hola AC Mueblería, me interesa cotizar un proyecto similar a Cocina en L (Capri + Cuarzo negro).",
+        filter: "cocinas",
+        price: "Desde S/ 6,500",
+        time: "15 días",
+        install: "8 días",
+        cta: "Quiero una cocina así"
       },
       {
         index: 1,
@@ -222,7 +227,12 @@ document.addEventListener("DOMContentLoaded", () => {
         material: "Melamina Toquilla 18mm",
         finish: "Jaladores bronce + LED",
         img: "public/ac_muebleria/trabajos/vestidor-01.png",
-        waText: "Hola AC Mueblería, me interesa cotizar un proyecto similar a Closet modular (Toquilla)."
+        waText: "Hola AC Mueblería, me interesa cotizar un proyecto similar a Closet modular (Toquilla).",
+        filter: "closets",
+        price: "Desde S/ 1,800",
+        time: "10 días",
+        install: "4 días",
+        cta: "Quiero un closet así"
       },
       {
         index: 2,
@@ -236,7 +246,12 @@ document.addEventListener("DOMContentLoaded", () => {
         material: "Melamina Blanca Mate",
         finish: "Panel SPC + Wall panel",
         img: "public/ac_muebleria/trabajos/mueble-tv-01.png",
-        waText: "Hola AC Mueblería, me interesa cotizar un proyecto similar a Mueble de TV flotante con Wall panel."
+        waText: "Hola AC Mueblería, me interesa cotizar un proyecto similar a Mueble de TV flotante con Wall panel.",
+        filter: "tv",
+        price: "Desde S/ 1,500",
+        time: "5 días",
+        install: "3 días",
+        cta: "Quiero un mueble de TV así"
       },
       {
         index: 3,
@@ -250,7 +265,12 @@ document.addEventListener("DOMContentLoaded", () => {
         material: "Melamina Blanca 18mm",
         finish: "Jaladores negros mate",
         img: "public/ac_muebleria/trabajos/organizador-01.png",
-        waText: "Hola AC Mueblería, me interesa cotizar un proyecto similar a Mueble organizador bajo escalera."
+        waText: "Hola AC Mueblería, me interesa cotizar un proyecto similar a Mueble organizador bajo escalera.",
+        filter: "organizadores",
+        price: "Desde S/ 1,000",
+        time: "5 días",
+        install: "2 días",
+        cta: "Quiero un organizador así"
       },
       {
         index: 4,
@@ -264,7 +284,12 @@ document.addEventListener("DOMContentLoaded", () => {
         material: "Melamina Espresso + Plomo",
         finish: "Tablero regrueso 36 mm",
         img: "public/ac_muebleria/trabajos/escritorio-01.png",
-        waText: "Hola AC Mueblería, me interesa cotizar un proyecto similar a Módulos de oficina."
+        waText: "Hola AC Mueblería, me interesa cotizar un proyecto similar a Módulos de oficina.",
+        filter: "oficinas",
+        price: "Desde S/ 2,500",
+        time: "10 días",
+        install: "5 días",
+        cta: "Quiero una oficina así"
       },
       {
         index: 5,
@@ -278,17 +303,27 @@ document.addEventListener("DOMContentLoaded", () => {
         material: "Melamina Espresso + Gris",
         finish: "Puertas de vidrio + Cuarzo",
         img: "public/ac_muebleria/trabajos/isla-cocina-01.png",
-        waText: "Hola AC Mueblería, me interesa cotizar un proyecto similar a Mueble bar con vitrinas vidriadas."
+        waText: "Hola AC Mueblería, me interesa cotizar un proyecto similar a Mueble bar con vitrinas vidriadas.",
+        filter: "cocinas",
+        price: "Desde S/ 2,000",
+        time: "8 días",
+        install: "3 días",
+        cta: "Quiero un mueble bar así"
       }
     ];
 
     let currentActiveIndex = 0;
     let modalCurrentIndex = 0;
 
+    // Tarjetas visibles según el filtro activo (posición en este arreglo = posición en dots y modal)
+    let visibleCards = cards.slice();
+    let carouselDots = [];
+
     // --- 1. Generación y sincronización de dots del carrusel ---
-    if (dotsContainer) {
+    function buildCarouselDots() {
+      if (!dotsContainer) return;
       dotsContainer.innerHTML = "";
-      cards.forEach((card, idx) => {
+      visibleCards.forEach((card, idx) => {
         const dot = document.createElement("button");
         dot.className = `carousel-dot ${idx === 0 ? "active" : ""}`;
         dot.setAttribute("aria-label", `Ir al proyecto ${idx + 1}`);
@@ -298,19 +333,19 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         dotsContainer.appendChild(dot);
       });
+      carouselDots = Array.from(dotsContainer.querySelectorAll(".carousel-dot"));
     }
-
-    const carouselDots = dotsContainer ? Array.from(dotsContainer.querySelectorAll(".carousel-dot")) : [];
+    buildCarouselDots();
 
     function updateActiveDot(index) {
-      currentActiveIndex = Math.max(0, Math.min(index, cards.length - 1));
+      currentActiveIndex = Math.max(0, Math.min(index, visibleCards.length - 1));
       carouselDots.forEach((dot, idx) => {
         dot.classList.toggle("active", idx === currentActiveIndex);
       });
     }
 
     function scrollToCard(index) {
-      const targetCard = cards[index];
+      const targetCard = visibleCards[index];
       if (!targetCard) return;
       const targetLeft = targetCard.offsetLeft - viewport.offsetLeft;
       viewport.scrollTo({
@@ -322,7 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Navegación con flechas Prev / Next del carrusel (flotantes y barra inferior)
     function getCardScrollStep() {
-      const cardWidth = cards[0].offsetWidth;
+      const cardWidth = (visibleCards[0] || cards[0]).offsetWidth;
       const gap = parseInt(window.getComputedStyle(track).gap, 10) || 16;
       return cardWidth + gap;
     }
@@ -398,28 +433,41 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalNextBtn = document.getElementById("modalNextBtn");
     const modalNavDotsContainer = document.getElementById("modalNavDots");
 
-    // Crear dots internos del modal
-    if (modalNavDotsContainer) {
+    const modalPrice = document.getElementById("modalPrice");
+    const modalTime = document.getElementById("modalTime");
+    const modalInstall = document.getElementById("modalInstall");
+    const modalWaLabel = document.getElementById("modalWaLabel");
+
+    // Crear dots internos del modal (uno por proyecto visible)
+    let modalNavDots = [];
+    function buildModalDots() {
+      if (!modalNavDotsContainer) return;
       modalNavDotsContainer.innerHTML = "";
-      projectsData.forEach((_, idx) => {
+      visibleCards.forEach((_, idx) => {
         const mDot = document.createElement("button");
         mDot.className = `modal-nav-dot ${idx === 0 ? "active" : ""}`;
         mDot.setAttribute("aria-label", `Ver proyecto ${idx + 1}`);
         mDot.addEventListener("click", () => populateModal(idx, idx > modalCurrentIndex ? "next" : "prev"));
         modalNavDotsContainer.appendChild(mDot);
       });
+      modalNavDots = Array.from(modalNavDotsContainer.querySelectorAll(".modal-nav-dot"));
     }
+    buildModalDots();
 
-    const modalNavDots = modalNavDotsContainer ? Array.from(modalNavDotsContainer.querySelectorAll(".modal-nav-dot")) : [];
+    const pad2 = (n) => String(n).padStart(2, "0");
 
     function populateModal(index, direction = "next") {
-      modalCurrentIndex = (index + projectsData.length) % projectsData.length;
-      const data = projectsData[modalCurrentIndex];
+      modalCurrentIndex = (index + visibleCards.length) % visibleCards.length;
+      const data = projectsData[Number(visibleCards[modalCurrentIndex].dataset.index)];
       if (!data) return;
 
       // Actualizar datos
       if (modalCategory) modalCategory.textContent = data.category;
-      if (modalCounter) modalCounter.textContent = data.counter;
+      if (modalCounter) modalCounter.textContent = `${pad2(modalCurrentIndex + 1)} / ${pad2(visibleCards.length)}`;
+      if (modalPrice) modalPrice.textContent = data.price.replace(/^Desde\s*/, "");
+      if (modalTime) modalTime.textContent = data.time;
+      if (modalInstall) modalInstall.textContent = data.install;
+      if (modalWaLabel) modalWaLabel.textContent = "Cotizar por WhatsApp";
       if (modalProjectTitle) modalProjectTitle.textContent = data.title;
       if (modalProjectSubtitle) modalProjectSubtitle.textContent = data.subtitle;
       if (modalDesc) modalDesc.textContent = data.desc;
@@ -427,7 +475,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (modalDimensions) modalDimensions.textContent = data.dimensions;
       if (modalMaterial) modalMaterial.textContent = data.material;
       if (modalFinish) modalFinish.textContent = data.finish;
-      if (modalWaBtn) modalWaBtn.href = waLink(data.waText);
+      if (modalWaBtn) modalWaBtn.href = waLink(`${data.waText} ${data.cta}.`);
 
       // Transición de imagen
       if (modalImg) {
@@ -466,20 +514,66 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Eventos de click en tarjetas del carrusel para abrir el modal
-    cards.forEach((card, idx) => {
+    cards.forEach((card) => {
       card.addEventListener("click", (e) => {
         if (hasDragged) return; // Evitar abrir si fue un drag
-        openModal(idx);
+        openModal(visibleCards.indexOf(card));
       });
 
       // Soporte para teclado (Enter / Espacio)
       card.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          openModal(idx);
+          openModal(visibleCards.indexOf(card));
         }
       });
     });
+
+    // --- 3. Entrada escalonada de tarjetas (al aparecer la sección y al filtrar) ---
+    function animateCardsIn() {
+      visibleCards.forEach((card, i) => {
+        card.style.setProperty("--i", i);
+        card.classList.remove("card-enter");
+        void card.offsetWidth; // reinicia la animación
+        card.classList.add("card-enter");
+      });
+    }
+
+    if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      carouselWrapper.classList.add("cards-pending");
+      const enterObserver = new IntersectionObserver((entries) => {
+        if (!entries.some((en) => en.isIntersecting)) return;
+        enterObserver.disconnect();
+        animateCardsIn();
+        carouselWrapper.classList.remove("cards-pending");
+      }, { threshold: 0.2 });
+      enterObserver.observe(carouselWrapper);
+    }
+
+    // --- 4. Filtros por tipo de proyecto ---
+    const filterBar = document.getElementById("worksFilters");
+    if (filterBar) {
+      const filterBtns = Array.from(filterBar.querySelectorAll(".filter-chip"));
+      filterBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const filter = btn.dataset.filter;
+          filterBtns.forEach((b) => {
+            const on = b === btn;
+            b.classList.toggle("active", on);
+            b.setAttribute("aria-pressed", on ? "true" : "false");
+          });
+          cards.forEach((card) => {
+            card.hidden = !(filter === "all" || card.dataset.filter === filter);
+          });
+          visibleCards = cards.filter((card) => !card.hidden);
+          animateCardsIn();
+          viewport.scrollTo({ left: 0, behavior: "auto" });
+          buildCarouselDots();
+          buildModalDots();
+          updateActiveDot(0);
+        });
+      });
+    }
 
     // Cerrar modal
     if (closeBtn) closeBtn.addEventListener("click", closeModal);
@@ -1195,55 +1289,102 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- Modal de cotización (AC Mueblería) ---
-  // Los botones con [data-quote-open] abren un cotizador express que arma el
-  // mensaje de WhatsApp con tipo de proyecto, medidas y datos del cliente.
-  function initQuoteModal() {
-    const modal = document.getElementById("quoteModal");
-    if (!modal) return;
+  // Bosquejos en trazos por tipo de proyecto (viewBox 320×160). Cada elemento
+  // lleva pathLength="1" para animar el dibujado con stroke-dashoffset.
+  const QUOTE_SKETCHES = {
+    "Cocina": [
+      "M30 20h260v42H30z", "M110 20v42M200 20v42", "M100 50h8M202 50h8",
+      "M24 92h272", "M30 92v58h260V92", "M117 92v58M203 92v58", "M108 108v10M212 108v10",
+      "M136 78a8 4 0 1 0 16 0a8 4 0 1 0-16 0", "M168 78a8 4 0 1 0 16 0a8 4 0 1 0-16 0"
+    ],
+    "Closet": [
+      "M50 10h220v140H50z", "M123 10v140M197 10v140", "M58 28h57", "M70 28l7 12h16l7-12",
+      "M133 100h54M133 124h54", "M205 20v100", "M115 70v22M131 70v22", "M50 150v6M270 150v6"
+    ],
+    "Escritorio": [
+      "M30 70h260v7H30z", "M40 77v73M280 77v73", "M196 77v73M280 77v0", "M196 105h84M196 128h84",
+      "M232 112h12M232 135h12", "M105 28h90v36h-90z", "M150 64v6M132 70h36", "M205 58h24v12h-24z"
+    ],
+    "Centro de TV": [
+      "M96 26h128v56H96z", "M160 82v10M136 92h48",
+      "M30 100h260v42H30z", "M117 100v42M203 100v42", "M108 118h6M206 118h6",
+      "M30 14h54v86M236 14h54v86", "M30 44h54M30 74h54M236 44h54M236 74h54"
+    ],
+    "Organizador": [
+      "M80 10h160v140H80z", "M80 54h160M80 98h160", "M160 10v140",
+      "M92 54v-18h26v18", "M170 54v-24h30v24", "M100 98v-26h40v26", "M180 98v-14h40v14",
+      "M92 150v-30h56v30", "M172 150v-20h60v20"
+    ],
+    "Mueble bar": [
+      "M70 10h180v140H70z", "M70 54h180", "M70 96h180", "M160 96v54",
+      "M92 54v-26h8v26M108 54v-34h8v34M124 54v-22h8v22", "M180 54l8-26h14l8 26",
+      "M206 28v-8", "M82 96v-14h18v14M104 96v-8h14v8", "M150 126h4M166 126h4"
+    ]
+  };
 
-    const backdrop = document.getElementById("quoteModalBackdrop");
-    const closeBtn = document.getElementById("quoteModalCloseBtn");
-    const form = document.getElementById("quoteForm");
-    const chipsWrap = document.getElementById("quoteTypeChips");
+  // --- Cotizador express (AC Mueblería) ---
+  // bindQuoteForm enlaza un formulario de cotización (ids con `prefix`) y arma
+  // el mensaje de WhatsApp con tipo de proyecto, medidas y datos del cliente.
+  // Lo usan el modal ("quote") y la sección inline ("inlineQuote").
+  function bindQuoteForm(prefix, onSent) {
+    const $ = (suffix) => document.getElementById(prefix + suffix);
+    const form = $("Form");
+    const waBtn = $("WaBtn");
+    if (!form || !waBtn) return null;
+
+    const chipsWrap = $("TypeChips");
     const chips = chipsWrap ? Array.from(chipsWrap.querySelectorAll(".quote-chip")) : [];
-    const typeSelect = document.getElementById("quoteTypeSelect");
-    const typeHint = document.getElementById("quoteTypeHint");
-    const widthEl = document.getElementById("quoteWidth");
-    const heightEl = document.getElementById("quoteHeight");
-    const depthEl = document.getElementById("quoteDepth");
-    const nameEl = document.getElementById("quoteName");
-    const materialEl = document.getElementById("quoteMaterial");
-    const zoneEl = document.getElementById("quoteZone");
-    const detailsEl = document.getElementById("quoteDetails");
-    const waBtn = document.getElementById("quoteWaBtn");
-    const triggers = document.querySelectorAll("[data-quote-open]");
+    const typeSelect = $("TypeSelect");
+    const typeHint = $("TypeHint");
+    const dimEls = [$("Width"), $("Height"), $("Depth")];
+    const val = (suffix) => { const el = $(suffix); return el && el.value ? el.value.trim() : ""; };
+
+    const sketchStage = $("SketchStage");
+    const sketchCaption = $("SketchCaption");
+    const sketchEmpty = sketchStage ? sketchStage.innerHTML : "";
 
     let selectedType = "";
+
+    // Dibuja el bosquejo del tipo elegido (trazos que se animan con CSS)
+    function renderSketch() {
+      if (!sketchStage) return;
+      const paths = QUOTE_SKETCHES[selectedType];
+      if (!paths) {
+        sketchStage.innerHTML = sketchEmpty;
+        sketchStage.classList.remove("has-sketch");
+        if (sketchCaption) sketchCaption.hidden = true;
+        return;
+      }
+      const d = paths.map((path, i) => `<path d="${path}" pathLength="1" style="animation-delay:${i * 70}ms"/>`).join("");
+      sketchStage.innerHTML = `<svg viewBox="0 0 320 160" role="img" aria-label="Bosquejo de ${selectedType}">${d}</svg>`;
+      sketchStage.classList.add("has-sketch");
+      updateCaption();
+    }
+
+    function updateCaption() {
+      if (!sketchCaption || !selectedType) return;
+      const dims = dimEls.map((el) => (el && el.value ? el.value.trim() : "")).filter(Boolean);
+      sketchCaption.textContent = dims.length ? `${selectedType} · ${dims.join(" × ")} cm` : `${selectedType} · bosquejo referencial`;
+      sketchCaption.hidden = false;
+    }
 
     function buildMessage() {
       const lines = ["Hola AC Mueblería, quiero cotizar un proyecto:"];
       lines.push(`• Tipo: ${selectedType || "por definir"}`);
-
-      const dims = [widthEl, heightEl, depthEl]
-        .map((el) => (el && el.value ? el.value.trim() : ""))
-        .filter(Boolean);
+      const dims = dimEls.map((el) => (el && el.value ? el.value.trim() : "")).filter(Boolean);
       if (dims.length) lines.push(`• Medidas aprox. (cm): ${dims.join(" × ")}`);
-
-      const name = nameEl && nameEl.value.trim();
-      if (name) lines.push(`• Nombre: ${name}`);
-      const material = materialEl && materialEl.value.trim();
-      if (material) lines.push(`• Material/acabado: ${material}`);
-      const zone = zoneEl && zoneEl.value.trim();
-      if (zone) lines.push(`• Zona: ${zone}`);
-      const details = detailsEl && detailsEl.value.trim();
-      if (details) lines.push(`• Detalles: ${details}`);
-
+      if (val("Name")) lines.push(`• Nombre: ${val("Name")}`);
+      if (val("Material")) lines.push(`• Material/acabado: ${val("Material")}`);
+      if (val("Zone")) lines.push(`• Zona: ${val("Zone")}`);
+      if (val("Details")) lines.push(`• Detalles: ${val("Details")}`);
       return lines.join("\n");
     }
 
-    function updateLink() {
-      if (waBtn) waBtn.href = waLink(buildMessage());
+    function updateLink() { waBtn.href = waLink(buildMessage()); updateCaption(); }
+
+    function clearError() {
+      if (typeHint) typeHint.hidden = true;
+      if (chipsWrap) chipsWrap.classList.remove("quote-chips-error");
     }
 
     function selectType(value) {
@@ -1254,20 +1395,61 @@ document.addEventListener("DOMContentLoaded", () => {
         chip.setAttribute("aria-pressed", on ? "true" : "false");
       });
       if (typeSelect) typeSelect.value = value;
-      if (typeHint) typeHint.hidden = true;
-      if (chipsWrap) chipsWrap.classList.remove("quote-chips-error");
+      clearError();
+      renderSketch();
       updateLink();
     }
 
-    function openModal() {
-      modal.classList.add("active");
-      modal.setAttribute("aria-hidden", "false");
-      document.body.classList.add("modal-open");
-      if (typeHint) typeHint.hidden = true;
-      if (chipsWrap) chipsWrap.classList.remove("quote-chips-error");
+    function reset() {
+      form.reset();
+      selectedType = "";
+      chips.forEach((chip) => { chip.classList.remove("active"); chip.setAttribute("aria-pressed", "false"); });
+      if (typeSelect) typeSelect.value = "";
+      clearError();
+      renderSketch();
       updateLink();
-      if (closeBtn) closeBtn.focus();
     }
+
+    chips.forEach((chip) => {
+      chip.addEventListener("click", () => selectType(chip.getAttribute("data-value")));
+    });
+    if (typeSelect) typeSelect.addEventListener("change", () => selectType(typeSelect.value));
+    form.addEventListener("input", updateLink);
+    form.addEventListener("change", updateLink);
+
+    // Enviar: exige el tipo de proyecto y luego abre WhatsApp
+    waBtn.addEventListener("click", (event) => {
+      if (!selectedType) {
+        event.preventDefault();
+        if (typeHint) typeHint.hidden = false;
+        if (chipsWrap) chipsWrap.classList.add("quote-chips-error");
+        if (typeSelect && typeSelect.offsetParent !== null) {
+          typeSelect.focus();
+        } else if (chips[0]) {
+          chips[0].focus();
+        }
+        return;
+      }
+      // El href ya está actualizado; se abre en una pestaña nueva.
+      window.setTimeout(() => {
+        if (onSent) onSent();
+        reset();
+      }, 250);
+    });
+
+    updateLink();
+    return { reset, clearError, updateLink };
+  }
+
+  // --- Modal de cotización ---
+  // Los botones con [data-quote-open] abren el cotizador en un modal.
+  function initQuoteModal() {
+    const modal = document.getElementById("quoteModal");
+    if (!modal) return;
+
+    const backdrop = document.getElementById("quoteModalBackdrop");
+    const closeBtn = document.getElementById("quoteModalCloseBtn");
+    const triggers = document.querySelectorAll("[data-quote-open]");
 
     function closeModal() {
       modal.classList.remove("active");
@@ -1275,67 +1457,31 @@ document.addEventListener("DOMContentLoaded", () => {
       document.body.classList.remove("modal-open");
     }
 
-    function resetForm() {
-      if (form) form.reset();
-      selectedType = "";
-      chips.forEach((chip) => {
-        chip.classList.remove("active");
-        chip.setAttribute("aria-pressed", "false");
-      });
-      if (typeSelect) typeSelect.value = "";
+    const quote = bindQuoteForm("quote", closeModal);
+    if (!quote) return;
+
+    function openModal() {
+      modal.classList.add("active");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("modal-open");
+      quote.clearError();
+      quote.updateLink();
+      if (closeBtn) closeBtn.focus();
     }
 
-    // Abrir desde los botones marcados (nav, hero y footer)
     triggers.forEach((trigger) => {
-      trigger.addEventListener("click", (event) => {
-        event.preventDefault();
-        openModal();
-      });
+      trigger.addEventListener("click", (event) => { event.preventDefault(); openModal(); });
     });
-
-    // Selección única de tipo de proyecto
-    chips.forEach((chip) => {
-      chip.addEventListener("click", () => selectType(chip.getAttribute("data-value")));
-    });
-
-    if (typeSelect) {
-      typeSelect.addEventListener("change", () => selectType(typeSelect.value));
-    }
-
-    // Mantener el enlace de WhatsApp sincronizado con el formulario
-    if (form) {
-      form.addEventListener("input", updateLink);
-      form.addEventListener("change", updateLink);
-    }
-
-    // Cierre: botón X, backdrop y tecla Escape
     if (closeBtn) closeBtn.addEventListener("click", closeModal);
     if (backdrop) backdrop.addEventListener("click", closeModal);
     window.addEventListener("keydown", (event) => {
       if (modal.classList.contains("active") && event.key === "Escape") closeModal();
     });
+  }
 
-    // Enviar: exige el tipo de proyecto y luego abre WhatsApp
-    if (waBtn) {
-      waBtn.addEventListener("click", (event) => {
-        if (!selectedType) {
-          event.preventDefault();
-          if (typeHint) typeHint.hidden = false;
-          if (chipsWrap) chipsWrap.classList.add("quote-chips-error");
-          if (typeSelect && typeSelect.offsetParent !== null) {
-            typeSelect.focus();
-          } else if (chips[0]) {
-            chips[0].focus();
-          }
-          return;
-        }
-        // El href ya está actualizado; se abre en una pestaña nueva.
-        window.setTimeout(() => {
-          closeModal();
-          resetForm();
-        }, 250);
-      });
-    }
+  // --- Sección de cotización inline (después de "Cómo trabajamos") ---
+  function initQuoteSection() {
+    bindQuoteForm("inlineQuote");
   }
 
   // --- Revelado de imágenes en "Por qué elegirnos" ---
@@ -1425,4 +1571,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Inicializar el modal de cotización de AC Mueblería (si existe en la página)
   initQuoteModal();
+  initQuoteSection();
 });

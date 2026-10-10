@@ -32,6 +32,7 @@
       <li><a href="#trabajos" id="navLinkTrabajos">Trabajos</a></li>
       <li><a href="#elegirnos" id="navLinkElegirnos">Por qué elegirnos</a></li>
       <li><a href="#proceso" id="navLinkProceso">Cómo trabajamos</a></li>
+      <li><a href="#cotizar" id="navLinkCotizar">Cotizar</a></li>
       <li><a href="#marcas" id="navLinkMarcas">Nuestras marcas</a></li>
     </ul>
     <!-- Botón WhatsApp: data-wa-message define el mensaje prellenado al abrir chat -->
@@ -171,6 +172,16 @@
       <p class="section-lede">Explora nuestros proyectos terminados. Haz clic en cualquier foto para abrir la ficha técnica con medidas, materiales y cotizar.</p>
     </div>
 
+    <!-- Filtros por tipo de proyecto -->
+    <div class="works-filters" id="worksFilters" role="group" aria-label="Filtrar proyectos por tipo">
+      <button type="button" class="filter-chip active" data-filter="all" aria-pressed="true">Todos</button>
+      <button type="button" class="filter-chip" data-filter="cocinas" aria-pressed="false">Cocinas y bares</button>
+      <button type="button" class="filter-chip" data-filter="closets" aria-pressed="false">Closets</button>
+      <button type="button" class="filter-chip" data-filter="tv" aria-pressed="false">Muebles de TV</button>
+      <button type="button" class="filter-chip" data-filter="oficinas" aria-pressed="false">Oficinas</button>
+      <button type="button" class="filter-chip" data-filter="organizadores" aria-pressed="false">Organizadores</button>
+    </div>
+
     <!-- Carrusel de fotos limpio y fluido con flechas flotantes laterales -->
     <div class="works-carousel-wrapper" id="worksCarouselWrapper">
       <!-- Botón Flotante Lateral Izquierdo -->
@@ -186,146 +197,125 @@
       <div class="works-carousel-viewport" id="worksCarouselViewport" tabindex="0" role="region" aria-label="Carrusel de proyectos">
         <div class="works-carousel-track" id="worksCarouselTrack">
           <!-- Card 01: Cocina en L -->
-          <article class="project-card" data-index="0" role="button" tabindex="0" aria-label="Abrir detalles de Cocina en L">
+          <article class="project-card" data-index="0" data-filter="cocinas" role="button" tabindex="0" aria-label="Abrir detalles de Cocina en L">
             <div class="project-card-media">
-              <img src="public/ac_muebleria/trabajos/cocina-01.png" alt="Cocina en L | Melamina Capri + Cuarzo negro" class="project-card-img" loading="lazy">
+              <img src="public/ac_muebleria/trabajos/cocina-01.png" alt="Cocina en L en melamina Capri con cuarzo negro, proyecto en Independencia, Lima" class="project-card-img" loading="lazy">
               <div class="project-card-overlay"></div>
               <div class="project-badge-top">
                 <span class="p-badge-cat">Cocinas</span>
-                <span class="p-badge-num">01</span>
+                <span class="p-badge-featured">Destacado</span>
               </div>
-              <div class="project-card-action-hint">
-                <span class="action-hint-pill">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
-                  Ver detalles
-                </span>
+              <div class="project-card-info">
+                <h3 class="project-card-title">Cocina en L</h3>
+                <p class="project-card-benefit"><span>Cocina completa con cubierta de cuarzo y tiradores invisibles.</span></p>
+                <div class="project-card-meta">
+                  <span class="pc-price">Desde <strong>S/ 6,500</strong></span>
+                  <span class="pc-meta-item"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>15 días</span>
+                </div>
               </div>
-              <div class="project-card-loc-hint">
-                <span class="action-hint-pill loc-pill">
-                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  Independencia
-                </span>
-              </div>
+              <span class="project-card-go" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
             </div>
           </article>
 
           <!-- Card 02: Closet modular -->
-          <article class="project-card" data-index="1" role="button" tabindex="0" aria-label="Abrir detalles de Closet modular">
+          <article class="project-card" data-index="1" data-filter="closets" role="button" tabindex="0" aria-label="Abrir detalles de Closet modular">
             <div class="project-card-media">
-              <img src="public/ac_muebleria/trabajos/vestidor-01.png" alt="Closet modular: Melamina Toquilla" class="project-card-img" loading="lazy">
+              <img src="public/ac_muebleria/trabajos/vestidor-01.png" alt="Closet modular en melamina Toquilla con jaladores de bronce, proyecto en Los Olivos, Lima" class="project-card-img" loading="lazy">
               <div class="project-card-overlay"></div>
               <div class="project-badge-top">
                 <span class="p-badge-cat">Closets & Vestidores</span>
-                <span class="p-badge-num">02</span>
+                <span class="p-badge-featured">Destacado</span>
               </div>
-              <div class="project-card-action-hint">
-                <span class="action-hint-pill">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
-                  Ver detalles
-                </span>
+              <div class="project-card-info">
+                <h3 class="project-card-title">Closet modular</h3>
+                <p class="project-card-benefit"><span>Closet empotrado con LED interno, cajonera y doble zona de percheros.</span></p>
+                <div class="project-card-meta">
+                  <span class="pc-price">Desde <strong>S/ 1,800</strong></span>
+                  <span class="pc-meta-item"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>10 días</span>
+                </div>
               </div>
-              <div class="project-card-loc-hint">
-                <span class="action-hint-pill loc-pill">
-                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  Los Olivos
-                </span>
-              </div>
+              <span class="project-card-go" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
             </div>
           </article>
 
           <!-- Card 03: Mueble de TV flotante -->
-          <article class="project-card" data-index="2" role="button" tabindex="0" aria-label="Abrir detalles de Mueble de TV flotante">
+          <article class="project-card" data-index="2" data-filter="tv" role="button" tabindex="0" aria-label="Abrir detalles de Mueble de TV flotante">
             <div class="project-card-media">
-              <img src="public/ac_muebleria/trabajos/mueble-tv-01.png" alt="Mueble de TV flotante con Wall panel" class="project-card-img" loading="lazy">
+              <img src="public/ac_muebleria/trabajos/mueble-tv-01.png" alt="Mueble de TV flotante con wall panel y luces LED, proyecto en San Juan de Lurigancho, Lima" class="project-card-img" loading="lazy">
               <div class="project-card-overlay"></div>
               <div class="project-badge-top">
                 <span class="p-badge-cat">Muebles de TV</span>
-                <span class="p-badge-num">03</span>
               </div>
-              <div class="project-card-action-hint">
-                <span class="action-hint-pill">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
-                  Ver detalles
-                </span>
+              <div class="project-card-info">
+                <h3 class="project-card-title">Mueble de TV flotante</h3>
+                <p class="project-card-benefit"><span>Centro de entretenimiento flotante con wall panel y tiras LED.</span></p>
+                <div class="project-card-meta">
+                  <span class="pc-price">Desde <strong>S/ 1,500</strong></span>
+                  <span class="pc-meta-item"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>5 días</span>
+                </div>
               </div>
-              <div class="project-card-loc-hint">
-                <span class="action-hint-pill loc-pill">
-                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  SJL
-                </span>
-              </div>
+              <span class="project-card-go" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
             </div>
           </article>
 
           <!-- Card 04: Mueble organizador -->
-          <article class="project-card" data-index="3" role="button" tabindex="0" aria-label="Abrir detalles de Mueble organizador">
+          <article class="project-card" data-index="3" data-filter="organizadores" role="button" tabindex="0" aria-label="Abrir detalles de Mueble organizador">
             <div class="project-card-media">
-              <img src="public/ac_muebleria/trabajos/organizador-01.png" alt="Mueble organizador bajo escalera" class="project-card-img" loading="lazy">
+              <img src="public/ac_muebleria/trabajos/organizador-01.png" alt="Mueble organizador bajo escalera en melamina blanca, proyecto en Comas, Lima" class="project-card-img" loading="lazy">
               <div class="project-card-overlay"></div>
               <div class="project-badge-top">
                 <span class="p-badge-cat">Organizadores</span>
-                <span class="p-badge-num">04</span>
               </div>
-              <div class="project-card-action-hint">
-                <span class="action-hint-pill">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
-                  Ver detalles
-                </span>
+              <div class="project-card-info">
+                <h3 class="project-card-title">Mueble organizador</h3>
+                <p class="project-card-benefit"><span>Aprovecha el espacio bajo la escalera con gavetas y repisas a medida.</span></p>
+                <div class="project-card-meta">
+                  <span class="pc-price">Desde <strong>S/ 1,000</strong></span>
+                  <span class="pc-meta-item"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>5 días</span>
+                </div>
               </div>
-              <div class="project-card-loc-hint">
-                <span class="action-hint-pill loc-pill">
-                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  Comas
-                </span>
-              </div>
+              <span class="project-card-go" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
             </div>
           </article>
 
           <!-- Card 05: Módulos de oficina -->
-          <article class="project-card" data-index="4" role="button" tabindex="0" aria-label="Abrir detalles de Módulos de oficina">
+          <article class="project-card" data-index="4" data-filter="oficinas" role="button" tabindex="0" aria-label="Abrir detalles de Módulos de oficina">
             <div class="project-card-media">
-              <img src="public/ac_muebleria/trabajos/escritorio-01.png" alt="Módulos de oficina: Escritorio en L" class="project-card-img" loading="lazy">
+              <img src="public/ac_muebleria/trabajos/escritorio-01.png" alt="Módulos de oficina con escritorio en L en melamina Espresso, proyecto en Carabayllo, Lima" class="project-card-img" loading="lazy">
               <div class="project-card-overlay"></div>
               <div class="project-badge-top">
                 <span class="p-badge-cat">Oficinas</span>
-                <span class="p-badge-num">05</span>
+                <span class="p-badge-featured">Destacado</span>
               </div>
-              <div class="project-card-action-hint">
-                <span class="action-hint-pill">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
-                  Ver detalles
-                </span>
+              <div class="project-card-info">
+                <h3 class="project-card-title">Módulos de oficina</h3>
+                <p class="project-card-benefit"><span>Estación de trabajo en L con archivador móvil y repisas superiores.</span></p>
+                <div class="project-card-meta">
+                  <span class="pc-price">Desde <strong>S/ 2,500</strong></span>
+                  <span class="pc-meta-item"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>10 días</span>
+                </div>
               </div>
-              <div class="project-card-loc-hint">
-                <span class="action-hint-pill loc-pill">
-                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  Carabayllo
-                </span>
-              </div>
+              <span class="project-card-go" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
             </div>
           </article>
 
           <!-- Card 06: Mueble bar -->
-          <article class="project-card" data-index="5" role="button" tabindex="0" aria-label="Abrir detalles de Mueble bar">
+          <article class="project-card" data-index="5" data-filter="cocinas" role="button" tabindex="0" aria-label="Abrir detalles de Mueble bar">
             <div class="project-card-media">
-              <img src="public/ac_muebleria/trabajos/isla-cocina-01.png" alt="Mueble bar con iluminación y vitrinas" class="project-card-img" loading="lazy">
+              <img src="public/ac_muebleria/trabajos/isla-cocina-01.png" alt="Mueble bar con iluminación LED y vitrinas de vidrio, proyecto en La Molina, Lima" class="project-card-img" loading="lazy">
               <div class="project-card-overlay"></div>
               <div class="project-badge-top">
                 <span class="p-badge-cat">Bares & Cocinas</span>
-                <span class="p-badge-num">06</span>
               </div>
-              <div class="project-card-action-hint">
-                <span class="action-hint-pill">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
-                  Ver detalles
-                </span>
+              <div class="project-card-info">
+                <h3 class="project-card-title">Mueble bar</h3>
+                <p class="project-card-benefit"><span>Bar residencial con LED perimetral y vitrinas de vidrio.</span></p>
+                <div class="project-card-meta">
+                  <span class="pc-price">Desde <strong>S/ 2,000</strong></span>
+                  <span class="pc-meta-item"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>8 días</span>
+                </div>
               </div>
-              <div class="project-card-loc-hint">
-                <span class="action-hint-pill loc-pill">
-                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  La Molina
-                </span>
-              </div>
+              <span class="project-card-go" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
             </div>
           </article>
         </div>
@@ -337,6 +327,15 @@
           <!-- Dots generados/sincronizados dinámicamente -->
         </div>
       </div>
+    </div>
+
+    <!-- CTA de cierre: para quien no ve su proyecto -->
+    <div class="works-cta">
+      <div class="works-cta-text">
+        <strong>¿No ves lo que buscas?</strong>
+        <span>Cuéntanos tu idea y te cotizamos un diseño a tu medida. Instalación incluida.</span>
+      </div>
+      <a href="#" class="btn btn-wa" data-quote-open data-wa-message="Hola, quiero cotizar un mueble a medida con AC Mueblería.">Cuéntanos tu idea</a>
     </div>
   </div>
 </section>
@@ -385,6 +384,23 @@
         </div>
 
         <p class="modal-desc" id="modalDesc">Módulos altos y bajos en melamina Capri RH resistente a la humedad, tiradores gola ocultos y cubierta de Cuarzo negro pulido.</p>
+
+        <!-- Precio referencial y tiempo de fabricación -->
+        <div class="modal-offer">
+          <div class="modal-offer-item">
+            <span class="m-spec-label">Precio desde</span>
+            <strong class="modal-offer-val" id="modalPrice">S/ 4,800</strong>
+          </div>
+          <div class="modal-offer-item">
+            <span class="m-spec-label">Fabricación</span>
+            <strong class="modal-offer-val" id="modalTime">20 días</strong>
+          </div>
+          <div class="modal-offer-item">
+            <span class="m-spec-label">Instalación</span>
+            <strong class="modal-offer-val" id="modalInstall">Incluida</strong>
+          </div>
+        </div>
+        <p class="modal-offer-note">Precio referencial: el valor final depende de tus medidas y materiales.</p>
 
         <!-- Especificaciones técnicas detalladas -->
         <div class="modal-specs-section">
@@ -436,7 +452,7 @@
         <div class="modal-actions">
           <a href="#" class="btn btn-wa modal-btn-wa" id="modalWaBtn" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.82.49 3.53 1.35 5L2 22l5.16-1.33A9.96 9.96 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm4.95 14.05c-.21.58-1.2 1.13-1.67 1.2-.47.07-.94.13-2.8-.62-2.22-.9-3.66-3.15-3.77-3.3-.11-.15-.9-1.2-.9-2.29s.57-1.63.77-1.85c.2-.22.44-.28.59-.28.15 0 .3 0 .43.01.14.01.33-.05.51.39.19.45.64 1.57.7 1.69.06.12.1.26.02.42-.08.16-.12.26-.24.4-.12.14-.25.31-.36.42-.12.12-.25.25-.11.49.14.24.63 1.04 1.35 1.68.93.83 1.71 1.09 1.95 1.21.24.12.38.1.52-.06.14-.16.6-.7.76-.94.16-.24.32-.2.53-.12.21.08 1.34.63 1.57.74.23.11.38.17.44.27.06.1.06.58-.15 1.16z"/></svg>
-            <span>Cotizar este proyecto por WhatsApp</span>
+            <span id="modalWaLabel">Cotizar por WhatsApp</span>
           </a>
         </div>
       </div>
@@ -597,6 +613,111 @@
   </div>
 </section>
 
+<!-- ============ COTIZAR PROYECTO ============ -->
+<!-- SECCIÓN COTIZAR: pitch + formulario express que arma el mensaje de WhatsApp (misma lógica que el modal) -->
+<section id="cotizar" class="on-paper2 reveal">
+  <div class="container">
+    <div class="cotizar-grid">
+      <!-- Pitch: por qué cotizar con nosotros -->
+      <div class="cotizar-pitch">
+        <span class="eyebrow">Cotiza tu proyecto</span>
+        <h2 class="section-title">Cuéntanos tu idea y te respondemos con una propuesta.</h2>
+        <p class="section-lede">Elige el tipo de mueble, indica medidas aproximadas y te enviamos la cotización por WhatsApp. Sin compromiso.</p>
+        <ul class="cotizar-benefits">
+          <li>
+            <span class="cotizar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+            <div><strong>Respuesta rápida</strong><span>Te escribimos por WhatsApp en el día.</span></div>
+          </li>
+          <li>
+            <span class="cotizar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17 17 3l4 4L7 21H3z"/><path d="m13 7 4 4"/></svg></span>
+            <div><strong>Medidas y diseño a tu espacio</strong><span>Visita técnica y render 3D antes de fabricar.</span></div>
+          </li>
+          <li>
+            <span class="cotizar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7v5c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V7z"/><path d="m9 12 2 2 4-4"/></svg></span>
+            <div><strong>Fabricación propia en taller</strong><span>Control de calidad e instalación incluida.</span></div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Tarjeta con el formulario -->
+      <div class="cotizar-card">
+        <form class="quote-form" id="inlineQuoteForm" novalidate>
+          <div class="quote-field">
+            <span class="quote-label">Tipo de proyecto <span class="quote-req">*</span></span>
+            <div class="quote-chips" id="inlineQuoteTypeChips" role="group" aria-label="Tipo de proyecto">
+              <button type="button" class="quote-chip" data-value="Cocina" aria-pressed="false">Cocina</button>
+              <button type="button" class="quote-chip" data-value="Closet" aria-pressed="false">Closet</button>
+              <button type="button" class="quote-chip" data-value="Escritorio" aria-pressed="false">Escritorio</button>
+              <button type="button" class="quote-chip" data-value="Centro de TV" aria-pressed="false">Centro de TV</button>
+              <button type="button" class="quote-chip" data-value="Organizador" aria-pressed="false">Organizador</button>
+              <button type="button" class="quote-chip" data-value="Mueble bar" aria-pressed="false">Mueble bar</button>
+            </div>
+            <select class="quote-select" id="inlineQuoteTypeSelect" aria-label="Tipo de proyecto">
+              <option value="" disabled selected>Selecciona un tipo de proyecto</option>
+              <option value="Cocina">Cocina</option>
+              <option value="Closet">Closet</option>
+              <option value="Escritorio">Escritorio</option>
+              <option value="Centro de TV">Centro de TV</option>
+              <option value="Organizador">Organizador</option>
+              <option value="Mueble bar">Mueble bar</option>
+            </select>
+            <p class="quote-hint" id="inlineQuoteTypeHint" hidden>Elige un tipo de proyecto para continuar.</p>
+          </div>
+
+          <!-- Bosquejo: se dibuja en trazos según el tipo elegido -->
+          <figure class="quote-sketch" id="inlineQuoteSketch" aria-live="polite">
+            <div class="quote-sketch-stage" id="inlineQuoteSketchStage">
+              <p class="quote-sketch-empty">Elige un tipo de proyecto y mira el bosquejo de tu mueble.</p>
+            </div>
+            <figcaption class="quote-sketch-caption" id="inlineQuoteSketchCaption" hidden></figcaption>
+          </figure>
+
+          <div class="quote-field">
+            <span class="quote-label">Medidas aproximadas (cm)</span>
+            <div class="quote-dim-grid">
+              <label class="quote-dim"><span>Ancho</span>
+                <input type="number" min="0" step="1" inputmode="numeric" class="quote-input" id="inlineQuoteWidth" placeholder="Ej. 300"></label>
+              <label class="quote-dim"><span>Alto</span>
+                <input type="number" min="0" step="1" inputmode="numeric" class="quote-input" id="inlineQuoteHeight" placeholder="Ej. 240"></label>
+              <label class="quote-dim"><span>Profundidad</span>
+                <input type="number" min="0" step="1" inputmode="numeric" class="quote-input" id="inlineQuoteDepth" placeholder="Ej. 60"></label>
+            </div>
+          </div>
+
+          <div class="quote-row">
+            <div class="quote-field">
+              <label class="quote-label" for="inlineQuoteName">Nombre</label>
+              <input type="text" class="quote-input" id="inlineQuoteName" placeholder="¿Cómo te llamas?" autocomplete="name">
+            </div>
+            <div class="quote-field">
+              <label class="quote-label" for="inlineQuoteZone">Zona o distrito</label>
+              <input type="text" class="quote-input" id="inlineQuoteZone" placeholder="Ej. Los Olivos, Lima">
+            </div>
+          </div>
+
+          <div class="quote-field">
+            <label class="quote-label" for="inlineQuoteMaterial">Material o acabado preferido</label>
+            <input type="text" class="quote-input" id="inlineQuoteMaterial" placeholder="Ej. Melamina blanca mate, MDF, madera">
+          </div>
+
+          <div class="quote-field">
+            <label class="quote-label" for="inlineQuoteDetails">Detalles adicionales</label>
+            <textarea class="quote-textarea" id="inlineQuoteDetails" rows="3" placeholder="Distribución, colores, referencias, fecha estimada..."></textarea>
+          </div>
+        </form>
+
+        <div class="modal-actions">
+          <a href="#" class="btn btn-wa modal-btn-wa" id="inlineQuoteWaBtn" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.82.49 3.53 1.35 5L2 22l5.16-1.33A9.96 9.96 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm4.95 14.05c-.21.58-1.2 1.13-1.67 1.2-.47.07-.94.13-2.8-.62-2.22-.9-3.66-3.15-3.77-3.3-.11-.15-.9-1.2-.9-2.29s.57-1.63.77-1.85c.2-.22.44-.28.59-.28.15 0 .3 0 .43.01.14.01.33-.05.51.39.19.45.64 1.57.7 1.69.06.12.1.26.02.42-.08.16-.12.26-.24.4-.12.14-.25.31-.36.42-.12.12-.25.25-.11.49.14.24.63 1.04 1.35 1.68.93.83 1.71 1.09 1.95 1.21.24.12.38.1.52-.06.14-.16.6-.7.76-.94.16-.24.32-.2.53-.12.21.08 1.34.63 1.57.74.23.11.38.17.44.27.06.1.06.58-.15 1.16z"/></svg>
+            <span>Cotizar por WhatsApp</span>
+          </a>
+          <p class="cotizar-note">Sin compromiso · Cotización gratuita · Lima, Perú</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ NUESTRAS MARCAS ============ -->
 <!-- SECCIÓN MARCAS: 3 cards (Maderin, CDM, Modulax) con enlace a cada sitio -->
 <section id="marcas" class="on-dark reveal">
@@ -651,6 +772,7 @@
         <a href="#trabajos">Trabajos</a>
         <a href="#elegirnos">Por qué elegirnos</a>
         <a href="#proceso">Cómo trabajamos</a>
+        <a href="#cotizar">Cotizar proyecto</a>
         <a href="#marcas">Nuestras marcas</a>
       </div>  
       <div class="footer-col">

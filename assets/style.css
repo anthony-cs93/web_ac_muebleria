@@ -1538,8 +1538,8 @@ body.theme-ac .work-meta {
 
 /* Tarjetas de Proyectos en el Carrusel */
 .project-card {
-  flex: 0 0 240px;
-  width: 240px;
+  flex: 0 0 280px;
+  width: 280px;
   scroll-snap-align: start;
   background: #171717;
   border: 1px solid var(--line-on-dark);
@@ -1563,7 +1563,7 @@ body.theme-ac .work-meta {
 .project-card-media {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 5;
   background: #111;
   overflow: hidden;
 }
@@ -1585,7 +1585,7 @@ body.theme-ac .work-meta {
 .project-card-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(15,15,15,0.6) 0%, rgba(15,15,15,0.05) 40%, rgba(15,15,15,0.7) 100%);
+  background: linear-gradient(180deg, rgba(15,15,15,0.5) 0%, rgba(15,15,15,0) 35%, rgba(15,15,15,0.55) 62%, rgba(15,15,15,0.92) 100%);
   pointer-events: none;
   transition: opacity 0.3s ease;
 }
@@ -1743,6 +1743,306 @@ body.theme-ac .work-meta {
   font-family: var(--font-mono);
   font-size: 11px;
   color: rgba(242,236,223,0.5);
+}
+
+/* Filtros por tipo de proyecto */
+.works-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+body .works-filters .filter-chip {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 14px;
+  min-height: 38px;
+  background: transparent;
+  border: 1px solid var(--line-on-dark);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+}
+
+.project-card[hidden] {
+  display: none;
+}
+
+.p-badge-featured {
+  background: rgba(18,18,18,0.82);
+  backdrop-filter: blur(6px);
+  color: var(--accent);
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border: 1px solid rgba(175, 143, 26, 0.55);
+}
+
+/* Info compacta sobre la foto: título, precio y tiempo; el beneficio aparece al pasar el mouse */
+.project-card-info {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: 16px 64px 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.project-card-title {
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: 1.15;
+  color: #fff;
+  margin: 0;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+}
+
+/* Beneficio: oculto por defecto, se despliega suavemente en hover */
+.project-card-benefit {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin: 0;
+  opacity: 0;
+  transition: grid-template-rows 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+
+.project-card-benefit > span {
+  overflow: hidden;
+  min-height: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: rgba(242,236,223,0.85);
+}
+
+.project-card:hover .project-card-benefit,
+.project-card:focus-visible .project-card-benefit {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.project-card-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+
+.pc-price {
+  font-size: 12px;
+  color: rgba(242,236,223,0.75);
+}
+
+.pc-price strong {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-left: 2px;
+}
+
+.pc-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: rgba(242,236,223,0.7);
+}
+
+.pc-meta-item svg {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+/* Botón circular de acción */
+.project-card-go {
+  position: absolute;
+  right: 14px;
+  bottom: 16px;
+  z-index: 3;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(18,18,18,0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.28);
+  color: #fff;
+  transition: background 0.35s ease, color 0.35s ease, border-color 0.35s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project-card:hover .project-card-go,
+.project-card:focus-visible .project-card-go {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #121212;
+  transform: rotate(45deg) scale(1.06);
+}
+
+/* Línea dorada que se dibuja en la base + brillo que cruza la foto */
+.project-card-media::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 4;
+}
+
+.project-card:hover .project-card-media::before,
+.project-card:focus-visible .project-card-media::before {
+  transform: scaleX(1);
+}
+
+.project-card-media::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -70%;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(105deg, transparent, rgba(255,255,255,0.16), transparent);
+  transform: skewX(-18deg);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.project-card:hover .project-card-media::after {
+  left: 130%;
+  transition: left 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Entrada escalonada al cargar / filtrar */
+@keyframes projectCardIn {
+  from { opacity: 0; transform: translateY(22px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.cards-pending .project-card {
+  opacity: 0;
+}
+
+.project-card.card-enter {
+  animation: projectCardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+/* Táctil: sin hover, el botón se muestra en dorado y el beneficio se omite */
+@media (hover: none) {
+  .project-card-benefit { display: none; }
+  .project-card-go {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #121212;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-card.card-enter { animation: none; }
+  .project-card-media::after { display: none; }
+}
+
+/* CTA de cierre bajo el carrusel */
+.works-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 28px;
+  padding: 20px 24px;
+  background: #171717;
+  border: 1px solid var(--line-on-dark);
+}
+
+.works-cta-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: rgba(242,236,223,0.72);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.works-cta-text strong {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--paper);
+  font-weight: 600;
+}
+
+.works-cta .btn {
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .works-filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-right: -16px;
+    padding-right: 16px;
+  }
+  .works-filters::-webkit-scrollbar { display: none; }
+  .works-filters .filter-chip { flex-shrink: 0; white-space: nowrap; }
+  .works-cta {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: left;
+    padding: 18px 16px;
+  }
+  .works-cta .btn { justify-content: center; }
+}
+
+/* Bloque de precio referencial dentro del modal */
+.modal-offer {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(175, 143, 26, 0.4);
+  margin-bottom: 8px;
+}
+
+.modal-offer-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px;
+  background: #1c1c1c;
+  min-width: 0;
+}
+
+.modal-offer-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.25;
+}
+
+.modal-offer-note {
+  font-size: 11.5px;
+  color: rgba(242,236,223,0.5);
+  margin: 0 0 16px;
+}
+
+@media (max-width: 440px) {
+  .modal-offer-val { font-size: 13px; }
+  .modal-offer-item { padding: 9px 8px; }
 }
 
 /* ==========================================================================
@@ -2134,8 +2434,8 @@ body.modal-open {
     max-width: 100%;
   }
   .project-card {
-    flex: 0 0 220px;
-    width: 220px;
+    flex: 0 0 260px;
+    width: 260px;
     max-width: 80vw;
   }
   .carousel-bottom-bar {
@@ -2204,15 +2504,15 @@ body.modal-open {
     max-width: 100%;
   }
   .project-card {
-    flex: 0 0 clamp(190px, 66vw, 220px);
-    width: clamp(190px, 66vw, 220px);
+    flex: 0 0 clamp(210px, 68vw, 250px);
+    width: clamp(210px, 68vw, 250px);
     max-width: 80vw;
     box-sizing: border-box;
   }
   .project-card-media {
     width: 100%;
     max-width: 100%;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 4 / 5;
     box-sizing: border-box;
     overflow: hidden;
   }
@@ -4251,3 +4551,109 @@ body.theme-ac .process-timeline-container {
 
 
 
+
+/* ==========================================================================
+   SECCIÓN COTIZAR (AC Mueblería) — pitch + formulario inline
+   ========================================================================== */
+#cotizar .cotizar-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 64px;
+  align-items: start;
+}
+#cotizar .cotizar-pitch { position: sticky; top: calc(var(--nav-h) + 24px); }
+#cotizar .section-lede { margin-top: 18px; }
+.cotizar-benefits {
+  list-style: none;
+  margin: 34px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.cotizar-benefits li { display: flex; gap: 16px; align-items: flex-start; }
+.cotizar-icon {
+  flex: 0 0 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(175,143,26,.45);
+  border-radius: 10px;
+  color: var(--accent);
+}
+.cotizar-icon svg { width: 22px; height: 22px; }
+.cotizar-benefits strong { display: block; color: var(--paper); font-weight: 600; font-size: 16px; }
+.cotizar-benefits li div span { display: block; margin-top: 2px; font-size: 14.5px; color: rgba(242,236,223,.6); }
+.cotizar-card {
+  background: #161616;
+  border: 1px solid rgba(255,255,255,.1);
+  box-shadow: 0 0 0 1px rgba(175,143,26,.18);
+  border-radius: 14px;
+  padding: 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.quote-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.cotizar-note {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 12.5px;
+  color: rgba(242,236,223,.5);
+}
+
+@media (max-width: 980px) {
+  #cotizar .cotizar-grid { grid-template-columns: 1fr; gap: 40px; }
+  #cotizar .cotizar-pitch { position: static; }
+}
+@media (max-width: 560px) {
+  .cotizar-card { padding: 24px 18px; }
+  .quote-row { grid-template-columns: 1fr; }
+}
+
+/* Bosquejo de proyecto: plano en trazos que se dibuja al elegir el tipo */
+.quote-sketch { margin: 0; }
+.quote-sketch-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 190px;
+  border: 1px dashed rgba(175,143,26,.35);
+  border-radius: 10px;
+  background:
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 20px 20px,
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 20px 20px,
+    rgba(255,255,255,.02);
+}
+.quote-sketch-stage.has-sketch { border-style: solid; }
+.quote-sketch-empty {
+  margin: 0;
+  padding: 0 24px;
+  text-align: center;
+  font-size: 13.5px;
+  color: rgba(242,236,223,.45);
+}
+.quote-sketch-stage svg { width: 100%; height: 100%; padding: 12px 16px; }
+.quote-sketch-stage path {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: quoteSketchDraw .9s ease-out forwards;
+}
+@keyframes quoteSketchDraw { to { stroke-dashoffset: 0; } }
+.quote-sketch-caption {
+  margin-top: 8px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: rgba(242,236,223,.6);
+}
+@media (prefers-reduced-motion: reduce) {
+  .quote-sketch-stage path { animation: none; stroke-dashoffset: 0; }
+}

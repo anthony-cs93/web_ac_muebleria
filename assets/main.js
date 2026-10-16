@@ -947,6 +947,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       {
         id: "organizador-juguetes",
+        photo: "organizador-juguetes",
         category: "guardado",
         categoryLabel: "Guardado & Orden",
         sku: "MAD-GUA-02",
@@ -999,6 +1000,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       {
         id: "mesa-silla",
+        photo: "mesa-silla",
         category: "escritorio",
         categoryLabel: "Escritorios & Mesas",
         sku: "MAD-ESC-01",
@@ -1052,6 +1054,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       {
         id: "perchero-tipi",
+        photo: "perchero-tipi",
         category: "accesorios",
         categoryLabel: "Accesorios & Estimulación",
         sku: "MAD-ACC-02",
@@ -1075,6 +1078,106 @@ document.addEventListener("DOMContentLoaded", () => {
           { name: "Bicolor (Pino/Blanco)", hex: "#EADCC9" }
         ],
         svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 42L24 6l8 36"/><line x1="19" y1="22" x2="29" y2="22"/><line x1="14" y1="36" x2="34" y2="36"/></svg>`
+      },
+      {
+        id: "closet-montessori",
+        photo: "closet-montessori",
+        category: "guardado",
+        categoryLabel: "Guardado & Orden",
+        sku: null,                 // por asignar
+        name: "Closet Montessori",
+        subtitle: "Ropa y calzado a su altura",
+        desc: "Closet bajo con barra a la altura de tu peque, repisas laterales y espacio para calzado, para que elija y guarde su ropa solo.",
+        price: null,               // por confirmar: mientras sea null, el producto se consulta por WhatsApp y no entra al carrito
+        oldPrice: null,
+        discount: null,
+        badge: "Nuevo",
+        rating: null,              // sin reseñas todavía
+        reviewsCount: 0,
+        dimensions: "Por confirmar",
+        material: "Por confirmar",
+        ageRange: "Por confirmar",
+        deliveryTime: null,        // por confirmar
+        finish: "Por confirmar",
+        colors: [
+          { name: "Por definir", hex: "#E5DCCB" }
+        ],
+        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="32" height="32" rx="2"/><line x1="8" y1="24" x2="40" y2="24"/></svg>`
+      },
+      {
+        id: "comoda-cambiador",
+        photo: "comoda-cambiador",
+        category: "guardado",
+        categoryLabel: "Guardado & Orden",
+        sku: null,                 // por asignar
+        name: "Cómoda Cambiador",
+        subtitle: "Cambiador superior con cajones",
+        desc: "Cómoda con cambiador superior, puerta y tres cajones amplios. Un mueble que acompaña desde bebé.",
+        price: null,               // por confirmar: mientras sea null, el producto se consulta por WhatsApp y no entra al carrito
+        oldPrice: null,
+        discount: null,
+        badge: "Nuevo",
+        rating: null,              // sin reseñas todavía
+        reviewsCount: 0,
+        dimensions: "Por confirmar",
+        material: "Por confirmar",
+        ageRange: "Por confirmar",
+        deliveryTime: null,        // por confirmar
+        finish: "Por confirmar",
+        colors: [
+          { name: "Por definir", hex: "#E5DCCB" }
+        ],
+        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="32" height="32" rx="2"/><line x1="8" y1="24" x2="40" y2="24"/></svg>`
+      },
+      {
+        id: "porta-libros",
+        photo: "porta-libros",
+        category: "guardado",
+        categoryLabel: "Guardado & Orden",
+        sku: null,                 // por asignar
+        name: "Porta Libros de Pared",
+        subtitle: "Cuentos a la vista",
+        desc: "Porta libros de pared de frente bajo para que vea y alcance sus cuentos por la portada.",
+        price: null,               // por confirmar: mientras sea null, el producto se consulta por WhatsApp y no entra al carrito
+        oldPrice: null,
+        discount: null,
+        badge: "Nuevo",
+        rating: null,              // sin reseñas todavía
+        reviewsCount: 0,
+        dimensions: "Por confirmar",
+        material: "Por confirmar",
+        ageRange: "Por confirmar",
+        deliveryTime: null,        // por confirmar
+        finish: "Por confirmar",
+        colors: [
+          { name: "Por definir", hex: "#E5DCCB" }
+        ],
+        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="32" height="32" rx="2"/><line x1="8" y1="24" x2="40" y2="24"/></svg>`
+      },
+      {
+        id: "repisa-libros",
+        photo: "repisa-libros",
+        category: "guardado",
+        categoryLabel: "Guardado & Orden",
+        sku: null,                 // por asignar
+        name: "Repisas para Libros",
+        subtitle: "Repisas de pared para cuentos",
+        desc: "Repisas de madera para exhibir los cuentos de frente, a la altura de los niños.",
+        price: null,               // por confirmar: mientras sea null, el producto se consulta por WhatsApp y no entra al carrito
+        oldPrice: null,
+        discount: null,
+        badge: "Nuevo",
+        rating: null,              // sin reseñas todavía
+        reviewsCount: 0,
+        dimensions: "Por confirmar",
+        material: "Por confirmar",
+        ageRange: "Por confirmar",
+        deliveryTime: null,        // por confirmar
+        finish: "Por confirmar",
+        colors: [
+          { name: "Por definir", hex: "#E5DCCB" }
+        ],
+        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="32" height="32" rx="2"/><line x1="8" y1="24" x2="40" y2="24"/></svg>`
       }
     ];
 
@@ -1107,6 +1210,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const qtyPlusBtn = document.getElementById("mModalQtyPlus") || document.getElementById("qtyPlusBtn");
     const modalWhatsAppBtn = document.getElementById("mModalWaOrderBtn") || document.getElementById("modalWhatsAppBtn");
     const modalWhatsAppBtnText = document.getElementById("mModalWaBtnText");
+    const modalStock = document.getElementById("mModalStock");
+    const modalAddBtn = document.getElementById("mModalAddBtn");
+    const modalAddBtnText = document.getElementById("mModalAddBtnText");
 
     // Estado del modal
     let currentModalIndex = 0;
@@ -1149,7 +1255,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Visual & Badge
       if (modalVisualEl) {
-        modalVisualEl.innerHTML = product.svg || "";
+        modalVisualEl.classList.toggle("has-photo", !!product.photo);
+        modalVisualEl.innerHTML = product.photo
+          ? `<img src="${photoUrl(product, 900)}" alt="${product.name}" decoding="async">`
+          : (product.svg || "");
       }
       if (modalBadge) {
         modalBadge.textContent = product.badge || "Destacado";
@@ -1163,15 +1272,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Información de encabezado
       if (modalCatTag) modalCatTag.textContent = product.categoryLabel;
-      if (modalSku) modalSku.textContent = `SKU: ${product.sku}`;
+      if (modalSku) modalSku.textContent = `SKU: ${product.sku || "por asignar"}`;
       if (modalTitle) modalTitle.textContent = product.name;
-      if (modalRatingNum) modalRatingNum.textContent = product.rating.toFixed(1);
-      if (modalReviewsCount) modalReviewsCount.textContent = `(${product.reviewsCount} opiniones verificadas)`;
+      const ratingRow = modalRatingNum ? modalRatingNum.closest(".ecom-rating-row") : null;
+      if (ratingRow) ratingRow.hidden = product.rating == null;
+      if (product.rating != null) {
+        if (modalRatingNum) modalRatingNum.textContent = product.rating.toFixed(1);
+        if (modalReviewsCount) modalReviewsCount.textContent = `(${product.reviewsCount} opiniones verificadas)`;
+      }
 
       // Precio
-      if (modalCurrentPrice) modalCurrentPrice.textContent = `S/ ${product.price}`;
-      if (modalOldPrice) modalOldPrice.textContent = `S/ ${product.oldPrice}`;
-      if (modalDiscountTag) modalDiscountTag.textContent = product.discount;
+      if (modalCurrentPrice) modalCurrentPrice.textContent = product.price == null ? "Precio por confirmar" : `S/ ${product.price}`;
+      if (modalOldPrice) {
+        modalOldPrice.hidden = !product.oldPrice;
+        if (product.oldPrice) modalOldPrice.textContent = `S/ ${product.oldPrice}`;
+      }
+      if (modalDiscountTag) {
+        modalDiscountTag.hidden = !product.discount;
+        if (product.discount) modalDiscountTag.textContent = product.discount;
+      }
 
       // Descripción
       if (modalDesc) modalDesc.textContent = product.desc;
@@ -1196,11 +1315,18 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
+      // Disponibilidad
+      if (modalStock) {
+        const av = getAvailability(product);
+        modalStock.className = `p-stock p-stock--${av.state}`;
+        modalStock.innerHTML = `<span class="p-stock-dot"></span>${av.label}`;
+      }
+
       // Especificaciones
       if (modalSpecAge) modalSpecAge.textContent = product.ageRange;
       if (modalSpecDimensions) modalSpecDimensions.textContent = product.dimensions;
       if (modalSpecMaterial) modalSpecMaterial.textContent = product.material;
-      if (modalSpecDelivery) modalSpecDelivery.textContent = product.deliveryTime;
+      if (modalSpecDelivery) modalSpecDelivery.textContent = product.deliveryTime || "Por confirmar";
 
       // Cantidad y Botón de WhatsApp
       updateQuantityUI();
@@ -1214,21 +1340,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updateWhatsAppButton(product) {
-      if (!modalWhatsAppBtn || !product) return;
-      const total = product.price * selectedQuantity;
+      if (!product) return;
+      const hasPrice = product.price != null;
+      const total = hasPrice ? product.price * selectedQuantity : null;
+
+      // Botón principal: agregar al carrito (o consultar precio si aún no está definido)
+      if (modalAddBtn) {
+        const soldOut = getAvailability(product).state === "out";
+        modalAddBtn.disabled = soldOut;
+        if (modalAddBtnText) {
+          modalAddBtnText.textContent = soldOut ? "Agotado por ahora"
+            : hasPrice ? `Agregar al carrito · S/ ${total}`
+            : "Consultar precio por WhatsApp";
+        }
+      }
+
+      // Botón secundario: consulta por WhatsApp
+      if (!modalWhatsAppBtn) return;
       const qtyText = selectedQuantity > 1 ? ` (${selectedQuantity} unidades)` : "";
-      const message = `Hola Maderin, deseo consultar y pedir el producto: "${product.name}"${qtyText} en acabado ${selectedColor} (Precio: S/ ${total}). ¿Tienen disponibilidad y fecha de entrega?`;
-      
+      const message = hasPrice
+        ? `Hola Maderin, tengo una consulta sobre: "${product.name}"${qtyText} en acabado ${selectedColor} (Precio: S/ ${total}). ¿Tienen disponibilidad y fecha de entrega?`
+        : `Hola Maderin, tengo una consulta sobre: "${product.name}". ¿Me indican precio, medidas y fecha de entrega?`;
+
       modalWhatsAppBtn.href = waLink(message);
       modalWhatsAppBtn.setAttribute("target", "_blank");
       modalWhatsAppBtn.setAttribute("rel", "noopener");
-      
-      if (modalWhatsAppBtnText) {
-        modalWhatsAppBtnText.textContent = `Pedir por WhatsApp (S/ ${total})`;
-      } else {
-        const iconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>`;
-        modalWhatsAppBtn.innerHTML = `${iconSvg} Pedir por WhatsApp (S/ ${total})`;
-      }
     }
 
     // Controles de cantidad
@@ -1279,12 +1415,297 @@ document.addEventListener("DOMContentLoaded", () => {
       if (e.key === "ArrowRight" && modalNextBtn) modalNextBtn.click();
     });
 
+    // ------------------------------------------------------------------------
+    // DISPONIBILIDAD POR PRODUCTO
+    // product.stock: "order" (sobre pedido, por defecto) | "ready" (listo para entrega) | "out" (agotado)
+    // ------------------------------------------------------------------------
+    const photoUrl = (product, width) => `public/maderin/productos/${product.photo}-${width}.webp`;
+
+    function getAvailability(product) {
+      const state = product.stock || "order";
+      const labels = {
+        ready: "Listo para entrega",
+        order: product.deliveryTime ? `Sobre pedido · ${product.deliveryTime}` : "Disponibilidad por confirmar",
+        out: "Agotado por ahora"
+      };
+      return { state, label: labels[state] || labels.order };
+    }
+
+    maderinProducts.forEach(p => {
+      const card = grid.querySelector(`.compact-card[data-id="${p.id}"]`);
+      if (!card) return;
+      const av = getAvailability(p);
+      const el = document.createElement("div");
+      el.className = `p-stock p-stock--${av.state}`;
+      el.innerHTML = `<span class="p-stock-dot"></span>${av.label}`;
+      const desc = card.querySelector(".desc");
+      if (desc) desc.after(el);
+      if (p.photo) {
+        const iconWrap = card.querySelector(".thumb-icon-wrap");
+        if (iconWrap) {
+          const img = document.createElement("img");
+          img.className = "thumb-photo";
+          img.src = photoUrl(p, 480);
+          img.alt = p.name;
+          img.loading = "lazy";
+          img.decoding = "async";
+          iconWrap.replaceWith(img);
+        }
+      }
+      if (av.state === "out") {
+        const btn = card.querySelector(".btn-add-cart");
+        if (btn) { btn.disabled = true; btn.querySelector("span").textContent = "Agotado"; }
+      }
+    });
+
+    // ------------------------------------------------------------------------
+    // CARRITO: estado en localStorage, drawer lateral y resumen por WhatsApp
+    // ------------------------------------------------------------------------
+    const CART_KEY = "maderinCart";
+    const CART_FIELDS_KEY = "maderinCartFields";
+    const MAX_LINE_QTY = 10;
+    const cartDrawer = document.getElementById("cartDrawer");
+    const cartBackdrop = document.getElementById("cartBackdrop");
+    const cartItemsEl = document.getElementById("cartItems");
+    const cartEmptyEl = document.getElementById("cartEmpty");
+    const cartFootEl = document.getElementById("cartFoot");
+    const cartSubtotalEl = document.getElementById("cartSubtotal");
+    const cartHeadCount = document.getElementById("cartHeadCount");
+    const navCartBtn = document.getElementById("navCartBtn");
+    const navCartCount = document.getElementById("navCartCount");
+    const cartNameInput = document.getElementById("cartName");
+    const cartDistrictInput = document.getElementById("cartDistrict");
+    const cartToast = document.getElementById("cartToast");
+    const cartToastText = document.getElementById("cartToastText");
+    let toastTimer = null;
+
+    const escapeHtml = (str) => String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const productById = (id) => maderinProducts.find(p => p.id === id);
+
+    let cart = [];
+    try { cart = JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch (e) { cart = []; }
+    // Descarta líneas inválidas o de productos que ya no existen / están agotados
+    cart = (Array.isArray(cart) ? cart : []).filter(l => {
+      const p = l && productById(l.id);
+      return p && p.price != null && getAvailability(p).state !== "out" && Number.isInteger(l.qty) && l.qty > 0 && typeof l.color === "string";
+    }).map(l => ({ id: l.id, color: l.color, qty: Math.min(l.qty, MAX_LINE_QTY) }));
+
+    function saveCart() {
+      try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) { /* sin almacenamiento: el carrito vive solo en esta visita */ }
+    }
+
+    const cartCount = () => cart.reduce((n, l) => n + l.qty, 0);
+    const cartTotal = () => cart.reduce((sum, l) => sum + productById(l.id).price * l.qty, 0);
+
+    function showToast(text) {
+      if (!cartToast) return;
+      cartToastText.textContent = text;
+      cartToast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => cartToast.classList.remove("show"), 3200);
+    }
+
+    function addToCart(id, color, qty) {
+      const product = productById(id);
+      if (!product || product.price == null || getAvailability(product).state === "out") return;
+      const line = cart.find(l => l.id === id && l.color === color);
+      if (line) line.qty = Math.min(line.qty + qty, MAX_LINE_QTY);
+      else cart.push({ id, color, qty: Math.min(qty, MAX_LINE_QTY) });
+      saveCart();
+      renderCart();
+      if (navCartBtn) {
+        navCartBtn.classList.remove("bump");
+        void navCartBtn.offsetWidth; // reinicia la animación
+        navCartBtn.classList.add("bump");
+      }
+      showToast(`${product.name} agregado al carrito`);
+    }
+
+    function renderCart() {
+      const count = cartCount();
+      if (navCartCount) {
+        navCartCount.textContent = count;
+        navCartCount.hidden = count === 0;
+      }
+      if (cartHeadCount) cartHeadCount.textContent = count ? `(${count})` : "";
+      if (!cartItemsEl) return;
+
+      cartEmptyEl.hidden = count > 0;
+      cartFootEl.hidden = count === 0;
+      cartItemsEl.hidden = count === 0;
+
+      cartItemsEl.innerHTML = cart.map((l, i) => {
+        const p = productById(l.id);
+        return `<div class="cart-line" data-index="${i}">
+          <div class="cart-line-icon${p.photo ? " has-photo" : ""}">${p.photo ? `<img src="${photoUrl(p, 480)}" alt="">` : p.svg}</div>
+          <div class="cart-line-info">
+            <strong>${escapeHtml(p.name)}</strong>
+            <span>${escapeHtml(l.color)}</span>
+            <div class="cart-line-qty">
+              <button type="button" data-act="minus" aria-label="Disminuir cantidad"${l.qty <= 1 ? " disabled" : ""}>&minus;</button>
+              <span>${l.qty}</span>
+              <button type="button" data-act="plus" aria-label="Aumentar cantidad"${l.qty >= MAX_LINE_QTY ? " disabled" : ""}>&plus;</button>
+            </div>
+          </div>
+          <div class="cart-line-side">
+            <strong>S/ ${p.price * l.qty}</strong>
+            <button type="button" data-act="remove" class="cart-line-remove" aria-label="Quitar ${escapeHtml(p.name)} del carrito">Quitar</button>
+          </div>
+        </div>`;
+      }).join("");
+
+      if (cartSubtotalEl) cartSubtotalEl.textContent = `S/ ${cartTotal()}`;
+    }
+
+    function openCart() {
+      if (!cartDrawer) return;
+      cartDrawer.classList.add("open");
+      cartBackdrop.classList.add("open");
+      cartDrawer.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      cartToast.classList.remove("show");
+      const closeBtn = document.getElementById("cartCloseBtn");
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function closeCart() {
+      if (!cartDrawer || !cartDrawer.classList.contains("open")) return;
+      cartDrawer.classList.remove("open");
+      cartBackdrop.classList.remove("open");
+      cartDrawer.setAttribute("aria-hidden", "true");
+      if (!modal.classList.contains("open")) document.body.style.overflow = "";
+      if (navCartBtn) navCartBtn.focus();
+    }
+
+    function buildOrderMessage() {
+      const lines = cart.map(l => {
+        const p = productById(l.id);
+        return `• ${l.qty} × ${p.name} (${l.color}) — S/ ${p.price * l.qty}`;
+      });
+      const name = cartNameInput ? cartNameInput.value.trim() : "";
+      const district = cartDistrictInput ? cartDistrictInput.value.trim() : "";
+      const extra = [name && `Nombre: ${name}`, district && `Distrito de entrega: ${district}`].filter(Boolean);
+      return [
+        "Hola Maderin, quiero hacer este pedido:",
+        "",
+        ...lines,
+        "",
+        `Total: S/ ${cartTotal()}`,
+        ...(extra.length ? ["", ...extra] : []),
+        "",
+        "¿Me confirman disponibilidad, costo de envío y cómo pagar? (transferencia, Yape o link de Mercado Pago)"
+      ].join("\n");
+    }
+
+    // Recuerda nombre y distrito entre visitas
+    try {
+      const saved = JSON.parse(localStorage.getItem(CART_FIELDS_KEY)) || {};
+      if (cartNameInput && saved.name) cartNameInput.value = saved.name;
+      if (cartDistrictInput && saved.district) cartDistrictInput.value = saved.district;
+    } catch (e) { /* sin datos guardados */ }
+    [cartNameInput, cartDistrictInput].forEach(input => {
+      if (!input) return;
+      input.addEventListener("input", () => {
+        try { localStorage.setItem(CART_FIELDS_KEY, JSON.stringify({ name: cartNameInput.value, district: cartDistrictInput.value })); } catch (e) { /* ignorar */ }
+      });
+    });
+
+    if (cartItemsEl) {
+      cartItemsEl.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-act]");
+        const lineEl = e.target.closest(".cart-line");
+        if (!btn || !lineEl) return;
+        const line = cart[Number(lineEl.getAttribute("data-index"))];
+        if (!line) return;
+        const act = btn.getAttribute("data-act");
+        if (act === "plus") line.qty = Math.min(line.qty + 1, MAX_LINE_QTY);
+        if (act === "minus") line.qty = Math.max(line.qty - 1, 1);
+        if (act === "remove") cart = cart.filter(l => l !== line);
+        saveCart();
+        renderCart();
+      });
+    }
+
+    if (navCartBtn) navCartBtn.addEventListener("click", openCart);
+    document.getElementById("cartCloseBtn")?.addEventListener("click", closeCart);
+    if (cartBackdrop) cartBackdrop.addEventListener("click", closeCart);
+    document.getElementById("cartToastBtn")?.addEventListener("click", openCart);
+    document.getElementById("cartEmptyCta")?.addEventListener("click", () => {
+      closeCart();
+      document.getElementById("productos")?.scrollIntoView({ behavior: "smooth" });
+    });
+    document.getElementById("cartClearBtn")?.addEventListener("click", () => {
+      cart = [];
+      saveCart();
+      renderCart();
+    });
+    document.getElementById("cartSendBtn")?.addEventListener("click", () => {
+      if (!cart.length) return;
+      openWhatsApp(buildOrderMessage());
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeCart();
+    });
+
+    // Agregar desde el modal de producto
+    if (modalAddBtn) {
+      modalAddBtn.addEventListener("click", () => {
+        const product = maderinProducts[currentModalIndex];
+        if (!product) return;
+        if (product.price == null) {
+          openWhatsApp(`Hola Maderin, quiero consultar el precio de: "${product.name}". ¿Me indican precio, medidas y fecha de entrega?`);
+          return;
+        }
+        addToCart(product.id, selectedColor, selectedQuantity);
+        closeModal();
+      });
+    }
+
+    renderCart();
+
+    // ------------------------------------------------------------------------
+    // RESEÑAS / FOTOS DE CLIENTES
+    // Agrega aquí reseñas reales. La sección #familias permanece oculta mientras esté vacío.
+    // (Hoy hay 3 reseñas de ejemplo con foto real y texto por completar.)
+    // Formato: { name: "María P.", district: "Surco", rating: 5, text: "…", product: "Cama Casita Montessori", photo: "public/maderin/reviews/maria.webp" }
+    // ("photo", "district" y "rating" son opcionales; sin rating no se muestran estrellas)
+    // ------------------------------------------------------------------------
+    const maderinReviews = [
+      // Notas basadas en la conformidad confirmada por cada cliente (no son citas textuales). Si consigues sus palabras, reemplaza text por su comentario real.
+      { photo: "public/maderin/reviews/closet-montessori.webp", product: "Closet Montessori", name: "Liliana", district: "Comas", rating: 5, text: "A mi hija le encanta elegir su ropa sola. Llegó rápido y se ve hermoso." },
+      { photo: "public/maderin/reviews/organizador-juguetes.webp", product: "Organizador de Juguetes", name: "Sebastián", district: "Los Olivos", rating: 5, text: "Mi hijo juega todo el día aquí. Gracias! ." },
+      { photo: "public/maderin/reviews/repisa-libros.webp", product: "Repisas para Libros", name: "Julia", district: "San Miguel", rating: 5, text: "Nuestra hija ama leer y tiene muchos libros. Estas repisas quedaron hermosas." }
+    ];
+    (function renderReviews() {
+      const section = document.getElementById("familias");
+      const wrap = document.getElementById("maderinReviews");
+      if (!section || !wrap || !maderinReviews.length) return;
+      wrap.innerHTML = maderinReviews.map(r => `<figure class="review-card">
+        ${r.photo ? `<img class="review-photo" src="${escapeHtml(r.photo)}" alt="Mueble Maderin en casa de ${escapeHtml(r.name)}" loading="lazy">` : ""}
+        ${r.rating ? `<div class="review-stars" aria-label="${Number(r.rating)} de 5 estrellas">${"★".repeat(Number(r.rating))}</div>` : ""}
+        <blockquote>${escapeHtml(r.text)}</blockquote>
+        <figcaption><strong>${escapeHtml(r.name)}</strong>${r.district ? ` · ${escapeHtml(r.district)}` : ""}${r.product ? `<span>${escapeHtml(r.product)}</span>` : ""}</figcaption>
+      </figure>`).join("");
+      section.hidden = false;
+    })();
+
     // Delegación de clics en las tarjetas del catálogo
     grid.addEventListener("click", (e) => {
-      // Si hizo clic en el botón directo de WhatsApp de la tarjeta, no abrir modal
-      const waBtn = e.target.closest(".btn-wa-icon");
-      if (waBtn) {
+      // Botón "Consultar" (productos sin precio definido): abre WhatsApp sin abrir el modal
+      const consultBtn = e.target.closest(".btn-consult");
+      if (consultBtn) {
         e.stopPropagation();
+        const product = maderinProducts.find(p => p.id === consultBtn.getAttribute("data-consult-id"));
+        if (product) openWhatsApp(`Hola Maderin, quiero consultar el precio de: "${product.name}". ¿Me indican precio, medidas y fecha de entrega?`);
+        return;
+      }
+
+      // Botón "Agregar" de la tarjeta: suma al carrito sin abrir el modal
+      const addBtn = e.target.closest(".btn-add-cart");
+      if (addBtn) {
+        e.stopPropagation();
+        const product = maderinProducts.find(p => p.id === addBtn.getAttribute("data-add-id"));
+        if (product) addToCart(product.id, product.colors[0].name, 1);
         return;
       }
 

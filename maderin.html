@@ -30,13 +30,17 @@
     <a href="#top" class="brand" id="navBrand"><img src="public/maderin/logo-maderin.png" alt="Maderin" class="brand-logo"></a>
     <!-- Links: Productos, Sobre Maderin, AC Mueblería (sitio padre), Instagram -->
     <ul class="nav-links" id="navLinks">
-      <li><a href="#productos" id="navLinkProductos">Catálogo</a></li>
+      <li><a href="#productos" id="navLinkProductos">Tienda</a></li>
       <li><a href="#nosotros" id="navLinkNosotros">Sobre Maderin</a></li>
       <li><a href="index.html" id="navLinkAc">AC Mueblería</a></li>
       <li><a href="https://www.instagram.com/maderin.pe/" target="_blank" rel="noopener" id="navLinkIg">Instagram</a></li>
     </ul>
     <!-- Botón WhatsApp: data-wa-message define el mensaje prellenado al abrir chat -->
     <div class="nav-cta">
+      <button type="button" class="nav-cart" id="navCartBtn" aria-label="Abrir carrito" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 11.2a1.6 1.6 0 0 0 1.6 1.2h8.4a1.6 1.6 0 0 0 1.6-1.2L21 7H6"/></svg>
+        <span class="nav-cart-count" id="navCartCount" hidden>0</span>
+      </button>
       <a class="btn btn-wa" id="navWaBtn" data-wa-message="Hola, quiero información sobre los productos de Maderin.">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
         <span class="long">Escríbenos</span>
@@ -143,13 +147,13 @@
   <div class="container">
     <div class="head-row catalog-header-row">
       <div>
-        <span class="eyebrow">Catálogo Infantil E-commerce</span>
+        <span class="eyebrow">Tienda Maderin</span>
         <h2 class="section-title">Mobiliario pensado para su tamaño y autonomía.</h2>
       </div>
-      <p class="section-lede">Selecciona cualquier pieza para abrir su ficha técnica interactiva, personalizar acabados y coordinar tu pedido directo por WhatsApp.</p>
+      <p class="section-lede">Elige tus piezas, agrégalas al carrito y envía tu pedido por WhatsApp. Pagas por transferencia, Yape o link de pago.</p>
     </div>
 
-    <!-- Grilla Compacta de Productos E-commerce (8 items) -->
+    <!-- Grilla Compacta de Productos E-commerce (12 items) -->
     <div class="product-grid compact-ecom-grid" id="maderinProductGrid">
       <!-- Los productos se inicializan con estructura accesible y se enlazan al dataset interactivo de modales -->
       <!-- 01: Cama Casita Montessori -->
@@ -186,9 +190,7 @@
             </div>
             <div class="p-actions-group">
               <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
-              <button class="btn btn-wa-icon btn-quick-wa" data-product-id="cama-casita" title="Pedir directo por WhatsApp" aria-label="Pedir por WhatsApp">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
-              </button>
+              <button type="button" class="btn btn-buy btn-add-cart" data-add-id="cama-casita" aria-label="Agregar al carrito"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 11.2a1.6 1.6 0 0 0 1.6 1.2h8.4a1.6 1.6 0 0 0 1.6-1.2L21 7H6"/></svg><span>Agregar</span></button>
             </div>
           </div>
         </div>
@@ -228,9 +230,7 @@
             </div>
             <div class="p-actions-group">
               <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
-              <button class="btn btn-wa-icon btn-quick-wa" data-product-id="cama-baja" title="Pedir directo por WhatsApp" aria-label="Pedir por WhatsApp">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
-              </button>
+              <button type="button" class="btn btn-buy btn-add-cart" data-add-id="cama-baja" aria-label="Agregar al carrito"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 11.2a1.6 1.6 0 0 0 1.6 1.2h8.4a1.6 1.6 0 0 0 1.6-1.2L21 7H6"/></svg><span>Agregar</span></button>
             </div>
           </div>
         </div>
@@ -270,9 +270,7 @@
             </div>
             <div class="p-actions-group">
               <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
-              <button class="btn btn-wa-icon btn-quick-wa" data-product-id="librero-frontal" title="Pedir directo por WhatsApp" aria-label="Pedir por WhatsApp">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
-              </button>
+              <button type="button" class="btn btn-buy btn-add-cart" data-add-id="librero-frontal" aria-label="Agregar al carrito"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 11.2a1.6 1.6 0 0 0 1.6 1.2h8.4a1.6 1.6 0 0 0 1.6-1.2L21 7H6"/></svg><span>Agregar</span></button>
             </div>
           </div>
         </div>
@@ -312,9 +310,7 @@
             </div>
             <div class="p-actions-group">
               <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
-              <button class="btn btn-wa-icon btn-quick-wa" data-product-id="organizador-juguetes" title="Pedir directo por WhatsApp" aria-label="Pedir por WhatsApp">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
-              </button>
+              <button type="button" class="btn btn-buy btn-add-cart" data-add-id="organizador-juguetes" aria-label="Agregar al carrito"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 11.2a1.6 1.6 0 0 0 1.6 1.2h8.4a1.6 1.6 0 0 0 1.6-1.2L21 7H6"/></svg><span>Agregar</span></button>
             </div>
           </div>
         </div>
@@ -354,9 +350,7 @@
             </div>
             <div class="p-actions-group">
               <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
-              <button class="btn btn-wa-icon btn-quick-wa" data-product-id="torre-aprendizaje" title="Pedir directo por WhatsApp" aria-label="Pedir por WhatsApp">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
-              </button>
+              <button type="button" class="btn btn-buy btn-add-cart" data-add-id="torre-aprendizaje" aria-label="Agregar al carrito"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 11.2a1.6 1.6 0 0 0 1.6 1.2h8.4a1.6 1.6 0 0 0 1.6-1.2L21 7H6"/></svg><span>Agregar</span></button>
             </div>
           </div>
         </div>
@@ -396,9 +390,7 @@
             </div>
             <div class="p-actions-group">
               <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
-              <button class="btn btn-wa-icon btn-quick-wa" data-product-id="mesa-silla" title="Pedir directo por WhatsApp" aria-label="Pedir por WhatsApp">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
-              </button>
+              <button type="button" class="btn btn-buy btn-add-cart" data-add-id="mesa-silla" aria-label="Agregar al carrito"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 11.2a1.6 1.6 0 0 0 1.6 1.2h8.4a1.6 1.6 0 0 0 1.6-1.2L21 7H6"/></svg><span>Agregar</span></button>
             </div>
           </div>
         </div>
@@ -438,9 +430,7 @@
             </div>
             <div class="p-actions-group">
               <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
-              <button class="btn btn-wa-icon btn-quick-wa" data-product-id="escritorio-gaveta" title="Pedir directo por WhatsApp" aria-label="Pedir por WhatsApp">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
-              </button>
+              <button type="button" class="btn btn-buy btn-add-cart" data-add-id="escritorio-gaveta" aria-label="Agregar al carrito"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 11.2a1.6 1.6 0 0 0 1.6 1.2h8.4a1.6 1.6 0 0 0 1.6-1.2L21 7H6"/></svg><span>Agregar</span></button>
             </div>
           </div>
         </div>
@@ -480,9 +470,143 @@
             </div>
             <div class="p-actions-group">
               <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
-              <button class="btn btn-wa-icon btn-quick-wa" data-product-id="perchero-tipi" title="Pedir directo por WhatsApp" aria-label="Pedir por WhatsApp">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
-              </button>
+              <button type="button" class="btn btn-buy btn-add-cart" data-add-id="perchero-tipi" aria-label="Agregar al carrito"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 11.2a1.6 1.6 0 0 0 1.6 1.2h8.4a1.6 1.6 0 0 0 1.6-1.2L21 7H6"/></svg><span>Agregar</span></button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Nuevo: Closet Montessori (precio y medidas por confirmar) -->
+      <article class="product-card compact-card reveal" data-id="closet-montessori" data-category="guardado" data-name="Closet Montessori" role="button" tabindex="0" aria-label="Ver detalles de Closet Montessori">
+        <div class="product-thumb compact-thumb">
+          <span class="sample-badge">Nuevo</span>
+          <div class="thumb-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="32" height="32" rx="2"/><line x1="8" y1="24" x2="40" y2="24"/></svg>
+          </div>
+          <div class="thumb-quick-hint">
+            <span class="quick-hint-pill">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+              Ficha rápida
+            </span>
+          </div>
+        </div>
+        <div class="product-body compact-body">
+          <div class="p-card-header">
+            <span class="p-card-cat">Guardado &amp; Orden</span>
+          </div>
+          <h3 class="p-card-name">Closet Montessori</h3>
+          <p class="desc">Closet bajo con barra a la altura de tu peque, repisas laterales y espacio para calzado.</p>
+          <div class="product-footer-row">
+            <div class="p-pricing">
+              <div class="p-price-row">
+                <span class="p-current-price p-price-pending">Precio por confirmar</span>
+              </div>
+            </div>
+            <div class="p-actions-group">
+              <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
+              <button type="button" class="btn btn-buy btn-consult" data-consult-id="closet-montessori" aria-label="Consultar precio por WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg><span>Consultar</span></button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Nuevo: Cómoda Cambiador (precio y medidas por confirmar) -->
+      <article class="product-card compact-card reveal" data-id="comoda-cambiador" data-category="guardado" data-name="Cómoda Cambiador" role="button" tabindex="0" aria-label="Ver detalles de Cómoda Cambiador">
+        <div class="product-thumb compact-thumb">
+          <span class="sample-badge">Nuevo</span>
+          <div class="thumb-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="32" height="32" rx="2"/><line x1="8" y1="24" x2="40" y2="24"/></svg>
+          </div>
+          <div class="thumb-quick-hint">
+            <span class="quick-hint-pill">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+              Ficha rápida
+            </span>
+          </div>
+        </div>
+        <div class="product-body compact-body">
+          <div class="p-card-header">
+            <span class="p-card-cat">Guardado &amp; Orden</span>
+          </div>
+          <h3 class="p-card-name">Cómoda Cambiador</h3>
+          <p class="desc">Cómoda con cambiador superior, puerta y tres cajones amplios.</p>
+          <div class="product-footer-row">
+            <div class="p-pricing">
+              <div class="p-price-row">
+                <span class="p-current-price p-price-pending">Precio por confirmar</span>
+              </div>
+            </div>
+            <div class="p-actions-group">
+              <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
+              <button type="button" class="btn btn-buy btn-consult" data-consult-id="comoda-cambiador" aria-label="Consultar precio por WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg><span>Consultar</span></button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Nuevo: Porta Libros de Pared (precio y medidas por confirmar) -->
+      <article class="product-card compact-card reveal" data-id="porta-libros" data-category="guardado" data-name="Porta Libros de Pared" role="button" tabindex="0" aria-label="Ver detalles de Porta Libros de Pared">
+        <div class="product-thumb compact-thumb">
+          <span class="sample-badge">Nuevo</span>
+          <div class="thumb-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="32" height="32" rx="2"/><line x1="8" y1="24" x2="40" y2="24"/></svg>
+          </div>
+          <div class="thumb-quick-hint">
+            <span class="quick-hint-pill">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+              Ficha rápida
+            </span>
+          </div>
+        </div>
+        <div class="product-body compact-body">
+          <div class="p-card-header">
+            <span class="p-card-cat">Guardado &amp; Orden</span>
+          </div>
+          <h3 class="p-card-name">Porta Libros de Pared</h3>
+          <p class="desc">Frente bajo para que vea y alcance sus cuentos por la portada.</p>
+          <div class="product-footer-row">
+            <div class="p-pricing">
+              <div class="p-price-row">
+                <span class="p-current-price p-price-pending">Precio por confirmar</span>
+              </div>
+            </div>
+            <div class="p-actions-group">
+              <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
+              <button type="button" class="btn btn-buy btn-consult" data-consult-id="porta-libros" aria-label="Consultar precio por WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg><span>Consultar</span></button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Nuevo: Repisas para Libros (precio y medidas por confirmar) -->
+      <article class="product-card compact-card reveal" data-id="repisa-libros" data-category="guardado" data-name="Repisas para Libros" role="button" tabindex="0" aria-label="Ver detalles de Repisas para Libros">
+        <div class="product-thumb compact-thumb">
+          <span class="sample-badge">Nuevo</span>
+          <div class="thumb-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="32" height="32" rx="2"/><line x1="8" y1="24" x2="40" y2="24"/></svg>
+          </div>
+          <div class="thumb-quick-hint">
+            <span class="quick-hint-pill">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+              Ficha rápida
+            </span>
+          </div>
+        </div>
+        <div class="product-body compact-body">
+          <div class="p-card-header">
+            <span class="p-card-cat">Guardado &amp; Orden</span>
+          </div>
+          <h3 class="p-card-name">Repisas para Libros</h3>
+          <p class="desc">Repisas de madera para exhibir los cuentos de frente.</p>
+          <div class="product-footer-row">
+            <div class="p-pricing">
+              <div class="p-price-row">
+                <span class="p-current-price p-price-pending">Precio por confirmar</span>
+              </div>
+            </div>
+            <div class="p-actions-group">
+              <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
+              <button type="button" class="btn btn-buy btn-consult" data-consult-id="repisa-libros" aria-label="Consultar precio por WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg><span>Consultar</span></button>
             </div>
           </div>
         </div>
@@ -577,6 +701,7 @@
             <span class="price-discount-pill" id="mModalDiscount">Ahorra S/ 70</span>
           </div>
           <span class="price-note">Precio con IGV incluido · Confección artesanal</span>
+          <div class="p-stock" id="mModalStock"></div>
         </div>
 
         <p class="ecom-desc" id="mModalDesc">Estructura baja inspirada en la metodología Montessori que promueve la libertad de movimiento y autonomía de tu pequeño, con bordes redondeados y selladores ecológicos no tóxicos.</p>
@@ -645,16 +770,68 @@
           </div>
         </div>
 
-        <!-- Botón de Compra por WhatsApp Configurado -->
+        <!-- Acciones: agregar al carrito (principal) y consulta por WhatsApp (apoyo) -->
         <div class="ecom-actions-wrap">
-          <a href="#" class="btn btn-wa btn-ecom-cta" id="mModalWaOrderBtn" target="_blank" rel="noopener">
+          <button type="button" class="btn btn-buy btn-ecom-cta" id="mModalAddBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 11.2a1.6 1.6 0 0 0 1.6 1.2h8.4a1.6 1.6 0 0 0 1.6-1.2L21 7H6"/></svg>
+            <span id="mModalAddBtnText">Agregar al carrito</span>
+          </button>
+          <a href="#" class="btn btn-ecom-secondary" id="mModalWaOrderBtn" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.82.49 3.53 1.35 5L2 22l5.16-1.33A9.96 9.96 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm4.95 14.05c-.21.58-1.2 1.13-1.67 1.2-.47.07-.94.13-2.8-.62-2.22-.9-3.66-3.15-3.77-3.3-.11-.15-.9-1.2-.9-2.29s.57-1.63.77-1.85c.2-.22.44-.28.59-.28.15 0 .3 0 .43.01.14.01.33-.05.51.39.19.45.64 1.57.7 1.69.06.12.1.26.02.42-.08.16-.12.26-.24.4-.12.14-.25.31-.36.42-.12.12-.25.25-.11.49.14.24.63 1.04 1.35 1.68.93.83 1.71 1.09 1.95 1.21.24.12.38.1.52-.06.14-.16.6-.7.76-.94.16-.24.32-.2.53-.12.21.08 1.34.63 1.57.74.23.11.38.17.44.27.06.1.06.58-.15 1.16z"/></svg>
-            <span id="mModalWaBtnText">Pedir por WhatsApp (S/ 480)</span>
+            <span id="mModalWaBtnText">¿Dudas? Consultar por WhatsApp</span>
           </a>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<!-- ============ FAMILIAS MADERIN: reseñas y fotos de clientes ============ -->
+<!-- Se llena desde maderinReviews en assets/main.js; permanece oculta mientras no haya reseñas reales -->
+<section id="familias" class="reveal" hidden>
+  <div class="container">
+    <div class="head-row">
+      <div>
+        <span class="eyebrow">Familias Maderin</span>
+        <h2 class="section-title">Lo que cuentan quienes ya lo tienen en casa.</h2>
+      </div>
+    </div>
+    <div class="reviews-grid" id="maderinReviews"></div>
+  </div>
+</section>
+
+<!-- ============ CARRITO (drawer lateral) ============ -->
+<div class="cart-backdrop" id="cartBackdrop"></div>
+<aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Carrito de compras">
+  <div class="cart-head">
+    <h3>Tu carrito <span class="cart-head-count" id="cartHeadCount"></span></h3>
+    <button type="button" class="cart-close" id="cartCloseBtn" aria-label="Cerrar carrito">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="cart-body" id="cartItems"></div>
+  <div class="cart-empty" id="cartEmpty">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 11.2a1.6 1.6 0 0 0 1.6 1.2h8.4a1.6 1.6 0 0 0 1.6-1.2L21 7H6"/></svg>
+    <p>Tu carrito está vacío.</p>
+    <button type="button" class="btn btn-buy" id="cartEmptyCta">Ver la tienda</button>
+  </div>
+  <div class="cart-foot" id="cartFoot">
+    <div class="cart-fields">
+      <label>Tu nombre<input type="text" id="cartName" autocomplete="name" placeholder="Ej. María"></label>
+      <label>Distrito de entrega<input type="text" id="cartDistrict" autocomplete="address-level2" placeholder="Ej. Surco"></label>
+    </div>
+    <div class="cart-total-row"><span>Subtotal</span><strong id="cartSubtotal">S/ 0</strong></div>
+    <p class="cart-note">El envío se coordina por WhatsApp. Pagas por transferencia, Yape o link de pago (Mercado Pago).</p>
+    <button type="button" class="btn btn-buy btn-cart-send" id="cartSendBtn">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
+      Enviar pedido por WhatsApp
+    </button>
+    <button type="button" class="cart-clear" id="cartClearBtn">Vaciar carrito</button>
+  </div>
+</aside>
+<div class="cart-toast" id="cartToast" role="status" aria-live="polite">
+  <span id="cartToastText"></span>
+  <button type="button" id="cartToastBtn">Ver carrito</button>
 </div>
 </main>
 
@@ -675,7 +852,7 @@
       </div>
       <div class="footer-col">
         <h4>Navegación</h4>
-        <a href="#productos">Catálogo</a>
+        <a href="#productos">Tienda</a>
         <a href="#nosotros">Sobre Maderin</a>
         <a href="https://www.instagram.com/maderin.pe/" target="_blank" rel="noopener">Instagram</a>
       </div>

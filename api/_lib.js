@@ -1,7 +1,7 @@
 // Utilidades compartidas de la API (el prefijo "_" evita que Vercel lo publique como ruta).
 //
 // Almacenamiento:
-//   - En Vercel: Vercel Blob (requiere BLOB_READ_WRITE_TOKEN; se crea al conectar un Blob store público).
+//   - En Vercel: Vercel Blob (BLOB_READ_WRITE_TOKEN o, en stores nuevos, BLOB_STORE_ID con autenticación OIDC; ambos los crea Vercel al conectar un Blob store público).
 //   - En local (sin token): carpeta .data/ del proyecto, para poder probar el admin sin Vercel.
 //
 // Variables de entorno:
@@ -20,7 +20,7 @@ const SESSION_HOURS = 12;
 export const COOKIE_NAME = 'ac_admin';
 
 export const storageMode = () =>
-  process.env.BLOB_READ_WRITE_TOKEN ? 'blob' : process.env.VERCEL ? 'none' : 'local';
+  process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID ? 'blob' : process.env.VERCEL ? 'none' : 'local';
 
 // ---------------------------------------------------------------- Respuestas
 export function sendJson(res, status, body, headers = {}) {

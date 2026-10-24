@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "node server.js",
     "build": "echo 'Build complete'",
-    "lint": "node -c assets/main.js server.js scripts/optimize-images.mjs",
+    "lint": "node -c assets/main.js server.js scripts/optimize-images.mjs scripts/add-product.mjs",
+    "producto": "node scripts/add-product.mjs",
     "optimize:images": "node scripts/optimize-images.mjs",
     "start": "node server.js"
   },

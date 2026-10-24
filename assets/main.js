@@ -893,30 +893,30 @@ document.addEventListener("DOMContentLoaded", () => {
         svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 34V20l18-12 18 12v14"/><path d="M6 34h36M12 34v6M36 34v6"/><path d="M12 24h24"/></svg>`
       },
       {
-        id: "cama-baja",
+        id: "cama-montessori-con-barandas",
+        photo: "cama-montessori-con-barandas",
         category: "camas",
         categoryLabel: "Camas Montessori",
         sku: "MAD-CAM-02",
-        name: "Cama Baja con Barandilla",
-        subtitle: "Nivel de piso con baranda protectora",
-        desc: "Ideal como primera cama para la transición de cuna. Barandilla de seguridad perimetral con entrada frontal despejada y esquinas suavemente biseladas para máxima protección.",
-        price: 420,
-        oldPrice: 480,
-        discount: "Ahorra S/ 60",
-        badge: "Primera Cama",
-        rating: 4.8,
-        reviewsCount: 24,
-        dimensions: "90 × 190 × 35 cm (1 Plaza)",
-        material: "Madera Pino 100% macizo",
-        ageRange: "18 meses a 7 años",
-        deliveryTime: "4 a 6 días hábiles",
-        finish: "Bordes biselados y sellador mate",
+        name: "Cama Montessori con Barandas",
+        subtitle: "Cama Montessori con Barandas",
+        desc: "Cama baja a ras de suelo con barandas de listones en los cuatro lados, para que descanse seguro y se mueva con libertad.",
+        price: 850,
+        oldPrice: null,
+        discount: null,
+        badge: "Nuevo",
+        stock: "order",
+        rating: null,              // sin reseñas todavía
+        reviewsCount: 0,
+        dimensions: "Por confirmar",
+        material: "Por confirmar",
+        ageRange: "Por confirmar",
+        deliveryTime: "15 a 20 días",
+        finish: "Por confirmar",
         colors: [
-          { name: "Pino Natural", hex: "#D8BC94" },
-          { name: "Blanco Nieve", hex: "#FFFFFF" },
-          { name: "Gris Cálido", hex: "#E5E7EB" }
+          { name: "Por definir", hex: "#E5DCCB" }
         ],
-        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 32V18h10v6h16v-6h10v14"/><line x1="6" y1="32" x2="42" y2="32"/><line x1="6" y1="32" x2="6" y2="40"/><line x1="42" y1="32" x2="42" y2="40"/><path d="M12 24v8M20 24v8M28 24v8M36 24v8"/></svg>`
+        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 34V20l18-12 18 12v14"/><path d="M6 34h36M12 34v6M36 34v6"/><path d="M12 24h24"/></svg>`
       },
       {
         id: "librero-frontal",

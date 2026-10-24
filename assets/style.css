@@ -5084,3 +5084,11 @@ body.theme-maderin .compact-card .p-actions-group .btn { flex: 1; justify-conten
 .cart-line-icon.has-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .p-price-pending { font-size: 14px; font-weight: 800; color: var(--ink-soft); }
 .ecom-rating-row[hidden], .price-old[hidden], .price-discount-pill[hidden] { display: none; }
+
+/* Catálogo generado desde /admin: estados vacíos y fotos en CDM */
+.catalog-empty { grid-column: 1 / -1; text-align: center; padding: 40px 0; color: var(--ink-soft); font-size: 15px; }
+body.theme-cdm .product-thumb { overflow: hidden; }
+body.theme-cdm .product-thumb img.thumb-photo { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s ease; }
+body.theme-cdm .product-card:hover .thumb-photo { transform: scale(1.04); }
+.product-old-price { font-family: var(--font-mono); font-size: 12px; font-weight: 400; color: var(--ink-soft); }
+.btn[disabled] { opacity: .55; cursor: not-allowed; }

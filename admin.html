@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="public/logo_favicon.png">
+<title>Panel de administración | AC Mueblería</title>
+<link rel="stylesheet" href="assets/admin.css">
+</head>
+<body>
+
+<!-- ============ ACCESO ============ -->
+<main class="login" id="loginView" hidden>
+  <form class="login-card" id="loginForm" autocomplete="off">
+    <h1>Panel de administración</h1>
+    <p class="muted">Gestiona las tiendas de Maderin y Corazón de Madera.</p>
+    <label for="loginPassword">Clave de acceso</label>
+    <input type="password" id="loginPassword" name="password" required autofocus autocomplete="current-password">
+    <p class="form-error" id="loginError" role="alert" hidden></p>
+    <button type="submit" class="btn btn-primary" id="loginBtn">Entrar</button>
+  </form>
+</main>
+
+<!-- ============ PANEL ============ -->
+<div class="app" id="appView" hidden>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><strong>Admin</strong><span>AC Mueblería</span></div>
+      <nav class="shop-tabs" role="tablist" aria-label="Tienda">
+        <button role="tab" class="tab" data-shop="maderin" aria-selected="true">Maderin <span class="count" id="countMaderin"></span></button>
+        <button role="tab" class="tab" data-shop="cdm" aria-selected="false">Corazón de Madera <span class="count" id="countCdm"></span></button>
+      </nav>
+      <div class="topbar-actions">
+        <a class="btn btn-ghost" id="viewShopLink" href="maderin.html#productos" target="_blank" rel="noopener">Ver tienda ↗</a>
+        <button type="button" class="btn btn-ghost" id="logoutBtn">Salir</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="banner banner-warn" id="storageBanner" hidden></div>
+
+  <main class="content">
+    <div class="toolbar">
+      <div class="search">
+        <input type="search" id="searchInput" placeholder="Buscar producto…" aria-label="Buscar producto">
+      </div>
+      <div class="toolbar-right">
+        <details class="more">
+          <summary class="btn btn-ghost">Más opciones</summary>
+          <div class="more-menu">
+            <button type="button" id="restoreBtn">Restaurar productos originales de la web</button>
+          </div>
+        </details>
+        <button type="button" class="btn btn-primary" id="newBtn">+ Nuevo producto</button>
+      </div>
+    </div>
+
+    <p class="hint" id="reorderHint">Arrastra <span aria-hidden="true">⋮⋮</span> o usa las flechas para cambiar el orden en que aparecen en la tienda. El primero se muestra arriba a la izquierda.</p>
+    <ol class="rows" id="rows" aria-label="Productos"></ol>
+    <p class="empty" id="emptyMsg" hidden>No hay productos que coincidan.</p>
+  </main>
+
+  <div class="savebar" id="saveBar">
+    <div class="savebar-inner">
+      <span class="save-status" id="saveStatus" role="status" aria-live="polite">Todo publicado</span>
+      <div class="savebar-actions">
+        <button type="button" class="btn btn-ghost" id="discardBtn" disabled>Descartar cambios</button>
+        <button type="button" class="btn btn-primary" id="publishBtn" disabled>Publicar cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ EDITOR DE PRODUCTO ============ -->
+<dialog class="editor" id="editor" aria-labelledby="editorTitle">
+  <form id="editorForm" method="dialog" novalidate>
+    <header class="editor-head">
+      <h2 id="editorTitle">Editar producto</h2>
+      <button type="button" class="icon-btn" id="editorClose" aria-label="Cerrar">✕</button>
+    </header>
+
+    <div class="editor-body">
+      <fieldset>
+        <legend>Información básica</legend>
+        <div class="grid-2">
+          <label class="span-2">Nombre
+            <input name="name" required maxlength="120">
+          </label>
+          <label>Categoría
+            <select name="category"></select>
+          </label>
+          <label class="only-maderin">Subtítulo (ficha)
+            <input name="subtitle" maxlength="120">
+          </label>
+          <label class="span-2 only-maderin">Texto corto (tarjeta)
+            <textarea name="cardDesc" rows="2" maxlength="300"></textarea>
+          </label>
+          <label class="span-2"><span class="lbl-desc">Descripción</span>
+            <textarea name="desc" rows="4" maxlength="1200"></textarea>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Foto</legend>
+        <div class="photo-row">
+          <div class="photo-preview" id="photoPreview"></div>
+          <div class="photo-actions">
+            <label class="btn btn-ghost file-btn">Subir foto<input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp" hidden></label>
+            <button type="button" class="btn btn-ghost" id="photoRemove">Quitar foto</button>
+            <p class="muted small" id="photoMsg">JPG, PNG o WebP. Se optimiza sola para la web.</p>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Precio y disponibilidad</legend>
+        <div class="grid-2">
+          <label>Precio (S/)
+            <input name="price" type="number" inputmode="decimal" min="0" step="1" placeholder="Vacío = por confirmar">
+          </label>
+          <label>Precio anterior (S/)
+            <input name="oldPrice" type="number" inputmode="decimal" min="0" step="1" placeholder="Opcional, para mostrar descuento">
+          </label>
+          <p class="muted small span-2" id="discountPreview"></p>
+          <label>Disponibilidad
+            <select name="stock">
+              <option value="order">Sobre pedido</option>
+              <option value="ready">Listo para entrega</option>
+              <option value="out">Agotado</option>
+            </select>
+          </label>
+          <label>Plazo de entrega
+            <input name="deliveryTime" maxlength="80" placeholder="Ej. 5 a 7 días hábiles">
+          </label>
+          <label class="only-cdm">Se vende por
+            <input name="unit" maxlength="20" placeholder="unidad, set…">
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Etiqueta (badge)</legend>
+        <div class="grid-2">
+          <label>Etiqueta
+            <select name="badgePreset"></select>
+          </label>
+          <label id="badgeCustomWrap" hidden>Texto de la etiqueta
+            <input name="badgeCustom" maxlength="30" placeholder="Ej. Regalo ideal">
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="only-maderin">
+        <legend>Ficha técnica</legend>
+        <div class="grid-2">
+          <label>SKU<input name="sku" maxlength="30"></label>
+          <label>Edad recomendada<input name="ageRange" maxlength="60"></label>
+          <label class="span-2">Medidas<input name="dimensions" maxlength="120"></label>
+          <label>Material<input name="material" maxlength="120"></label>
+          <label>Acabado<input name="finish" maxlength="160"></label>
+          <label>Calificación (0 a 5)<input name="rating" type="number" min="0" max="5" step="0.1" placeholder="Vacío = sin reseñas"></label>
+          <label>N.º de opiniones<input name="reviewsCount" type="number" min="0" step="1"></label>
+        </div>
+        <div class="colors">
+          <span class="colors-title">Colores disponibles</span>
+          <div id="colorList"></div>
+          <button type="button" class="btn btn-ghost btn-sm" id="addColor">+ Agregar color</button>
+        </div>
+      </fieldset>
+
+      <fieldset class="only-cdm">
+        <legend>Detalles de la tarjeta</legend>
+        <div class="grid-2">
+          <label>Medidas<input name="spec1" maxlength="60" placeholder="Ej. 30 × 40 cm"></label>
+          <label>Material<input name="spec2" maxlength="60" placeholder="Ej. MDF"></label>
+        </div>
+      </fieldset>
+
+      <label class="check"><input type="checkbox" name="hidden"> Ocultar este producto en la tienda</label>
+    </div>
+
+    <footer class="editor-foot">
+      <p class="form-error" id="editorError" role="alert" hidden></p>
+      <button type="button" class="btn btn-ghost" id="editorCancel">Cancelar</button>
+      <button type="submit" class="btn btn-primary">Aplicar cambios</button>
+    </footer>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="assets/catalog.js"></script>
+<script src="assets/admin.js"></script>
+</body>
+</html>

@@ -858,328 +858,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================================================
   // MADERIN: CATÁLOGO INFANTIL E-COMMERCE & MODAL INTERACTIVO
   // ==========================================================================
-  function initMaderinEcommerce() {
+  async function initMaderinEcommerce() {
     const grid = document.getElementById("maderinProductGrid");
     const modal = document.getElementById("maderinProductModal");
     if (!grid || !modal) return;
 
-    // Catálogo de 8 productos destacados para Maderin
-    const maderinProducts = [
-      {
-        id: "cama-casita",
-        category: "camas",
-        categoryLabel: "Camas Montessori",
-        sku: "MAD-CAM-01",
-        name: "Cama Casita Montessori",
-        subtitle: "Estructura en techo a dos aguas",
-        desc: "Estructura baja inspirada en la metodología Montessori que promueve la libertad de movimiento y autonomía de tu pequeño, con bordes cuidadosamente redondeados y selladores ecológicos no tóxicos.",
-        price: 480,
-        oldPrice: 550,
-        discount: "Ahorra S/ 70",
-        badge: "Más Vendido",
-        rating: 4.9,
-        reviewsCount: 38,
-        dimensions: "90 × 190 × 145 cm (1 Plaza)",
-        material: "Pino selecto secado al horno",
-        ageRange: "2 a 10 años",
-        deliveryTime: "5 a 7 días hábiles",
-        finish: "Laca selladora al agua no tóxica",
-        colors: [
-          { name: "Pino Natural", hex: "#D8BC94" },
-          { name: "Blanco Nieve", hex: "#FFFFFF" },
-          { name: "Gris Nórdico", hex: "#D1D5DB" },
-          { name: "Rosa Pastel", hex: "#FBCFE8" }
-        ],
-        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 34V20l18-12 18 12v14"/><path d="M6 34h36M12 34v6M36 34v6"/><path d="M12 24h24"/></svg>`
-      },
-      {
-        id: "cama-montessori-con-barandas",
-        photo: "cama-montessori-con-barandas",
-        category: "camas",
-        categoryLabel: "Camas Montessori",
-        sku: "MAD-CAM-02",
-        name: "Cama Montessori con Barandas",
-        subtitle: "Cama Montessori con Barandas",
-        desc: "Cama baja a ras de suelo con barandas de listones en los cuatro lados, para que descanse seguro y se mueva con libertad.",
-        price: 850,
-        oldPrice: null,
-        discount: null,
-        badge: "Nuevo",
-        stock: "order",
-        rating: null,              // sin reseñas todavía
-        reviewsCount: 0,
-        dimensions: "Por confirmar",
-        material: "Por confirmar",
-        ageRange: "Por confirmar",
-        deliveryTime: "15 a 20 días",
-        finish: "Por confirmar",
-        colors: [
-          { name: "Por definir", hex: "#E5DCCB" }
-        ],
-        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 34V20l18-12 18 12v14"/><path d="M6 34h36M12 34v6M36 34v6"/><path d="M12 24h24"/></svg>`
-      },
-      {
-        id: "librero-frontal",
-        category: "guardado",
-        categoryLabel: "Guardado & Orden",
-        sku: "MAD-GUA-01",
-        name: "Librero Frontal Montessori",
-        subtitle: "3 niveles de cuentos a la vista",
-        desc: "Los niños eligen sus lecturas por la portada. Este librero a su altura estimula la autonomía, el hábito lector diario y el orden en su habitación sin riesgo de caídas.",
-        price: 140,
-        oldPrice: 165,
-        discount: "Ahorra S/ 25",
-        badge: "Lectura Temprana",
-        rating: 5.0,
-        reviewsCount: 42,
-        dimensions: "75 × 30 × 80 cm",
-        material: "MDF 15mm + Pino macizo",
-        ageRange: "1 a 8 años",
-        deliveryTime: "3 a 5 días hábiles",
-        finish: "Esmalte satinado lavable",
-        colors: [
-          { name: "Pino Natural", hex: "#D8BC94" },
-          { name: "Blanco Nieve", hex: "#FFFFFF" },
-          { name: "Verde Menta", hex: "#A7F3D0" },
-          { name: "Rosa Pastel", hex: "#FBCFE8" }
-        ],
-        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="10" width="32" height="30" rx="2"/><line x1="8" y1="20" x2="40" y2="20"/><line x1="8" y1="30" x2="40" y2="30"/><line x1="12" y1="18" x2="36" y2="18"/><line x1="12" y1="28" x2="36" y2="28"/></svg>`
-      },
-      {
-        id: "organizador-juguetes",
-        photo: "organizador-juguetes",
-        category: "guardado",
-        categoryLabel: "Guardado & Orden",
-        sku: "MAD-GUA-02",
-        name: "Organizador de Juguetes 6 Gavetas",
-        subtitle: "Módulo bajo con gavetas ligeras",
-        desc: "Facilita la clasificación de juguetes, bloques y manualidades. Gavetas ultra-ligeras que los pequeños pueden mover y acomodar de forma 100% independiente.",
-        price: 195,
-        oldPrice: 230,
-        discount: "Ahorra S/ 35",
-        badge: "Autonomía",
-        rating: 4.9,
-        reviewsCount: 31,
-        dimensions: "85 × 32 × 65 cm",
-        material: "Melamina Pelíkano 18mm",
-        ageRange: "2 a 9 años",
-        deliveryTime: "4 a 6 días hábiles",
-        finish: "Cantos gruesos termo-adheridos",
-        colors: [
-          { name: "Blanco Nórdico", hex: "#FFFFFF" },
-          { name: "Pino Natural", hex: "#D8BC94" },
-          { name: "Gris Claro", hex: "#E5E7EB" }
-        ],
-        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="32" height="32" rx="2"/><line x1="8" y1="24" x2="40" y2="24"/><line x1="24" y1="8" x2="24" y2="40"/><rect x="12" y="12" width="8" height="8" rx="1"/><rect x="28" y="12" width="8" height="8" rx="1"/><rect x="12" y="28" width="8" height="8" rx="1"/><rect x="28" y="28" width="8" height="8" rx="1"/></svg>`
-      },
-      {
-        id: "torre-aprendizaje",
-        category: "accesorios",
-        categoryLabel: "Accesorios & Estimulación",
-        sku: "MAD-ACC-01",
-        name: "Torre de Aprendizaje Regulable",
-        subtitle: "3 alturas de piso con barra de seguridad",
-        desc: "Permite al niño alcanzar la mesada de cocina o mesa con total estabilidad para cocinar, lavarse las manos y participar activamente en las tareas del hogar.",
-        price: 175,
-        oldPrice: 210,
-        discount: "Ahorra S/ 35",
-        badge: "Favorito Padres",
-        rating: 4.9,
-        reviewsCount: 56,
-        dimensions: "42 × 40 × 90 cm",
-        material: "Madera pino selecto 20mm",
-        ageRange: "18 meses a 5 años",
-        deliveryTime: "3 a 5 días hábiles",
-        finish: "Base antideslizante y cantos redondeados",
-        colors: [
-          { name: "Pino Natural", hex: "#D8BC94" },
-          { name: "Blanco Nieve", hex: "#FFFFFF" },
-          { name: "Gris Nórdico", hex: "#D1D5DB" }
-        ],
-        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 42L18 8h12l6 34"/><line x1="15" y1="28" x2="33" y2="28"/><line x1="16" y1="20" x2="32" y2="20"/><line x1="18" y1="12" x2="30" y2="12"/><path d="M12 42h24"/></svg>`
-      },
-      {
-        id: "mesa-silla",
-        photo: "mesa-silla",
-        category: "escritorio",
-        categoryLabel: "Escritorios & Mesas",
-        sku: "MAD-ESC-01",
-        name: "Mesa + Silla Ergonómica Infantil",
-        subtitle: "Set de estudio y juego boleado",
-        desc: "Mesa cuadrada con esquinas boleadas y silla robusta de soporte lumbar ergonómico. Superficie tratada para fácil limpieza ante témperas, plumones y plastilinas.",
-        price: 240,
-        oldPrice: 280,
-        discount: "Ahorra S/ 40",
-        badge: "Set Ergonómico",
-        rating: 4.8,
-        reviewsCount: 19,
-        dimensions: "Mesa 60×60×48 cm · Silla 30×30×52 cm",
-        material: "Madera pino + Cubierta lavable",
-        ageRange: "2 a 7 años",
-        deliveryTime: "4 a 6 días hábiles",
-        finish: "Laca protectora poliuretano mate",
-        colors: [
-          { name: "Pino Natural", hex: "#D8BC94" },
-          { name: "Blanco + Pino", hex: "#F3F4F6" },
-          { name: "Rosa Pastel", hex: "#FBCFE8" },
-          { name: "Verde Menta", hex: "#A7F3D0" }
-        ],
-        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="16" width="24" height="6" rx="1"/><line x1="10" y1="22" x2="10" y2="38"/><line x1="26" y1="22" x2="26" y2="38"/><path d="M34 14v24M34 26h8v12M42 26v-6"/></svg>`
-      },
-      {
-        id: "escritorio-gaveta",
-        category: "escritorio",
-        categoryLabel: "Escritorios & Mesas",
-        sku: "MAD-ESC-02",
-        name: "Escritorio Escolar con Gaveta",
-        subtitle: "Amplio espacio para tareas y libros",
-        desc: "Diseñado para los primeros años de primaria. Cuenta con cajón silencioso con tope de seguridad, canal para lápices y estructura reforzada de pino macizo.",
-        price: 260,
-        oldPrice: 310,
-        discount: "Ahorra S/ 50",
-        badge: "Primaria",
-        rating: 4.9,
-        reviewsCount: 22,
-        dimensions: "80 × 50 × 62 cm",
-        material: "Pino macizo + MDF laqueado",
-        ageRange: "4 a 10 años",
-        deliveryTime: "5 a 7 días hábiles",
-        finish: "Rieles telescópicos y acabado mate",
-        colors: [
-          { name: "Pino Natural", hex: "#D8BC94" },
-          { name: "Blanco Nieve", hex: "#FFFFFF" },
-          { name: "Gris Cálido", hex: "#E5E7EB" }
-        ],
-        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="16" width="36" height="8" rx="1"/><line x1="10" y1="24" x2="10" y2="40"/><line x1="38" y1="24" x2="38" y2="40"/><line x1="18" y1="20" x2="30" y2="20"/></svg>`
-      },
-      {
-        id: "perchero-tipi",
-        photo: "perchero-tipi",
-        category: "accesorios",
-        categoryLabel: "Accesorios & Estimulación",
-        sku: "MAD-ACC-02",
-        name: "Perchero Tipi con Zapatero",
-        subtitle: "Colgador bajito con base organizadora",
-        desc: "Permite a los pequeños colgar sus casacas, mochilas y ordenar su calzado al volver a casa. Estructura triangular tipo tipi súper estable que no se tambalea.",
-        price: 95,
-        oldPrice: 115,
-        discount: "Ahorra S/ 20",
-        badge: "Compacto",
-        rating: 4.8,
-        reviewsCount: 17,
-        dimensions: "40 × 40 × 110 cm",
-        material: "Madera pino 100% macizo",
-        ageRange: "2 a 9 años",
-        deliveryTime: "2 a 4 días hábiles",
-        finish: "Lijado fino al tacto y sellador ecológico",
-        colors: [
-          { name: "Pino Natural", hex: "#D8BC94" },
-          { name: "Blanco Nieve", hex: "#FFFFFF" },
-          { name: "Bicolor (Pino/Blanco)", hex: "#EADCC9" }
-        ],
-        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 42L24 6l8 36"/><line x1="19" y1="22" x2="29" y2="22"/><line x1="14" y1="36" x2="34" y2="36"/></svg>`
-      },
-      {
-        id: "closet-montessori",
-        photo: "closet-montessori",
-        category: "guardado",
-        categoryLabel: "Guardado & Orden",
-        sku: null,                 // por asignar
-        name: "Closet Montessori",
-        subtitle: "Ropa y calzado a su altura",
-        desc: "Closet bajo con barra a la altura de tu peque, repisas laterales y espacio para calzado, para que elija y guarde su ropa solo.",
-        price: null,               // por confirmar: mientras sea null, el producto se consulta por WhatsApp y no entra al carrito
-        oldPrice: null,
-        discount: null,
-        badge: "Nuevo",
-        rating: null,              // sin reseñas todavía
-        reviewsCount: 0,
-        dimensions: "Por confirmar",
-        material: "Por confirmar",
-        ageRange: "Por confirmar",
-        deliveryTime: null,        // por confirmar
-        finish: "Por confirmar",
-        colors: [
-          { name: "Por definir", hex: "#E5DCCB" }
-        ],
-        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="32" height="32" rx="2"/><line x1="8" y1="24" x2="40" y2="24"/></svg>`
-      },
-      {
-        id: "comoda-cambiador",
-        photo: "comoda-cambiador",
-        category: "guardado",
-        categoryLabel: "Guardado & Orden",
-        sku: null,                 // por asignar
-        name: "Cómoda Cambiador",
-        subtitle: "Cambiador superior con cajones",
-        desc: "Cómoda con cambiador superior, puerta y tres cajones amplios. Un mueble que acompaña desde bebé.",
-        price: null,               // por confirmar: mientras sea null, el producto se consulta por WhatsApp y no entra al carrito
-        oldPrice: null,
-        discount: null,
-        badge: "Nuevo",
-        rating: null,              // sin reseñas todavía
-        reviewsCount: 0,
-        dimensions: "Por confirmar",
-        material: "Por confirmar",
-        ageRange: "Por confirmar",
-        deliveryTime: null,        // por confirmar
-        finish: "Por confirmar",
-        colors: [
-          { name: "Por definir", hex: "#E5DCCB" }
-        ],
-        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="32" height="32" rx="2"/><line x1="8" y1="24" x2="40" y2="24"/></svg>`
-      },
-      {
-        id: "porta-libros",
-        photo: "porta-libros",
-        category: "guardado",
-        categoryLabel: "Guardado & Orden",
-        sku: null,                 // por asignar
-        name: "Porta Libros de Pared",
-        subtitle: "Cuentos a la vista",
-        desc: "Porta libros de pared de frente bajo para que vea y alcance sus cuentos por la portada.",
-        price: null,               // por confirmar: mientras sea null, el producto se consulta por WhatsApp y no entra al carrito
-        oldPrice: null,
-        discount: null,
-        badge: "Nuevo",
-        rating: null,              // sin reseñas todavía
-        reviewsCount: 0,
-        dimensions: "Por confirmar",
-        material: "Por confirmar",
-        ageRange: "Por confirmar",
-        deliveryTime: null,        // por confirmar
-        finish: "Por confirmar",
-        colors: [
-          { name: "Por definir", hex: "#E5DCCB" }
-        ],
-        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="32" height="32" rx="2"/><line x1="8" y1="24" x2="40" y2="24"/></svg>`
-      },
-      {
-        id: "repisa-libros",
-        photo: "repisa-libros",
-        category: "guardado",
-        categoryLabel: "Guardado & Orden",
-        sku: null,                 // por asignar
-        name: "Repisas para Libros",
-        subtitle: "Repisas de pared para cuentos",
-        desc: "Repisas de madera para exhibir los cuentos de frente, a la altura de los niños.",
-        price: null,               // por confirmar: mientras sea null, el producto se consulta por WhatsApp y no entra al carrito
-        oldPrice: null,
-        discount: null,
-        badge: "Nuevo",
-        rating: null,              // sin reseñas todavía
-        reviewsCount: 0,
-        dimensions: "Por confirmar",
-        material: "Por confirmar",
-        ageRange: "Por confirmar",
-        deliveryTime: null,        // por confirmar
-        finish: "Por confirmar",
-        colors: [
-          { name: "Por definir", hex: "#E5DCCB" }
-        ],
-        svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="32" height="32" rx="2"/><line x1="8" y1="24" x2="40" y2="24"/></svg>`
-      }
-    ];
+    // Catálogo: lo publicado desde /admin (o los valores originales de assets/catalog.js si no hay nada guardado).
+    // Los productos ocultos no aparecen en la tienda.
+    const maderinProducts = (await window.ACCatalog.load("maderin")).filter(p => !p.hidden);
 
     // Elementos del Modal
     const modalBackdrop = modal.querySelector(".ecom-modal-backdrop") || document.getElementById("maderinModalBackdrop");
@@ -1255,8 +941,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Visual & Badge
       if (modalVisualEl) {
-        modalVisualEl.classList.toggle("has-photo", !!product.photo);
-        modalVisualEl.innerHTML = product.photo
+        modalVisualEl.classList.toggle("has-photo", ACCatalog.hasPhoto(product));
+        modalVisualEl.innerHTML = ACCatalog.hasPhoto(product)
           ? `<img src="${photoUrl(product, 900)}" alt="${product.name}" decoding="async">`
           : (product.svg || "");
       }
@@ -1419,44 +1105,58 @@ document.addEventListener("DOMContentLoaded", () => {
     // DISPONIBILIDAD POR PRODUCTO
     // product.stock: "order" (sobre pedido, por defecto) | "ready" (listo para entrega) | "out" (agotado)
     // ------------------------------------------------------------------------
-    const photoUrl = (product, width) => `public/maderin/productos/${product.photo}-${width}.webp`;
+    const photoUrl = (product, width) => ACCatalog.photoUrl(product, width, "maderin");
 
-    function getAvailability(product) {
-      const state = product.stock || "order";
-      const labels = {
-        ready: "Listo para entrega",
-        order: product.deliveryTime ? `Sobre pedido · ${product.deliveryTime}` : "Disponibilidad por confirmar",
-        out: "Agotado por ahora"
-      };
-      return { state, label: labels[state] || labels.order };
+    const getAvailability = (product) => ACCatalog.stockInfo(product);
+
+    const escAttr = (str) => String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>';
+    const CART_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 11.2a1.6 1.6 0 0 0 1.6 1.2h8.4a1.6 1.6 0 0 0 1.6-1.2L21 7H6"/></svg>';
+    const SEARCH_ICON = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>';
+
+    // Tarjeta del catálogo (misma estructura que usaba el HTML estático)
+    function renderProductCard(p) {
+      const av = getAvailability(p);
+      const priced = p.price != null;
+      const soldOut = av.state === "out";
+      const filled = p.rating != null ? Math.min(5, Math.max(1, Math.round(p.rating))) : 0;
+      const thumb = ACCatalog.hasPhoto(p)
+        ? `<img class="thumb-photo" src="${escAttr(photoUrl(p, 480))}" alt="${escAttr(p.name)}" loading="lazy" decoding="async">`
+        : `<div class="thumb-icon-wrap">${p.svg}</div>`;
+      const priceBlock = priced
+        ? `<div class="p-price-row"><span class="p-current-price">S/ ${p.price}</span>${p.oldPrice ? `<span class="p-old-price">S/ ${p.oldPrice}</span>` : ""}</div>${p.discount ? `<span class="p-discount-tag">${escAttr(p.discount)}</span>` : ""}`
+        : `<div class="p-price-row"><span class="p-current-price p-price-pending">Precio por confirmar</span></div>`;
+      const action = !priced
+        ? `<button type="button" class="btn btn-buy btn-consult" data-consult-id="${escAttr(p.id)}" aria-label="Consultar precio por WhatsApp">${WA_ICON}<span>Consultar</span></button>`
+        : `<button type="button" class="btn btn-buy btn-add-cart" data-add-id="${escAttr(p.id)}" aria-label="Agregar al carrito"${soldOut ? " disabled" : ""}>${CART_ICON}<span>${soldOut ? "Agotado" : "Agregar"}</span></button>`;
+      return `<article class="product-card compact-card reveal in-view" data-id="${escAttr(p.id)}" data-category="${escAttr(p.category)}"${priced ? ` data-price="${p.price}"` : ""} data-name="${escAttr(p.name)}" role="button" tabindex="0" aria-label="Ver detalles de ${escAttr(p.name)}">
+        <div class="product-thumb compact-thumb">
+          ${p.badge ? `<span class="sample-badge${ACCatalog.isPromo(p.badge) ? " promo" : ""}">${escAttr(p.badge)}</span>` : ""}
+          ${thumb}
+          <div class="thumb-quick-hint"><span class="quick-hint-pill">${SEARCH_ICON} Ficha rápida</span></div>
+        </div>
+        <div class="product-body compact-body">
+          <div class="p-card-header">
+            <span class="p-card-cat">${escAttr(p.categoryLabel)}</span>
+            ${p.rating != null ? `<div class="p-card-rating"><span class="stars">${"★".repeat(filled)}${"☆".repeat(5 - filled)}</span><span class="rating-val">${p.rating.toFixed(1)}</span></div>` : ""}
+          </div>
+          <h3 class="p-card-name">${escAttr(p.name)}</h3>
+          <p class="desc">${escAttr(p.cardDesc)}</p>
+          <div class="p-stock p-stock--${av.state}"><span class="p-stock-dot"></span>${escAttr(av.label)}</div>
+          <div class="product-footer-row">
+            <div class="p-pricing">${priceBlock}</div>
+            <div class="p-actions-group">
+              <button class="btn btn-outline-maderin btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
+              ${action}
+            </div>
+          </div>
+        </div>
+      </article>`;
     }
 
-    maderinProducts.forEach(p => {
-      const card = grid.querySelector(`.compact-card[data-id="${p.id}"]`);
-      if (!card) return;
-      const av = getAvailability(p);
-      const el = document.createElement("div");
-      el.className = `p-stock p-stock--${av.state}`;
-      el.innerHTML = `<span class="p-stock-dot"></span>${av.label}`;
-      const desc = card.querySelector(".desc");
-      if (desc) desc.after(el);
-      if (p.photo) {
-        const iconWrap = card.querySelector(".thumb-icon-wrap");
-        if (iconWrap) {
-          const img = document.createElement("img");
-          img.className = "thumb-photo";
-          img.src = photoUrl(p, 480);
-          img.alt = p.name;
-          img.loading = "lazy";
-          img.decoding = "async";
-          iconWrap.replaceWith(img);
-        }
-      }
-      if (av.state === "out") {
-        const btn = card.querySelector(".btn-add-cart");
-        if (btn) { btn.disabled = true; btn.querySelector("span").textContent = "Agotado"; }
-      }
-    });
+    grid.innerHTML = maderinProducts.length
+      ? maderinProducts.map(renderProductCard).join("")
+      : '<p class="catalog-empty">Estamos preparando nuevos productos. Escríbenos por WhatsApp y te contamos.</p>';
 
     // ------------------------------------------------------------------------
     // CARRITO: estado en localStorage, drawer lateral y resumen por WhatsApp
@@ -1537,7 +1237,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cartItemsEl.innerHTML = cart.map((l, i) => {
         const p = productById(l.id);
         return `<div class="cart-line" data-index="${i}">
-          <div class="cart-line-icon${p.photo ? " has-photo" : ""}">${p.photo ? `<img src="${photoUrl(p, 480)}" alt="">` : p.svg}</div>
+          <div class="cart-line-icon${ACCatalog.hasPhoto(p) ? " has-photo" : ""}">${ACCatalog.hasPhoto(p) ? `<img src="${photoUrl(p, 480)}" alt="">` : p.svg}</div>
           <div class="cart-line-info">
             <strong>${escapeHtml(p.name)}</strong>
             <span>${escapeHtml(l.color)}</span>
@@ -1716,6 +1416,52 @@ document.addEventListener("DOMContentLoaded", () => {
           openModalForProduct(productId);
         }
       }
+    });
+  }
+
+  // ==========================================================================
+  // CORAZÓN DE MADERA: CATÁLOGO DESDE /admin (con respaldo en assets/catalog.js)
+  // ==========================================================================
+  async function initCdmCatalog() {
+    const grid = document.getElementById("cdmProductGrid");
+    if (!grid) return;
+    const products = (await window.ACCatalog.load("cdm")).filter(p => !p.hidden);
+    const esc = (str) => String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+    grid.innerHTML = products.map((p) => {
+      const av = ACCatalog.stockInfo(p);
+      const soldOut = av.state === "out";
+      const showStock = av.state !== "order" || p.deliveryTime;
+      const msg = `Hola, quiero pedir: ${p.name} (Corazón de Madera). ¿Me ayudan con precio y disponibilidad?`;
+      const media = ACCatalog.hasPhoto(p) ? `<img class="thumb-photo" src="${esc(ACCatalog.photoUrl(p, 480, "cdm"))}" alt="${esc(p.name)}" loading="lazy" decoding="async">` : p.svg;
+      return `<article class="product-card reveal in-view" data-id="${esc(p.id)}" data-category="${esc(p.category)}">
+        <div class="product-thumb">
+          ${p.badge ? `<span class="sample-badge">${esc(p.badge)}</span>` : ""}
+          ${media}
+        </div>
+        <div class="product-body">
+          <h3>${esc(p.name)}</h3>
+          <p class="desc">${esc(p.desc)}</p>
+          ${p.specs.length ? `<div class="product-specs">${p.specs.map(s => `<span>${esc(s)}</span>`).join("")}</div>` : ""}
+          ${showStock ? `<div class="p-stock p-stock--${av.state}"><span class="p-stock-dot"></span>${esc(av.label)}</div>` : ""}
+          <div class="product-price">${p.price == null ? "Precio a consultar" : `S/ ${p.price} <small>/ ${esc(p.unit)}</small>`}${p.oldPrice ? ` <s class="product-old-price">S/ ${p.oldPrice}</s>` : ""}</div>
+          <button class="btn btn-wa btn-sm" ${soldOut ? "disabled" : `data-wa-message="${esc(msg)}"`}>${soldOut ? "Agotado por ahora" : "Pedir por WhatsApp"}</button>
+        </div>
+      </article>`;
+    }).join("") || '<p class="catalog-empty">Estamos preparando nuevos detalles. Escríbenos por WhatsApp y te contamos.</p>';
+
+    grid.querySelectorAll("[data-wa-message]").forEach((el) => {
+      el.addEventListener("click", () => openWhatsApp(el.getAttribute("data-wa-message")));
+    });
+
+    // Filtros por categoría
+    document.querySelectorAll("#cdmFilters .filter-chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        const cat = chip.getAttribute("data-filter");
+        grid.querySelectorAll(".product-card").forEach((card) => {
+          card.style.display = cat === "todos" || card.getAttribute("data-category") === cat ? "" : "none";
+        });
+      });
     });
   }
 
@@ -1997,6 +1743,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Inicializar Catálogo E-commerce Maderin si estamos en maderin.html
   initMaderinEcommerce();
+  initCdmCatalog();
 
   initQuoteSection();
   initQuoteAnchors();

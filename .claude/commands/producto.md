@@ -1,18 +1,14 @@
 ---
-description: Sube un producto nuevo a la tienda de Maderin (foto + tarjeta + ficha)
+description: Cómo subir o editar un producto de Maderin / CDM (ahora se hace desde el panel /admin)
 argument-hint: <nombre, categoría, precio, ruta de la foto, descripción...>
 ---
 
-Sube un producto a la tienda de Maderin con los datos que dio el usuario: $ARGUMENTS
+Los productos de Maderin y Corazón de Madera ya no se agregan editando `maderin.html` ni `assets/main.js`: se administran desde el panel `/admin` (producto nuevo, precio, textos, plazo, disponibilidad, etiqueta, foto y orden). El catálogo publicado vive en Vercel Blob (`/api/catalog`); `assets/catalog.js` solo guarda los valores originales de respaldo.
 
-Pasos:
+Datos recibidos: $ARGUMENTS
 
-1. Extrae los datos del texto. Obligatorios: nombre, categoría (`camas`, `guardado`, `escritorio` o `accesorios`), ruta de la foto y descripción corta. Si falta alguno obligatorio, pregúntalo en una sola pregunta; no inventes nombre, foto ni categoría. Si falta la descripción, redáctala tú en 1 frase en el tono de las existentes y avísalo.
-2. Opcionales: precio (sin precio el producto queda "por confirmar" y se consulta por WhatsApp), precio anterior, disponibilidad (`order` por defecto, `ready`, `out`), tiempo de entrega, medidas, material, edad, subtítulo, badge. No inventes valores: lo que no se dé, se omite.
-3. Primero corre en seco para validar:
-   `node scripts/add-product.mjs --dry-run --name "..." --category ... --photo "..." --desc "..." [--price N] [--old-price N] [--stock ...] [--delivery "..."] [--dimensions "..."] [--material "..."] [--age "..."]`
-4. Si el dry-run sale bien, corre el mismo comando sin `--dry-run`.
-5. Verifica: `node --check assets/main.js` y `git diff --stat`. Si hay servidor de preview disponible, comprueba que la tarjeta y el modal del producto se vean bien en `maderin.html#productos`.
-6. Resume qué se agregó (id, SKU, precio, disponibilidad) y qué quedó "Por confirmar" en `assets/main.js` (colores, medidas, etc.). No hagas commit salvo que el usuario lo pida.
+Qué hacer:
 
-Si el script falla (id duplicado, foto inexistente), explica el motivo y propone la solución; no edites `maderin.html` ni `assets/main.js` a mano para esquivar el error.
+1. Explica al usuario en 2–3 líneas que debe entrar a `/admin` → pestaña de la tienda → **+ Nuevo producto**, y resume los datos que dio (nombre, categoría, precio, descripción) para que los copie.
+2. No edites `maderin.html`, `cdm.html` ni el array de `assets/catalog.js` para agregar productos: si el admin ya publicó algo, esos cambios no se verían (el catálogo del admin tiene prioridad).
+3. Solo si el usuario pide cambiar los valores originales de respaldo (por ejemplo para resetear la tienda), edita `DEFAULTS` en `assets/catalog.js` y corre `node --check assets/catalog.js`.

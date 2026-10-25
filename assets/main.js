@@ -856,6 +856,216 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================================================
+  // CARRITO COMPARTIDO (Maderin y Corazón de Madera)
+  // Estado en localStorage, drawer lateral y resumen del pedido por WhatsApp.
+  // cfg: { products, storageKey, fieldsKey, brand, photoShop, isBlocked, buildMessage }
+  //   - products: catálogo ya cargado (con precios y disponibilidad)
+  //   - isBlocked(): true si hay otra capa abierta (p. ej. el modal) y no se debe liberar el scroll
+  // Devuelve { add(id, color, qty), open(), close() }.
+  // ==========================================================================
+  function setupCart(cfg) {
+    const { products, storageKey, fieldsKey, brand, photoShop } = cfg;
+    const MAX_LINE_QTY = 10;
+    const cartDrawer = document.getElementById("cartDrawer");
+    const cartBackdrop = document.getElementById("cartBackdrop");
+    const cartItemsEl = document.getElementById("cartItems");
+    const cartEmptyEl = document.getElementById("cartEmpty");
+    const cartFootEl = document.getElementById("cartFoot");
+    const cartSubtotalEl = document.getElementById("cartSubtotal");
+    const cartHeadCount = document.getElementById("cartHeadCount");
+    const navCartBtn = document.getElementById("navCartBtn");
+    const navCartCount = document.getElementById("navCartCount");
+    const cartNameInput = document.getElementById("cartName");
+    const cartDistrictInput = document.getElementById("cartDistrict");
+    const cartNotesInput = document.getElementById("cartNotes");
+    const cartToast = document.getElementById("cartToast");
+    const cartToastText = document.getElementById("cartToastText");
+    let toastTimer = null;
+
+    const esc = (str) => String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const productById = (id) => products.find(p => p.id === id);
+    const isSoldOut = (p) => ACCatalog.stockInfo(p).state === "out";
+
+    let cart = [];
+    try { cart = JSON.parse(localStorage.getItem(storageKey)) || []; } catch (e) { cart = []; }
+    // Descarta líneas inválidas o de productos que ya no existen / están agotados / sin precio
+    cart = (Array.isArray(cart) ? cart : []).filter(l => {
+      const p = l && productById(l.id);
+      return p && p.price != null && !isSoldOut(p) && Number.isInteger(l.qty) && l.qty > 0 && typeof l.color === "string";
+    }).map(l => ({ id: l.id, color: l.color, qty: Math.min(l.qty, MAX_LINE_QTY) }));
+
+    function saveCart() {
+      try { localStorage.setItem(storageKey, JSON.stringify(cart)); } catch (e) { /* sin almacenamiento: el carrito vive solo en esta visita */ }
+    }
+
+    const cartCount = () => cart.reduce((n, l) => n + l.qty, 0);
+    const cartTotal = () => cart.reduce((sum, l) => sum + productById(l.id).price * l.qty, 0);
+
+    function showToast(text) {
+      if (!cartToast) return;
+      cartToastText.textContent = text;
+      cartToast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => cartToast.classList.remove("show"), 3200);
+    }
+
+    function addToCart(id, color, qty) {
+      const product = productById(id);
+      if (!product || product.price == null || isSoldOut(product)) return;
+      const line = cart.find(l => l.id === id && l.color === color);
+      if (line) line.qty = Math.min(line.qty + qty, MAX_LINE_QTY);
+      else cart.push({ id, color, qty: Math.min(qty, MAX_LINE_QTY) });
+      saveCart();
+      renderCart();
+      if (navCartBtn) {
+        navCartBtn.classList.remove("bump");
+        void navCartBtn.offsetWidth; // reinicia la animación
+        navCartBtn.classList.add("bump");
+      }
+      showToast(`${product.name} agregado al carrito`);
+    }
+
+    function renderCart() {
+      const count = cartCount();
+      if (navCartCount) {
+        navCartCount.textContent = count;
+        navCartCount.hidden = count === 0;
+      }
+      if (cartHeadCount) cartHeadCount.textContent = count ? `(${count})` : "";
+      if (!cartItemsEl) return;
+
+      cartEmptyEl.hidden = count > 0;
+      cartFootEl.hidden = count === 0;
+      cartItemsEl.hidden = count === 0;
+
+      cartItemsEl.innerHTML = cart.map((l, i) => {
+        const p = productById(l.id);
+        const photo = ACCatalog.hasPhoto(p);
+        return `<div class="cart-line" data-index="${i}">
+          <div class="cart-line-icon${photo ? " has-photo" : ""}">${photo ? `<img src="${esc(ACCatalog.photoUrl(p, 480, photoShop))}" alt="">` : p.svg}</div>
+          <div class="cart-line-info">
+            <strong>${esc(p.name)}</strong>
+            ${l.color ? `<span>${esc(l.color)}</span>` : ""}
+            <div class="cart-line-qty">
+              <button type="button" data-act="minus" aria-label="Disminuir cantidad"${l.qty <= 1 ? " disabled" : ""}>&minus;</button>
+              <span>${l.qty}</span>
+              <button type="button" data-act="plus" aria-label="Aumentar cantidad"${l.qty >= MAX_LINE_QTY ? " disabled" : ""}>&plus;</button>
+            </div>
+          </div>
+          <div class="cart-line-side">
+            <strong>S/ ${p.price * l.qty}</strong>
+            <button type="button" data-act="remove" class="cart-line-remove" aria-label="Quitar ${esc(p.name)} del carrito">Quitar</button>
+          </div>
+        </div>`;
+      }).join("");
+
+      if (cartSubtotalEl) cartSubtotalEl.textContent = `S/ ${cartTotal()}`;
+    }
+
+    function openCart() {
+      if (!cartDrawer) return;
+      cartDrawer.classList.add("open");
+      cartBackdrop.classList.add("open");
+      cartDrawer.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      cartToast.classList.remove("show");
+      const closeBtn = document.getElementById("cartCloseBtn");
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function closeCart() {
+      if (!cartDrawer || !cartDrawer.classList.contains("open")) return;
+      cartDrawer.classList.remove("open");
+      cartBackdrop.classList.remove("open");
+      cartDrawer.setAttribute("aria-hidden", "true");
+      if (!(cfg.isBlocked && cfg.isBlocked())) document.body.style.overflow = "";
+      if (navCartBtn) navCartBtn.focus();
+    }
+
+    function buildOrderMessage() {
+      const lines = cart.map(l => {
+        const p = productById(l.id);
+        return `• ${l.qty} × ${p.name}${l.color ? ` (${l.color})` : ""} — S/ ${p.price * l.qty}`;
+      });
+      const name = cartNameInput ? cartNameInput.value.trim() : "";
+      const district = cartDistrictInput ? cartDistrictInput.value.trim() : "";
+      const notes = cartNotesInput ? cartNotesInput.value.trim() : "";
+      const extra = [name && `Nombre: ${name}`, district && `Distrito de entrega: ${district}`, notes && `Personalización: ${notes}`].filter(Boolean);
+      return [
+        `Hola ${brand}, quiero hacer este pedido:`,
+        "",
+        ...lines,
+        "",
+        `Total: S/ ${cartTotal()}`,
+        ...(extra.length ? ["", ...extra] : []),
+        "",
+        "¿Me confirman disponibilidad, costo de envío y cómo pagar? (transferencia, Yape o link de Mercado Pago)"
+      ].join("\n");
+    }
+
+    // Recuerda nombre, distrito y personalización entre visitas
+    const fieldInputs = [cartNameInput, cartDistrictInput, cartNotesInput];
+    try {
+      const saved = JSON.parse(localStorage.getItem(fieldsKey)) || {};
+      if (cartNameInput && saved.name) cartNameInput.value = saved.name;
+      if (cartDistrictInput && saved.district) cartDistrictInput.value = saved.district;
+      if (cartNotesInput && saved.notes) cartNotesInput.value = saved.notes;
+    } catch (e) { /* sin datos guardados */ }
+    fieldInputs.forEach(input => {
+      if (!input) return;
+      input.addEventListener("input", () => {
+        try {
+          localStorage.setItem(fieldsKey, JSON.stringify({
+            name: cartNameInput ? cartNameInput.value : "",
+            district: cartDistrictInput ? cartDistrictInput.value : "",
+            notes: cartNotesInput ? cartNotesInput.value : ""
+          }));
+        } catch (e) { /* ignorar */ }
+      });
+    });
+
+    if (cartItemsEl) {
+      cartItemsEl.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-act]");
+        const lineEl = e.target.closest(".cart-line");
+        if (!btn || !lineEl) return;
+        const line = cart[Number(lineEl.getAttribute("data-index"))];
+        if (!line) return;
+        const act = btn.getAttribute("data-act");
+        if (act === "plus") line.qty = Math.min(line.qty + 1, MAX_LINE_QTY);
+        if (act === "minus") line.qty = Math.max(line.qty - 1, 1);
+        if (act === "remove") cart = cart.filter(l => l !== line);
+        saveCart();
+        renderCart();
+      });
+    }
+
+    if (navCartBtn) navCartBtn.addEventListener("click", openCart);
+    document.getElementById("cartCloseBtn")?.addEventListener("click", closeCart);
+    if (cartBackdrop) cartBackdrop.addEventListener("click", closeCart);
+    document.getElementById("cartToastBtn")?.addEventListener("click", openCart);
+    document.getElementById("cartEmptyCta")?.addEventListener("click", () => {
+      closeCart();
+      document.getElementById("productos")?.scrollIntoView({ behavior: "smooth" });
+    });
+    document.getElementById("cartClearBtn")?.addEventListener("click", () => {
+      cart = [];
+      saveCart();
+      renderCart();
+    });
+    document.getElementById("cartSendBtn")?.addEventListener("click", () => {
+      if (!cart.length) return;
+      openWhatsApp(buildOrderMessage());
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeCart();
+    });
+
+    renderCart();
+    return { add: addToCart, open: openCart, close: closeCart };
+  }
+
+  // ==========================================================================
   // MADERIN: CATÁLOGO INFANTIL E-COMMERCE & MODAL INTERACTIVO
   // ==========================================================================
   async function initMaderinEcommerce() {
@@ -1159,193 +1369,18 @@ document.addEventListener("DOMContentLoaded", () => {
       : '<p class="catalog-empty">Estamos preparando nuevos productos. Escríbenos por WhatsApp y te contamos.</p>';
 
     // ------------------------------------------------------------------------
-    // CARRITO: estado en localStorage, drawer lateral y resumen por WhatsApp
+    // CARRITO: la lógica vive en setupCart (compartida con Corazón de Madera)
     // ------------------------------------------------------------------------
-    const CART_KEY = "maderinCart";
-    const CART_FIELDS_KEY = "maderinCartFields";
-    const MAX_LINE_QTY = 10;
-    const cartDrawer = document.getElementById("cartDrawer");
-    const cartBackdrop = document.getElementById("cartBackdrop");
-    const cartItemsEl = document.getElementById("cartItems");
-    const cartEmptyEl = document.getElementById("cartEmpty");
-    const cartFootEl = document.getElementById("cartFoot");
-    const cartSubtotalEl = document.getElementById("cartSubtotal");
-    const cartHeadCount = document.getElementById("cartHeadCount");
-    const navCartBtn = document.getElementById("navCartBtn");
-    const navCartCount = document.getElementById("navCartCount");
-    const cartNameInput = document.getElementById("cartName");
-    const cartDistrictInput = document.getElementById("cartDistrict");
-    const cartToast = document.getElementById("cartToast");
-    const cartToastText = document.getElementById("cartToastText");
-    let toastTimer = null;
-
     const escapeHtml = (str) => String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-    const productById = (id) => maderinProducts.find(p => p.id === id);
-
-    let cart = [];
-    try { cart = JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch (e) { cart = []; }
-    // Descarta líneas inválidas o de productos que ya no existen / están agotados
-    cart = (Array.isArray(cart) ? cart : []).filter(l => {
-      const p = l && productById(l.id);
-      return p && p.price != null && getAvailability(p).state !== "out" && Number.isInteger(l.qty) && l.qty > 0 && typeof l.color === "string";
-    }).map(l => ({ id: l.id, color: l.color, qty: Math.min(l.qty, MAX_LINE_QTY) }));
-
-    function saveCart() {
-      try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) { /* sin almacenamiento: el carrito vive solo en esta visita */ }
-    }
-
-    const cartCount = () => cart.reduce((n, l) => n + l.qty, 0);
-    const cartTotal = () => cart.reduce((sum, l) => sum + productById(l.id).price * l.qty, 0);
-
-    function showToast(text) {
-      if (!cartToast) return;
-      cartToastText.textContent = text;
-      cartToast.classList.add("show");
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => cartToast.classList.remove("show"), 3200);
-    }
-
-    function addToCart(id, color, qty) {
-      const product = productById(id);
-      if (!product || product.price == null || getAvailability(product).state === "out") return;
-      const line = cart.find(l => l.id === id && l.color === color);
-      if (line) line.qty = Math.min(line.qty + qty, MAX_LINE_QTY);
-      else cart.push({ id, color, qty: Math.min(qty, MAX_LINE_QTY) });
-      saveCart();
-      renderCart();
-      if (navCartBtn) {
-        navCartBtn.classList.remove("bump");
-        void navCartBtn.offsetWidth; // reinicia la animación
-        navCartBtn.classList.add("bump");
-      }
-      showToast(`${product.name} agregado al carrito`);
-    }
-
-    function renderCart() {
-      const count = cartCount();
-      if (navCartCount) {
-        navCartCount.textContent = count;
-        navCartCount.hidden = count === 0;
-      }
-      if (cartHeadCount) cartHeadCount.textContent = count ? `(${count})` : "";
-      if (!cartItemsEl) return;
-
-      cartEmptyEl.hidden = count > 0;
-      cartFootEl.hidden = count === 0;
-      cartItemsEl.hidden = count === 0;
-
-      cartItemsEl.innerHTML = cart.map((l, i) => {
-        const p = productById(l.id);
-        return `<div class="cart-line" data-index="${i}">
-          <div class="cart-line-icon${ACCatalog.hasPhoto(p) ? " has-photo" : ""}">${ACCatalog.hasPhoto(p) ? `<img src="${photoUrl(p, 480)}" alt="">` : p.svg}</div>
-          <div class="cart-line-info">
-            <strong>${escapeHtml(p.name)}</strong>
-            <span>${escapeHtml(l.color)}</span>
-            <div class="cart-line-qty">
-              <button type="button" data-act="minus" aria-label="Disminuir cantidad"${l.qty <= 1 ? " disabled" : ""}>&minus;</button>
-              <span>${l.qty}</span>
-              <button type="button" data-act="plus" aria-label="Aumentar cantidad"${l.qty >= MAX_LINE_QTY ? " disabled" : ""}>&plus;</button>
-            </div>
-          </div>
-          <div class="cart-line-side">
-            <strong>S/ ${p.price * l.qty}</strong>
-            <button type="button" data-act="remove" class="cart-line-remove" aria-label="Quitar ${escapeHtml(p.name)} del carrito">Quitar</button>
-          </div>
-        </div>`;
-      }).join("");
-
-      if (cartSubtotalEl) cartSubtotalEl.textContent = `S/ ${cartTotal()}`;
-    }
-
-    function openCart() {
-      if (!cartDrawer) return;
-      cartDrawer.classList.add("open");
-      cartBackdrop.classList.add("open");
-      cartDrawer.setAttribute("aria-hidden", "false");
-      document.body.style.overflow = "hidden";
-      cartToast.classList.remove("show");
-      const closeBtn = document.getElementById("cartCloseBtn");
-      if (closeBtn) closeBtn.focus();
-    }
-
-    function closeCart() {
-      if (!cartDrawer || !cartDrawer.classList.contains("open")) return;
-      cartDrawer.classList.remove("open");
-      cartBackdrop.classList.remove("open");
-      cartDrawer.setAttribute("aria-hidden", "true");
-      if (!modal.classList.contains("open")) document.body.style.overflow = "";
-      if (navCartBtn) navCartBtn.focus();
-    }
-
-    function buildOrderMessage() {
-      const lines = cart.map(l => {
-        const p = productById(l.id);
-        return `• ${l.qty} × ${p.name} (${l.color}) — S/ ${p.price * l.qty}`;
-      });
-      const name = cartNameInput ? cartNameInput.value.trim() : "";
-      const district = cartDistrictInput ? cartDistrictInput.value.trim() : "";
-      const extra = [name && `Nombre: ${name}`, district && `Distrito de entrega: ${district}`].filter(Boolean);
-      return [
-        "Hola Maderin, quiero hacer este pedido:",
-        "",
-        ...lines,
-        "",
-        `Total: S/ ${cartTotal()}`,
-        ...(extra.length ? ["", ...extra] : []),
-        "",
-        "¿Me confirman disponibilidad, costo de envío y cómo pagar? (transferencia, Yape o link de Mercado Pago)"
-      ].join("\n");
-    }
-
-    // Recuerda nombre y distrito entre visitas
-    try {
-      const saved = JSON.parse(localStorage.getItem(CART_FIELDS_KEY)) || {};
-      if (cartNameInput && saved.name) cartNameInput.value = saved.name;
-      if (cartDistrictInput && saved.district) cartDistrictInput.value = saved.district;
-    } catch (e) { /* sin datos guardados */ }
-    [cartNameInput, cartDistrictInput].forEach(input => {
-      if (!input) return;
-      input.addEventListener("input", () => {
-        try { localStorage.setItem(CART_FIELDS_KEY, JSON.stringify({ name: cartNameInput.value, district: cartDistrictInput.value })); } catch (e) { /* ignorar */ }
-      });
+    const cartApi = setupCart({
+      products: maderinProducts,
+      storageKey: "maderinCart",
+      fieldsKey: "maderinCartFields",
+      brand: "Maderin",
+      photoShop: "maderin",
+      isBlocked: () => modal.classList.contains("open")
     });
-
-    if (cartItemsEl) {
-      cartItemsEl.addEventListener("click", (e) => {
-        const btn = e.target.closest("button[data-act]");
-        const lineEl = e.target.closest(".cart-line");
-        if (!btn || !lineEl) return;
-        const line = cart[Number(lineEl.getAttribute("data-index"))];
-        if (!line) return;
-        const act = btn.getAttribute("data-act");
-        if (act === "plus") line.qty = Math.min(line.qty + 1, MAX_LINE_QTY);
-        if (act === "minus") line.qty = Math.max(line.qty - 1, 1);
-        if (act === "remove") cart = cart.filter(l => l !== line);
-        saveCart();
-        renderCart();
-      });
-    }
-
-    if (navCartBtn) navCartBtn.addEventListener("click", openCart);
-    document.getElementById("cartCloseBtn")?.addEventListener("click", closeCart);
-    if (cartBackdrop) cartBackdrop.addEventListener("click", closeCart);
-    document.getElementById("cartToastBtn")?.addEventListener("click", openCart);
-    document.getElementById("cartEmptyCta")?.addEventListener("click", () => {
-      closeCart();
-      document.getElementById("productos")?.scrollIntoView({ behavior: "smooth" });
-    });
-    document.getElementById("cartClearBtn")?.addEventListener("click", () => {
-      cart = [];
-      saveCart();
-      renderCart();
-    });
-    document.getElementById("cartSendBtn")?.addEventListener("click", () => {
-      if (!cart.length) return;
-      openWhatsApp(buildOrderMessage());
-    });
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeCart();
-    });
+    const addToCart = cartApi.add;
 
     // Agregar desde el modal de producto
     if (modalAddBtn) {
@@ -1360,8 +1395,6 @@ document.addEventListener("DOMContentLoaded", () => {
         closeModal();
       });
     }
-
-    renderCart();
 
     // ------------------------------------------------------------------------
     // RESEÑAS / FOTOS DE CLIENTES
@@ -1428,6 +1461,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const products = (await window.ACCatalog.load("cdm")).filter(p => !p.hidden);
     const esc = (str) => String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
+    const CART_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 11.2a1.6 1.6 0 0 0 1.6 1.2h8.4a1.6 1.6 0 0 0 1.6-1.2L21 7H6"/></svg>';
+    // Botones de la tarjeta: con precio se agrega al carrito; sin precio solo se consulta por WhatsApp
+    const actions = (p, soldOut, msg) => {
+      if (soldOut) return `<button type="button" class="btn btn-buy btn-sm" disabled>Agotado por ahora</button>`;
+      if (p.price == null) return `<button type="button" class="btn btn-wa btn-sm" data-wa-message="${esc(msg)}">Consultar por WhatsApp</button>`;
+      return `<div class="cdm-actions">
+            <button type="button" class="btn btn-buy btn-sm btn-add-cart" data-add-id="${esc(p.id)}" aria-label="Agregar ${esc(p.name)} al carrito">${CART_ICON}<span>Agregar</span></button>
+            <button type="button" class="btn btn-outline-cdm btn-sm" data-wa-message="${esc(msg)}">Consultar</button>
+          </div>`;
+    };
+
+    const cartApi = setupCart({
+      products,
+      storageKey: "cdmCart",
+      fieldsKey: "cdmCartFields",
+      brand: "Corazón de Madera",
+      photoShop: "cdm"
+    });
+
     grid.innerHTML = products.map((p) => {
       const av = ACCatalog.stockInfo(p);
       const soldOut = av.state === "out";
@@ -1445,13 +1497,16 @@ document.addEventListener("DOMContentLoaded", () => {
           ${p.specs.length ? `<div class="product-specs">${p.specs.map(s => `<span>${esc(s)}</span>`).join("")}</div>` : ""}
           ${showStock ? `<div class="p-stock p-stock--${av.state}"><span class="p-stock-dot"></span>${esc(av.label)}</div>` : ""}
           <div class="product-price">${p.price == null ? "Precio a consultar" : `S/ ${p.price} <small>/ ${esc(p.unit)}</small>`}${p.oldPrice ? ` <s class="product-old-price">S/ ${p.oldPrice}</s>` : ""}</div>
-          <button class="btn btn-wa btn-sm" ${soldOut ? "disabled" : `data-wa-message="${esc(msg)}"`}>${soldOut ? "Agotado por ahora" : "Pedir por WhatsApp"}</button>
+          ${actions(p, soldOut, msg)}
         </div>
       </article>`;
     }).join("") || '<p class="catalog-empty">Estamos preparando nuevos detalles. Escríbenos por WhatsApp y te contamos.</p>';
 
-    grid.querySelectorAll("[data-wa-message]").forEach((el) => {
-      el.addEventListener("click", () => openWhatsApp(el.getAttribute("data-wa-message")));
+    grid.addEventListener("click", (e) => {
+      const addBtn = e.target.closest(".btn-add-cart");
+      if (addBtn) { cartApi.add(addBtn.getAttribute("data-add-id"), "", 1); return; }
+      const waBtn = e.target.closest("[data-wa-message]");
+      if (waBtn) openWhatsApp(waBtn.getAttribute("data-wa-message"));
     });
 
     // Filtros por categoría

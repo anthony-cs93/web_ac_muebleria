@@ -36,6 +36,10 @@
     </ul>
     <!-- Botón WhatsApp: data-wa-message define el mensaje prellenado al abrir chat -->
     <div class="nav-cta">
+      <button type="button" class="nav-cart" id="navCartBtn" aria-label="Abrir carrito" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 11.2a1.6 1.6 0 0 0 1.6 1.2h8.4a1.6 1.6 0 0 0 1.6-1.2L21 7H6"/></svg>
+        <span class="nav-cart-count" id="navCartCount" hidden>0</span>
+      </button>
       <a class="btn btn-wa" id="navWaBtn" data-wa-message="Hola, quiero información sobre los productos de Corazón de Madera.">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
         <span class="long">Escríbenos</span>
@@ -154,6 +158,41 @@
     </div>
   </div>
 </section>
+
+<!-- ============ CARRITO (drawer lateral) ============ -->
+<div class="cart-backdrop" id="cartBackdrop"></div>
+<aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Carrito de compras">
+  <div class="cart-head">
+    <h3>Tu carrito <span class="cart-head-count" id="cartHeadCount"></span></h3>
+    <button type="button" class="cart-close" id="cartCloseBtn" aria-label="Cerrar carrito">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="cart-body" id="cartItems"></div>
+  <div class="cart-empty" id="cartEmpty">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 11.2a1.6 1.6 0 0 0 1.6 1.2h8.4a1.6 1.6 0 0 0 1.6-1.2L21 7H6"/></svg>
+    <p>Tu carrito está vacío.</p>
+    <button type="button" class="btn btn-buy" id="cartEmptyCta">Ver el catálogo</button>
+  </div>
+  <div class="cart-foot" id="cartFoot">
+    <div class="cart-fields">
+      <label>Tu nombre<input type="text" id="cartName" autocomplete="name" placeholder="Ej. María"></label>
+      <label>Distrito de entrega<input type="text" id="cartDistrict" autocomplete="address-level2" placeholder="Ej. Surco"></label>
+      <label class="cart-field-wide">Personalización (nombre, fecha, dedicatoria)<textarea id="cartNotes" rows="2" maxlength="300" placeholder="Ej. Cuadro con el nombre Valentina y fecha 12/03/2026"></textarea></label>
+    </div>
+    <div class="cart-total-row"><span>Subtotal</span><strong id="cartSubtotal">S/ 0</strong></div>
+    <p class="cart-note">Los detalles personalizados se coordinan por WhatsApp antes de fabricar. El envío también. Pagas por transferencia, Yape o link de pago (Mercado Pago).</p>
+    <button type="button" class="btn btn-buy btn-cart-send" id="cartSendBtn">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
+      Enviar pedido por WhatsApp
+    </button>
+    <button type="button" class="cart-clear" id="cartClearBtn">Vaciar carrito</button>
+  </div>
+</aside>
+<div class="cart-toast" id="cartToast" role="status" aria-live="polite">
+  <span id="cartToastText"></span>
+  <button type="button" id="cartToastBtn">Ver carrito</button>
+</div>
 
 <!-- ============ FOOTER ============ -->
 <!-- FOOTER: logo CDM, navegación, grupo AC Mueblería, copyright -->

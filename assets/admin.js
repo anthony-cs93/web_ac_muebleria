@@ -75,8 +75,9 @@
   // ---------------------------------------------------------------- Lista de productos
   function badgeOptions(current) {
     const opts = ['<option value="">Sin etiqueta</option>'];
-    const known = C.BADGES.map((b) => b.toLowerCase());
-    for (const b of C.BADGES) opts.push(`<option value="${esc(b)}"${current && current.toLowerCase() === b.toLowerCase() ? " selected" : ""}>${esc(b)}</option>`);
+    const presets = C.BADGES[state.shop];
+    const known = presets.map((b) => b.toLowerCase());
+    for (const b of presets) opts.push(`<option value="${esc(b)}"${current && current.toLowerCase() === b.toLowerCase() ? " selected" : ""}>${esc(b)}</option>`);
     if (current && !known.includes(current.toLowerCase())) opts.push(`<option value="${esc(current)}" selected>${esc(current)}</option>`);
     return opts.join("");
   }
@@ -243,12 +244,13 @@
     f("category").innerHTML = C.SHOPS[state.shop].categories.map((c) => `<option value="${c.id}">${esc(c.label)}</option>`).join("");
   }
   function fillBadgeSelect(current) {
-    const known = C.BADGES.map((b) => b.toLowerCase());
+    const presets = C.BADGES[state.shop];
+    const known = presets.map((b) => b.toLowerCase());
     const custom = current && !known.includes(current.toLowerCase());
     f("badgePreset").innerHTML = ['<option value="">Sin etiqueta</option>']
-      .concat(C.BADGES.map((b) => `<option value="${esc(b)}">${esc(b)}</option>`))
+      .concat(presets.map((b) => `<option value="${esc(b)}">${esc(b)}</option>`))
       .concat('<option value="__custom">Otra (escribir)…</option>').join("");
-    f("badgePreset").value = !current ? "" : custom ? "__custom" : C.BADGES.find((b) => b.toLowerCase() === current.toLowerCase());
+    f("badgePreset").value = !current ? "" : custom ? "__custom" : presets.find((b) => b.toLowerCase() === current.toLowerCase());
     f("badgeCustom").value = custom ? current : "";
     $("#badgeCustomWrap").hidden = !custom;
   }
@@ -372,7 +374,7 @@
     const err = $("#editorError");
     if (!out.name) { err.textContent = "Escribe el nombre del producto."; err.hidden = false; f("name").focus(); return; }
     if (out.price !== null && !Number.isFinite(out.price)) { err.textContent = "El precio no es válido."; err.hidden = false; return; }
-    if (out.rating !== null && (!Number.isFinite(out.rating) || out.rating < 0 || out.rating > 5)) { err.textContent = "La calificación debe estar entre 0 y 5."; err.hidden = false; return; }
+    if (state.shop === "maderin" && out.rating !== null && (!Number.isFinite(out.rating) || out.rating < 0 || out.rating > 5)) { err.textContent = "La calificación debe estar entre 0 y 5."; err.hidden = false; return; }
     const items = list();
     if (editing.isNew) {
       out.id = uniqueId(slugify(out.name) || "producto");

@@ -56,7 +56,10 @@
   };
 
   // Etiquetas sugeridas en el admin (también se puede escribir una propia)
-  const BADGES = ["Más Vendido", "Nuevo", "Favorito Padres", "Oferta", "Últimas unidades", "Edición limitada", "Personalizado"];
+  const BADGES = {
+    maderin: ["Más Vendido", "Nuevo", "Favorito Padres", "Oferta", "Últimas unidades", "Edición limitada"],
+    cdm: ["Más Vendido", "Nuevo", "Personalizado", "Regalo ideal", "Oferta", "Últimas unidades", "Edición limitada"]
+  };
   // Etiquetas que se pintan con el estilo naranja de "promo"
   const PROMO_BADGES = ["más vendido", "oferta", "últimas unidades", "edición limitada"];
 

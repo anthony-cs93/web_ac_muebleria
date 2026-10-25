@@ -5129,3 +5129,11 @@ body.theme-cdm .cart-toast button { background: var(--accent-2); color: var(--ac
 .cart-fields textarea:focus { outline: none; border-color: var(--accent); }
 @media (max-width: 860px) { body.theme-cdm .nav-cart { width: 40px; height: 40px; } }
 @media (prefers-reduced-motion: reduce) { body.theme-cdm .nav-cart.bump { animation: none; } }
+body.theme-cdm .cdm-colors { display: flex; flex-wrap: wrap; gap: 6px; }
+body.theme-cdm .cdm-color {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 5px; border-radius: 999px;
+  border: 1.5px solid var(--line-strong); background: transparent; color: var(--ink); font: inherit; font-size: 12px; cursor: pointer;
+}
+body.theme-cdm .cdm-color:hover { border-color: var(--accent); }
+body.theme-cdm .cdm-color.active { border-color: var(--accent); background: var(--paper-2); font-weight: 700; }
+body.theme-cdm .cdm-swatch { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(0, 0, 0, .18); flex-shrink: 0; }

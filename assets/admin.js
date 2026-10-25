@@ -315,15 +315,14 @@
       f("finish").value = isNew ? "" : (base.finish === "Por confirmar" ? "" : base.finish);
       f("rating").value = base.rating ?? "";
       f("reviewsCount").value = base.reviewsCount || "";
-      const colorList = $("#colorList");
-      colorList.innerHTML = "";
-      const hasReal = base.colors.some((c) => c.name !== "Por definir");
-      (hasReal ? base.colors : []).forEach((c) => colorList.appendChild(colorRow(c)));
     } else {
       f("unit").value = base.unit;
       f("spec1").value = base.specs[0] || "";
       f("spec2").value = base.specs[1] || "";
     }
+    const colorList = $("#colorList");
+    colorList.innerHTML = "";
+    base.colors.filter((c) => c.name !== "Por definir").forEach((c) => colorList.appendChild(colorRow(c)));
     renderPhotoPreview(base);
     $("#photoMsg").textContent = "JPG, PNG o WebP. Se optimiza sola para la web.";
     updateDiscountPreview();
@@ -355,14 +354,14 @@
       out.finish = f("finish").value.trim();
       out.rating = f("rating").value === "" ? null : Number(f("rating").value);
       out.reviewsCount = f("reviewsCount").value === "" ? 0 : Number(f("reviewsCount").value);
-      out.colors = $$(".color-row", editor).map((row) => ({
-        hex: row.querySelector('input[type="color"]').value,
-        name: row.querySelector('input[type="text"]').value.trim()
-      })).filter((c) => c.name);
     } else {
       out.unit = f("unit").value.trim() || "unidad";
       out.specs = [f("spec1").value.trim(), f("spec2").value.trim()].filter(Boolean);
     }
+    out.colors = $$(".color-row", editor).map((row) => ({
+      hex: row.querySelector('input[type="color"]').value,
+      name: row.querySelector('input[type="text"]').value.trim()
+    })).filter((c) => c.name);
     // El icono de respaldo sigue a la categoría mientras no haya foto
     if (!C.hasPhoto(out)) out.svg = C.iconSvg(out.category);
     return out;

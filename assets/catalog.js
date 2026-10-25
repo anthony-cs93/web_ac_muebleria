@@ -109,6 +109,7 @@
       } else {
         p.specs = (Array.isArray(p.specs) ? p.specs : []).map((s) => str(s).trim()).filter(Boolean);
         p.unit = str(p.unit).trim() || "unidad";
+        p.colors = (Array.isArray(p.colors) ? p.colors : []).filter((c) => c && c.name).map((c) => ({ name: String(c.name), hex: /^#[0-9a-f]{3,8}$/i.test(c.hex) ? c.hex : "#E5DCCB" }));
       }
       return p;
     });

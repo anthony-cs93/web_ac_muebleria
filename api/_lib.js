@@ -205,10 +205,6 @@ export function sanitizeProduct(raw, shop) {
       finish: text(raw.finish, 160),
       rating: raw.rating === null || raw.rating === undefined || raw.rating === '' ? null : Math.min(5, Math.max(0, Number(raw.rating) || 0)),
       reviewsCount: Math.max(0, Math.round(Number(raw.reviewsCount) || 0)),
-      colors: (Array.isArray(raw.colors) ? raw.colors : []).slice(0, 12).map((c) => ({
-        name: text(c && c.name, 40),
-        hex: /^#[0-9a-f]{3,8}$/i.test(c && c.hex) ? c.hex : '#E5DCCB'
-      })).filter((c) => c.name)
     });
   } else {
     Object.assign(p, {
@@ -216,6 +212,10 @@ export function sanitizeProduct(raw, shop) {
       unit: text(raw.unit, 20) || 'unidad'
     });
   }
+  p.colors = (Array.isArray(raw.colors) ? raw.colors : []).slice(0, 12).map((c) => ({
+    name: text(c && c.name, 40),
+    hex: /^#[0-9a-f]{3,8}$/i.test(c && c.hex) ? c.hex : '#E5DCCB'
+  })).filter((c) => c.name);
   for (const k of Object.keys(p)) if (p[k] === undefined) delete p[k];
   return p;
 }

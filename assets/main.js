@@ -1494,6 +1494,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="product-body">
           <h3>${esc(p.name)}</h3>
           <p class="desc">${esc(p.desc)}</p>
+          ${p.colors.length ? `<div class="cdm-colors" role="group" aria-label="Color de ${esc(p.name)}">${p.colors.map((c, i) => `<button type="button" class="cdm-color${i === 0 ? " active" : ""}" data-color="${esc(c.name)}" aria-pressed="${i === 0}" title="${esc(c.name)}"><span class="cdm-swatch" style="background:${esc(c.hex)}"></span><span>${esc(c.name)}</span></button>`).join("")}</div>` : ""}
           ${p.specs.length ? `<div class="product-specs">${p.specs.map(s => `<span>${esc(s)}</span>`).join("")}</div>` : ""}
           ${showStock ? `<div class="p-stock p-stock--${av.state}"><span class="p-stock-dot"></span>${esc(av.label)}</div>` : ""}
           <div class="product-price">${p.price == null ? "Precio a consultar" : `S/ ${p.price} <small>/ ${esc(p.unit)}</small>`}${p.oldPrice ? ` <s class="product-old-price">S/ ${p.oldPrice}</s>` : ""}</div>
@@ -1503,8 +1504,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }).join("") || '<p class="catalog-empty">Estamos preparando nuevos detalles. Escríbenos por WhatsApp y te contamos.</p>';
 
     grid.addEventListener("click", (e) => {
+      const colorBtn = e.target.closest(".cdm-color");
+      if (colorBtn) {
+        colorBtn.parentElement.querySelectorAll(".cdm-color").forEach((b) => { b.classList.remove("active"); b.setAttribute("aria-pressed", "false"); });
+        colorBtn.classList.add("active");
+        colorBtn.setAttribute("aria-pressed", "true");
+        return;
+      }
       const addBtn = e.target.closest(".btn-add-cart");
-      if (addBtn) { cartApi.add(addBtn.getAttribute("data-add-id"), "", 1); return; }
+      if (addBtn) {
+        const active = addBtn.closest(".product-card").querySelector(".cdm-color.active");
+        cartApi.add(addBtn.getAttribute("data-add-id"), active ? active.getAttribute("data-color") : "", 1);
+        return;
+      }
       const waBtn = e.target.closest("[data-wa-message]");
       if (waBtn) openWhatsApp(waBtn.getAttribute("data-wa-message"));
     });

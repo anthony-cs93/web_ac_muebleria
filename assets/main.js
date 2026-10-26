@@ -1118,21 +1118,51 @@ document.addEventListener("DOMContentLoaded", () => {
     // ------------------------------------------------------------------------
     // LÓGICA DEL MODAL DE PRODUCTO
     // ------------------------------------------------------------------------
-    function openModalForProduct(productId) {
+    // URL por producto: ?producto=<id>. Abrir desde una tarjeta agrega una entrada al historial
+    // (el botón "atrás" cierra el modal); entrar directo con el link abre el modal sin agregarla.
+    const productUrl = (id) => {
+      const url = new URL(location.href);
+      if (id) url.searchParams.set("producto", id); else url.searchParams.delete("producto");
+      return url.pathname + url.search + url.hash;
+    };
+
+    function openModalForProduct(productId, { push = true } = {}) {
       const idx = maderinProducts.findIndex(p => p.id === productId);
       if (idx === -1) return;
       currentModalIndex = idx;
       selectedQuantity = 1;
       populateModal(maderinProducts[currentModalIndex]);
+      const wasOpen = modal.classList.contains("open");
       modal.classList.add("open");
       document.body.style.overflow = "hidden";
       modal.setAttribute("aria-hidden", "false");
+      if (push && !wasOpen) history.pushState({ mProd: productId, pushed: true }, "", productUrl(productId));
     }
 
-    function closeModal() {
+    function hideModal() {
       modal.classList.remove("open");
       document.body.style.overflow = "";
       modal.setAttribute("aria-hidden", "true");
+    }
+
+    function closeModal() {
+      if (history.state && history.state.pushed) {
+        history.back(); // popstate oculta el modal y limpia la URL
+      } else {
+        hideModal();
+        history.replaceState(null, "", productUrl(null));
+      }
+    }
+
+    window.addEventListener("popstate", () => {
+      const id = new URLSearchParams(location.search).get("producto");
+      if (id) openModalForProduct(id, { push: false }); else hideModal();
+    });
+
+    // Mantiene la URL al navegar entre productos con las flechas
+    function syncUrlToCurrent() {
+      const p = maderinProducts[currentModalIndex];
+      if (p) history.replaceState({ mProd: p.id, pushed: !!(history.state && history.state.pushed) }, "", productUrl(p.id));
     }
 
     function populateModal(product) {
@@ -1289,6 +1319,7 @@ document.addEventListener("DOMContentLoaded", () => {
       modalPrevBtn.addEventListener("click", () => {
         currentModalIndex = (currentModalIndex - 1 + maderinProducts.length) % maderinProducts.length;
         populateModal(maderinProducts[currentModalIndex]);
+        syncUrlToCurrent();
       });
     }
 
@@ -1296,6 +1327,7 @@ document.addEventListener("DOMContentLoaded", () => {
       modalNextBtn.addEventListener("click", () => {
         currentModalIndex = (currentModalIndex + 1) % maderinProducts.length;
         populateModal(maderinProducts[currentModalIndex]);
+        syncUrlToCurrent();
       });
     }
 
@@ -1452,6 +1484,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     });
+
+    // Link directo a un producto: ?producto=<id>
+    const deepLinkId = new URLSearchParams(location.search).get("producto");
+    if (deepLinkId) openModalForProduct(deepLinkId, { push: false });
   }
 
   // ==========================================================================
@@ -1462,73 +1498,242 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!grid) return;
     const products = (await window.ACCatalog.load("cdm")).filter(p => !p.hidden);
     const esc = (str) => String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const byId = (id) => products.find(p => p.id === id);
 
     const CART_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 11.2a1.6 1.6 0 0 0 1.6 1.2h8.4a1.6 1.6 0 0 0 1.6-1.2L21 7H6"/></svg>';
-    // Botones de la tarjeta: con precio se agrega al carrito; sin precio solo se consulta por WhatsApp
-    const actions = (p, soldOut, msg) => {
-      if (soldOut) return `<button type="button" class="btn btn-buy btn-sm" disabled>Agotado por ahora</button>`;
-      if (p.price == null) return `<button type="button" class="btn btn-wa btn-sm" data-wa-message="${esc(msg)}">Consultar por WhatsApp</button>`;
-      return `<div class="cdm-actions">
-            <button type="button" class="btn btn-buy btn-sm btn-add-cart" data-add-id="${esc(p.id)}" aria-label="Agregar ${esc(p.name)} al carrito">${CART_ICON}<span>Agregar</span></button>
-            <button type="button" class="btn btn-outline-cdm btn-sm" data-wa-message="${esc(msg)}">Consultar</button>
-          </div>`;
+    const WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>';
+    const SEARCH_ICON = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>';
+    const SPEC_ICONS = {
+      size: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>',
+      material: '<path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>',
+      unit: '<path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/>',
+      time: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+      detail: '<path d="M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.4-7 10-7 10z"/>'
     };
+
+    // Disponibilidad: sin plazo definido, "sobre pedido" se muestra como hecho a pedido
+    const availability = (p) => {
+      const av = ACCatalog.stockInfo(p);
+      if (av.state === "order" && !p.deliveryTime) return { state: "order", label: "Hecho a pedido" };
+      return av;
+    };
+
+    // Estado compartido: filtro activo (define la navegación del modal) y color elegido por tarjeta
+    let activeFilter = "todos";
+    const cardColor = {};
+    const colorOf = (p) => cardColor[p.id] || (p.colors.length ? p.colors[0].name : "");
+    const visibleProducts = () => products.filter(p => activeFilter === "todos" || p.category === activeFilter);
+
+    const modal = document.getElementById("cdmProductModal");
+    const modalIsOpen = () => !!modal && modal.classList.contains("open");
 
     const cartApi = setupCart({
       products,
       storageKey: "cdmCart",
       fieldsKey: "cdmCartFields",
       brand: "Corazón de Madera",
-      photoShop: "cdm"
+      photoShop: "cdm",
+      isBlocked: modalIsOpen
     });
 
-    grid.innerHTML = products.map((p) => {
-      const av = ACCatalog.stockInfo(p);
+    const waMessage = (p, color, qty) => `Hola Corazón de Madera, quiero consultar por: "${p.name}"${qty > 1 ? ` (${qty} unidades)` : ""}${color ? ` en color ${color}` : ""}. ¿Me ayudan con precio, personalización y disponibilidad?`;
+
+    // ---------------- Tarjetas ----------------
+    function renderCard(p) {
+      const av = availability(p);
+      const priced = p.price != null;
       const soldOut = av.state === "out";
-      const showStock = av.state !== "order" || p.deliveryTime;
-      const msg = `Hola, quiero pedir: ${p.name} (Corazón de Madera). ¿Me ayudan con precio y disponibilidad?`;
-      const media = ACCatalog.hasPhoto(p) ? `<img class="thumb-photo" src="${esc(ACCatalog.photoUrl(p, 480, "cdm"))}" alt="${esc(p.name)}" loading="lazy" decoding="async">` : p.svg;
-      return `<article class="product-card reveal in-view" data-id="${esc(p.id)}" data-category="${esc(p.category)}">
-        <div class="product-thumb">
-          ${p.badge ? `<span class="sample-badge">${esc(p.badge)}</span>` : ""}
-          ${media}
+      const thumb = ACCatalog.hasPhoto(p)
+        ? `<img class="thumb-photo" src="${esc(ACCatalog.photoUrl(p, 480, "cdm"))}" alt="${esc(p.name)}" loading="lazy" decoding="async">`
+        : `<div class="thumb-icon-wrap">${p.svg}</div>`;
+      const priceBlock = priced
+        ? `<div class="p-price-row"><span class="p-current-price">S/ ${p.price}</span>${p.oldPrice ? `<span class="p-old-price">S/ ${p.oldPrice}</span>` : ""}<span class="p-unit">/ ${esc(p.unit)}</span></div>${p.discount ? `<span class="p-discount-tag">${esc(p.discount)}</span>` : ""}`
+        : `<div class="p-price-row"><span class="p-current-price p-price-pending">Precio a consultar</span></div>`;
+      const action = !priced
+        ? `<button type="button" class="btn btn-buy btn-consult" aria-label="Consultar precio por WhatsApp">${WA_ICON}<span>Consultar</span></button>`
+        : `<button type="button" class="btn btn-buy btn-add-cart" aria-label="Agregar ${esc(p.name)} al carrito"${soldOut ? " disabled" : ""}>${CART_ICON}<span>${soldOut ? "Agotado" : "Agregar"}</span></button>`;
+      const dots = p.colors.length ? `<div class="cdm-dots" role="group" aria-label="Color de ${esc(p.name)}">${p.colors.map((c, i) => `<button type="button" class="cdm-dot${i === 0 ? " active" : ""}" data-color="${esc(c.name)}" aria-pressed="${i === 0}" aria-label="${esc(c.name)}" title="${esc(c.name)}" style="--dot:${esc(c.hex)}"></button>`).join("")}<span class="cdm-dot-label">${esc(p.colors[0].name)}</span></div>` : "";
+      return `<article class="product-card compact-card reveal in-view" data-id="${esc(p.id)}" data-category="${esc(p.category)}" role="button" tabindex="0" aria-label="Ver detalles de ${esc(p.name)}">
+        <div class="product-thumb compact-thumb">
+          ${p.badge ? `<span class="sample-badge${ACCatalog.isPromo(p.badge) ? " promo" : ""}">${esc(p.badge)}</span>` : ""}
+          ${thumb}
+          <div class="thumb-quick-hint"><span class="quick-hint-pill">${SEARCH_ICON} Ficha rápida</span></div>
         </div>
-        <div class="product-body">
-          <h3>${esc(p.name)}</h3>
+        <div class="product-body compact-body">
+          <div class="p-card-header"><span class="p-card-cat">${esc(p.categoryLabel)}</span></div>
+          <h3 class="p-card-name">${esc(p.name)}</h3>
           <p class="desc">${esc(p.desc)}</p>
-          ${p.colors.length ? `<div class="cdm-colors" role="group" aria-label="Color de ${esc(p.name)}">${p.colors.map((c, i) => `<button type="button" class="cdm-color${i === 0 ? " active" : ""}" data-color="${esc(c.name)}" aria-pressed="${i === 0}" title="${esc(c.name)}"><span class="cdm-swatch" style="background:${esc(c.hex)}"></span><span>${esc(c.name)}</span></button>`).join("")}</div>` : ""}
-          ${p.specs.length ? `<div class="product-specs">${p.specs.map(s => `<span>${esc(s)}</span>`).join("")}</div>` : ""}
-          ${showStock ? `<div class="p-stock p-stock--${av.state}"><span class="p-stock-dot"></span>${esc(av.label)}</div>` : ""}
-          <div class="product-price">${p.price == null ? "Precio a consultar" : `S/ ${p.price} <small>/ ${esc(p.unit)}</small>`}${p.oldPrice ? ` <s class="product-old-price">S/ ${p.oldPrice}</s>` : ""}</div>
-          ${actions(p, soldOut, msg)}
+          ${dots}
+          ${p.specs.length ? `<div class="product-specs-chips">${p.specs.map(s => `<span class="spec-chip">${esc(s)}</span>`).join("")}</div>` : ""}
+          <div class="p-stock p-stock--${av.state}"><span class="p-stock-dot"></span>${esc(av.label)}</div>
+          <div class="product-footer-row">
+            <div class="p-pricing">${priceBlock}</div>
+            <div class="p-actions-group">
+              <button type="button" class="btn btn-outline-cdm btn-open-modal" aria-label="Ver ficha completa">Ver detalle</button>
+              ${action}
+            </div>
+          </div>
         </div>
       </article>`;
-    }).join("") || '<p class="catalog-empty">Estamos preparando nuevos detalles. Escríbenos por WhatsApp y te contamos.</p>';
+    }
+
+    grid.innerHTML = products.map(renderCard).join("") || '<p class="catalog-empty">Estamos preparando nuevos detalles. Escríbenos por WhatsApp y te contamos.</p>';
+
+    // ---------------- Modal ----------------
+    const $ = (id) => document.getElementById(id);
+    const el = {
+      badge: $("cModalBadge"), visual: $("cModalVisual"), colorInd: $("cModalColorIndicator"), colorLabel: $("cModalActiveColorLabel"),
+      counter: $("cModalCounter"), prev: $("cModalPrevBtn"), next: $("cModalNextBtn"),
+      category: $("cModalCategory"), unit: $("cModalUnit"), title: $("cModalTitle"),
+      price: $("cModalPrice"), oldPrice: $("cModalOldPrice"), discount: $("cModalDiscount"), stock: $("cModalStock"),
+      desc: $("cModalDesc"), colorGroup: $("cModalColorGroup"), colorText: $("cModalSelectedColorText"), swatches: $("cModalColorSwatches"),
+      qtyVal: $("cModalQtyVal"), qtyMinus: $("cModalQtyMinus"), qtyPlus: $("cModalQtyPlus"),
+      specs: $("cModalSpecs"), add: $("cModalAddBtn"), addText: $("cModalAddBtnText"), wa: $("cModalWaBtn")
+    };
+    let navList = [];
+    let navIndex = 0;
+    let qty = 1;
+    let modalColor = "";
+
+    function specCards(p) {
+      const cards = [];
+      p.specs.forEach((s, i) => cards.push([i === 0 ? "Medidas" : i === 1 ? "Material" : "Detalle", s, i === 0 ? "size" : i === 1 ? "material" : "detail"]));
+      cards.push(["Se vende por", p.unit, "unit"]);
+      cards.push(["Tiempo estimado", p.deliveryTime || "Se confirma por WhatsApp", "time"]);
+      return cards.map(([name, val, icon]) => `<div class="ecom-spec-card"><span class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${SPEC_ICONS[icon]}</svg></span><div class="spec-text"><span class="spec-name">${esc(name)}</span><strong class="spec-val">${esc(val)}</strong></div></div>`).join("");
+    }
+
+    function updateButtons(p) {
+      const priced = p.price != null;
+      const soldOut = availability(p).state === "out";
+      el.add.disabled = soldOut;
+      el.addText.textContent = soldOut ? "Agotado por ahora" : priced ? `Agregar al carrito · S/ ${p.price * qty}` : "Consultar precio por WhatsApp";
+      el.qtyVal.textContent = qty;
+      el.qtyMinus.disabled = qty <= 1;
+      el.qtyPlus.disabled = qty >= 10;
+      el.wa.href = waLink(waMessage(p, modalColor, qty));
+    }
+
+    function populate() {
+      const p = navList[navIndex];
+      if (!p) return;
+      qty = 1;
+      modalColor = colorOf(p);
+      el.counter.textContent = `${String(navIndex + 1).padStart(2, "0")} / ${String(navList.length).padStart(2, "0")}`;
+      el.prev.hidden = el.next.hidden = navList.length < 2;
+
+      const photo = ACCatalog.hasPhoto(p);
+      el.visual.classList.toggle("has-photo", photo);
+      el.visual.innerHTML = photo ? `<img src="${esc(ACCatalog.photoUrl(p, 900, "cdm"))}" alt="${esc(p.name)}" decoding="async">` : p.svg;
+      el.badge.hidden = !p.badge;
+      el.badge.textContent = p.badge || "";
+
+      el.category.textContent = p.categoryLabel;
+      el.unit.textContent = `Se vende por ${p.unit}`;
+      el.title.textContent = p.name;
+      el.price.textContent = p.price == null ? "Precio a consultar" : `S/ ${p.price}`;
+      el.oldPrice.hidden = !p.oldPrice;
+      if (p.oldPrice) el.oldPrice.textContent = `S/ ${p.oldPrice}`;
+      el.discount.hidden = !p.discount;
+      if (p.discount) el.discount.textContent = p.discount;
+      const av = availability(p);
+      el.stock.className = `p-stock p-stock--${av.state}`;
+      el.stock.innerHTML = `<span class="p-stock-dot"></span>${esc(av.label)}`;
+      el.desc.textContent = p.desc;
+
+      // Colores (opcionales)
+      const hasColors = p.colors.length > 0;
+      el.colorGroup.hidden = !hasColors;
+      el.colorInd.hidden = !hasColors || photo;
+      el.colorLabel.textContent = el.colorText.textContent = modalColor;
+      el.swatches.innerHTML = p.colors.map(c => `<button type="button" class="color-swatch-btn${c.name === modalColor ? " active" : ""}" data-color="${esc(c.name)}"><span class="swatch-circle" style="background:${esc(c.hex)}"></span><span>${esc(c.name)}</span></button>`).join("");
+
+      el.specs.innerHTML = specCards(p);
+      updateButtons(p);
+    }
+
+    function openModal(id) {
+      navList = visibleProducts();
+      navIndex = navList.findIndex(p => p.id === id);
+      if (navIndex === -1) { navList = products; navIndex = products.findIndex(p => p.id === id); }
+      if (navIndex === -1) return;
+      populate();
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      el.add.focus({ preventScroll: true });
+    }
+    function closeModal() {
+      if (!modalIsOpen()) return;
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+    const step = (d) => { navIndex = (navIndex + d + navList.length) % navList.length; populate(); };
+
+    if (modal) {
+      $("cdmModalCloseBtn").addEventListener("click", closeModal);
+      $("cdmModalBackdrop").addEventListener("click", closeModal);
+      el.prev.addEventListener("click", () => step(-1));
+      el.next.addEventListener("click", () => step(1));
+      el.qtyMinus.addEventListener("click", () => { if (qty > 1) { qty--; updateButtons(navList[navIndex]); } });
+      el.qtyPlus.addEventListener("click", () => { if (qty < 10) { qty++; updateButtons(navList[navIndex]); } });
+      el.swatches.addEventListener("click", (e) => {
+        const btn = e.target.closest(".color-swatch-btn");
+        if (!btn) return;
+        modalColor = btn.getAttribute("data-color");
+        el.swatches.querySelectorAll(".color-swatch-btn").forEach(b => b.classList.toggle("active", b === btn));
+        el.colorLabel.textContent = el.colorText.textContent = modalColor;
+        updateButtons(navList[navIndex]);
+      });
+      el.add.addEventListener("click", () => {
+        const p = navList[navIndex];
+        if (!p) return;
+        if (p.price == null) { openWhatsApp(waMessage(p, modalColor, qty)); return; }
+        closeModal();
+        cartApi.add(p.id, modalColor, qty);
+      });
+      document.addEventListener("keydown", (e) => {
+        if (!modalIsOpen()) return;
+        if (e.key === "Escape") closeModal();
+        if (e.key === "ArrowLeft" && navList.length > 1) step(-1);
+        if (e.key === "ArrowRight" && navList.length > 1) step(1);
+      });
+    }
+
+    // ---------------- Interacción en la grilla ----------------
+    function selectCardColor(card, btn) {
+      const id = card.getAttribute("data-id");
+      cardColor[id] = btn.getAttribute("data-color");
+      card.querySelectorAll(".cdm-dot").forEach((b) => { const on = b === btn; b.classList.toggle("active", on); b.setAttribute("aria-pressed", on); });
+      const label = card.querySelector(".cdm-dot-label");
+      if (label) label.textContent = cardColor[id];
+    }
 
     grid.addEventListener("click", (e) => {
-      const colorBtn = e.target.closest(".cdm-color");
-      if (colorBtn) {
-        colorBtn.parentElement.querySelectorAll(".cdm-color").forEach((b) => { b.classList.remove("active"); b.setAttribute("aria-pressed", "false"); });
-        colorBtn.classList.add("active");
-        colorBtn.setAttribute("aria-pressed", "true");
-        return;
+      const card = e.target.closest(".product-card");
+      if (!card) return;
+      const dot = e.target.closest(".cdm-dot");
+      if (dot) { selectCardColor(card, dot); return; }
+      const p = byId(card.getAttribute("data-id"));
+      if (!p) return;
+      if (e.target.closest(".btn-consult")) { openWhatsApp(waMessage(p, colorOf(p), 1)); return; }
+      if (e.target.closest(".btn-add-cart")) { cartApi.add(p.id, colorOf(p), 1); return; }
+      openModal(p.id);
+    });
+    grid.addEventListener("keydown", (e) => {
+      if ((e.key === "Enter" || e.key === " ") && e.target.classList.contains("product-card")) {
+        e.preventDefault();
+        openModal(e.target.getAttribute("data-id"));
       }
-      const addBtn = e.target.closest(".btn-add-cart");
-      if (addBtn) {
-        const active = addBtn.closest(".product-card").querySelector(".cdm-color.active");
-        cartApi.add(addBtn.getAttribute("data-add-id"), active ? active.getAttribute("data-color") : "", 1);
-        return;
-      }
-      const waBtn = e.target.closest("[data-wa-message]");
-      if (waBtn) openWhatsApp(waBtn.getAttribute("data-wa-message"));
     });
 
     // Filtros por categoría
     document.querySelectorAll("#cdmFilters .filter-chip").forEach((chip) => {
       chip.addEventListener("click", () => {
-        const cat = chip.getAttribute("data-filter");
+        activeFilter = chip.getAttribute("data-filter");
         grid.querySelectorAll(".product-card").forEach((card) => {
-          card.style.display = cat === "todos" || card.getAttribute("data-category") === cat ? "" : "none";
+          card.style.display = activeFilter === "todos" || card.getAttribute("data-category") === activeFilter ? "" : "none";
         });
       });
     });

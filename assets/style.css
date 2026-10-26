@@ -5191,3 +5191,74 @@ body.theme-cdm .cdm-color {
 body.theme-cdm .cdm-color:hover { border-color: var(--accent); }
 body.theme-cdm .cdm-color.active { border-color: var(--accent); background: var(--paper-2); font-weight: 700; }
 body.theme-cdm .cdm-swatch { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(0, 0, 0, .18); flex-shrink: 0; }
+
+/* =========================== CDM — tarjetas y modal (misma estructura que Maderin) =========================== */
+body.theme-cdm .compact-ecom-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 22px; }
+@media (min-width: 1200px) { body.theme-cdm .compact-ecom-grid { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 640px) { body.theme-cdm .compact-ecom-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
+@media (max-width: 380px) { body.theme-cdm .compact-ecom-grid { grid-template-columns: 1fr; } }
+
+body.theme-cdm .compact-card { border-radius: 16px; border: 1px solid var(--line); }
+body.theme-cdm .compact-card:hover { border-color: var(--accent); box-shadow: 0 12px 32px -18px rgba(46, 47, 26, .4); }
+body.theme-cdm .compact-thumb { aspect-ratio: 1 / 1; background: var(--paper-2); border-bottom: 1px solid var(--line); }
+body.theme-cdm .compact-thumb .sample-badge {
+  top: 10px; left: 10px; right: auto;
+  background: var(--paper); color: var(--ink); border: 1px solid var(--line);
+  font-family: var(--font-body); font-size: 11px; font-weight: 800; letter-spacing: 0; text-transform: none;
+  padding: 4px 10px; border-radius: 999px;
+}
+body.theme-cdm .compact-thumb .sample-badge.promo { background: #ffecd9; color: #c05621; border-color: rgba(192, 86, 33, .2); }
+body.theme-cdm .compact-thumb .thumb-icon-wrap svg { width: 100%; height: 100%; }
+body.theme-cdm .thumb-quick-hint { background: rgba(46, 47, 26, .18); }
+body.theme-cdm .compact-body { padding: 16px; gap: 0; }
+body.theme-cdm .compact-body .p-card-name { font-family: var(--font-display); font-size: 18px; font-weight: 600; }
+body.theme-cdm .compact-body p.desc { flex: 0 0 auto; }
+body.theme-cdm .product-footer-row,
+body.theme-cdm .compact-card .product-footer-row { flex-direction: column; align-items: stretch; gap: 10px; border-top-color: var(--line); }
+body.theme-cdm .compact-card .p-actions-group { width: 100%; }
+body.theme-cdm .compact-card .p-actions-group .btn { flex: 1; justify-content: center; padding: 9px 12px; font-size: 12px; border-radius: 999px; white-space: nowrap; }
+body.theme-cdm .p-current-price { color: var(--accent); }
+body.theme-cdm .p-unit { font-size: 12px; color: var(--ink-soft); }
+body.theme-cdm .spec-chip { border-color: var(--line); }
+body.theme-cdm .btn-outline-cdm.btn-open-modal:hover { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+
+/* Colores en la tarjeta */
+.cdm-dots { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.cdm-dot {
+  width: 20px; height: 20px; border-radius: 50%; padding: 0; cursor: pointer;
+  background: var(--dot, #E5DCCB); border: 1px solid rgba(0, 0, 0, .2);
+  box-shadow: 0 0 0 2px var(--paper); transition: box-shadow .15s ease, transform .15s ease;
+}
+.cdm-dot:hover { transform: scale(1.12); }
+.cdm-dot.active { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--accent); }
+.cdm-dot-label { font-size: 12px; color: var(--ink-soft); margin-left: 4px; }
+
+/* Modal */
+body.theme-cdm .ecom-modal-backdrop { background: rgba(30, 31, 16, .65); }
+body.theme-cdm .ecom-modal-dialog { border-color: var(--line); box-shadow: 0 24px 64px rgba(30, 31, 16, .3); }
+body.theme-cdm .ecom-modal-close { border-color: var(--line); }
+body.theme-cdm .ecom-modal-media-col,
+body.theme-cdm .ecom-main-preview,
+body.theme-cdm .ecom-modal-nav-bar,
+body.theme-cdm .ecom-price-box,
+body.theme-cdm .ecom-spec-card,
+body.theme-cdm .quantity-picker { border-color: var(--line); }
+body.theme-cdm .preview-badge { background: var(--accent); color: var(--paper); border-color: transparent; }
+body.theme-cdm .preview-visual svg { filter: none; }
+body.theme-cdm .ecom-title { font-family: var(--font-display); font-weight: 600; }
+body.theme-cdm .color-swatch-btn { border-color: var(--line-strong); }
+body.theme-cdm .color-swatch-btn.active { background: var(--paper-2); box-shadow: 0 2px 8px rgba(46, 47, 26, .2); }
+body.theme-cdm .btn-add-cart { white-space: nowrap; }
+body.theme-cdm .btn-ecom-cta { width: 100%; padding: 14px 20px; font-size: 15px; border-radius: 14px; box-shadow: 0 6px 20px rgba(63, 64, 33, .3); }
+body.theme-cdm .btn-ecom-cta svg { width: 20px; height: 20px; }
+body.theme-cdm .btn-ecom-cta:disabled { box-shadow: none; }
+body.theme-cdm .ecom-actions-wrap { display: flex; flex-direction: column; gap: 10px; }
+body.theme-cdm .btn-ecom-secondary {
+  width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 18px; font-size: 13.5px; font-weight: 700; border-radius: 14px;
+  background: transparent; color: var(--ink); border: 1.5px solid var(--line-strong);
+}
+body.theme-cdm .btn-ecom-secondary:hover { border-color: var(--accent); color: var(--accent); }
+body.theme-cdm .btn-ecom-secondary svg { width: 18px; height: 18px; color: #25D366; }
+.ecom-option-group[hidden], .preview-color-indicator[hidden], .preview-badge[hidden], .modal-nav-btn[hidden] { display: none; }
+body.theme-cdm .ecom-modal-header { padding-right: 44px; }

@@ -98,9 +98,66 @@
   </a>
 </header>
 
+<!-- ============ CATÁLOGO ============ -->
+<!-- SECCIÓN CATÁLOGO: grid de productos con filtros por categoría -->
+<section id="productos" class="on-paper2 reveal">
+  <div class="container">
+    <div class="head-row">
+      <div>
+        <span class="eyebrow">Catálogo</span>
+        <h2 class="section-title">Elige tu detalle y coordinamos por WhatsApp.</h2>
+      </div>
+      <p class="section-lede">Piezas listas para regalar o personalizar con nombres, fechas y dedicatorias grabadas.</p>
+    </div>
+    <!-- Filtros: botones que muestran/ocultan cards por data-category -->
+    <div class="filter-row" id="cdmFilters">
+      <button class="filter-chip active" data-filter="todos">Todos</button>
+      <button class="filter-chip" data-filter="decoracion">Decoración</button>
+      <button class="filter-chip" data-filter="organizadores">Organizadores</button>
+      <button class="filter-chip" data-filter="recuerdos">Recuerdos</button>
+    </div>
+
+    <div class="product-grid compact-ecom-grid" id="cdmProductGrid">
+      <!-- Las tarjetas se generan desde assets/catalog.js + lo publicado en /admin -->
+      <p class="catalog-empty" id="catalogLoading">Cargando catálogo…</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESEÑAS ============ -->
+<!-- SECCIÓN RESEÑAS: placeholders, reemplazar nombre, distrito y texto por reseñas reales -->
+<section id="resenas" class="reveal">
+  <div class="container">
+    <div class="head-row">
+      <div>
+        <span class="eyebrow">Reseñas</span>
+        <h2 class="section-title">Lo que dicen quienes ya regalaron.</h2>
+      </div>
+      <p class="section-lede">Comentarios de clientes que recibieron su detalle personalizado.</p>
+    </div>
+    <div class="reviews-grid">
+      <figure class="review-card reveal">
+        <div class="review-stars" role="img" aria-label="5 de 5 estrellas"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8Z"/></svg></div>
+        <blockquote>“Aquí irá el comentario del cliente 1. Reemplaza este texto con la reseña real.”</blockquote>
+        <figcaption><span class="review-avatar" aria-hidden="true">N</span><span><strong>Nombre del cliente</strong><small>Distrito, Lima</small></span></figcaption>
+      </figure>
+      <figure class="review-card reveal">
+        <div class="review-stars" role="img" aria-label="5 de 5 estrellas"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8Z"/></svg></div>
+        <blockquote>“Aquí irá el comentario del cliente 2. Reemplaza este texto con la reseña real.”</blockquote>
+        <figcaption><span class="review-avatar" aria-hidden="true">N</span><span><strong>Nombre del cliente</strong><small>Distrito, Lima</small></span></figcaption>
+      </figure>
+      <figure class="review-card reveal">
+        <div class="review-stars" role="img" aria-label="5 de 5 estrellas"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8Z"/></svg></div>
+        <blockquote>“Aquí irá el comentario del cliente 3. Reemplaza este texto con la reseña real.”</blockquote>
+        <figcaption><span class="review-avatar" aria-hidden="true">N</span><span><strong>Nombre del cliente</strong><small>Distrito, Lima</small></span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
 <!-- ============ SOBRE CDM ============ -->
 <!-- SECCIÓN FEATURES: 3 cards con icono SVG (sin imagen de fondo) -->
-<section id="nosotros" class="reveal">
+<section id="nosotros" class="on-paper2 reveal">
   <div class="container">
     <div class="head-row">
       <div>
@@ -133,31 +190,108 @@
   </div>
 </section>
 
-<!-- ============ CATÁLOGO ============ -->
-<!-- SECCIÓN CATÁLOGO: grid de productos con filtros por categoría -->
-<section id="productos" class="on-paper2 reveal">
-  <div class="container">
-    <div class="head-row">
-      <div>
-        <span class="eyebrow">Catálogo</span>
-        <h2 class="section-title">Elige tu detalle y coordinamos por WhatsApp.</h2>
+<!-- ============ MODAL DE PRODUCTO (CDM) ============ -->
+<!-- Mismo modal que Maderin (clases ecom-*); se llena desde assets/main.js -->
+<div class="ecom-product-modal" id="cdmProductModal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Ficha de producto">
+  <div class="ecom-modal-backdrop" id="cdmModalBackdrop"></div>
+  <div class="ecom-modal-dialog">
+    <button class="ecom-modal-close" id="cdmModalCloseBtn" aria-label="Cerrar ventana de producto" title="Cerrar (Esc)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="ecom-modal-grid">
+      <div class="ecom-modal-media-col">
+        <div class="ecom-main-preview">
+          <div class="preview-badge-stack">
+            <span class="preview-badge" id="cModalBadge">Personalizado</span>
+          </div>
+          <div class="preview-visual" id="cModalVisual"></div>
+          <div class="preview-color-indicator" id="cModalColorIndicator">
+            <span>Color:</span>
+            <strong id="cModalActiveColorLabel"></strong>
+          </div>
+        </div>
+        <div class="ecom-modal-nav-bar">
+          <button class="modal-nav-btn prev" id="cModalPrevBtn" aria-label="Producto anterior" title="Anterior (←)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+            <span>Anterior</span>
+          </button>
+          <div class="modal-nav-counter" id="cModalCounter">01 / 05</div>
+          <button class="modal-nav-btn next" id="cModalNextBtn" aria-label="Producto siguiente" title="Siguiente (→)">
+            <span>Siguiente</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+        <div class="ecom-guarantees-list">
+          <div class="guarantee-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.4-7 10-7 10z"/></svg>
+            <span>Nombre, fecha o frase a tu medida</span>
+          </div>
+          <div class="guarantee-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            <span>Madera y melamina de buena calidad</span>
+          </div>
+          <div class="guarantee-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <span>Entrega coordinada para tu fecha especial</span>
+          </div>
+        </div>
       </div>
-      <p class="section-lede">Piezas listas para regalar o personalizar con nombres, fechas y dedicatorias grabadas.</p>
-    </div>
-    <!-- Filtros: botones que muestran/ocultan cards por data-category -->
-    <div class="filter-row" id="cdmFilters">
-      <button class="filter-chip active" data-filter="todos">Todos</button>
-      <button class="filter-chip" data-filter="decoracion">Decoración</button>
-      <button class="filter-chip" data-filter="organizadores">Organizadores</button>
-      <button class="filter-chip" data-filter="recuerdos">Recuerdos</button>
-    </div>
 
-    <div class="product-grid" id="cdmProductGrid">
-      <!-- Las tarjetas se generan desde assets/catalog.js + lo publicado en /admin -->
-      <p class="catalog-empty" id="catalogLoading">Cargando catálogo…</p>
+      <div class="ecom-modal-info-col">
+        <div class="ecom-modal-header">
+          <div class="header-top-meta">
+            <span class="m-cat-tag" id="cModalCategory">Decoración</span>
+            <span class="m-sku" id="cModalUnit">Se vende por unidad</span>
+          </div>
+          <h2 class="ecom-title" id="cModalTitle"></h2>
+        </div>
+
+        <div class="ecom-price-box">
+          <div class="price-main-wrap">
+            <span class="price-current" id="cModalPrice"></span>
+            <span class="price-old" id="cModalOldPrice" hidden></span>
+            <span class="price-discount-pill" id="cModalDiscount" hidden></span>
+          </div>
+          <span class="price-note">La personalización (nombre, fecha, dedicatoria) se coordina por WhatsApp antes de fabricar.</span>
+          <div class="p-stock" id="cModalStock"></div>
+        </div>
+
+        <p class="ecom-desc" id="cModalDesc"></p>
+
+        <div class="ecom-option-group" id="cModalColorGroup">
+          <label class="option-label">
+            <span>Color / Acabado:</span>
+            <strong id="cModalSelectedColorText"></strong>
+          </label>
+          <div class="color-swatches-row" id="cModalColorSwatches"></div>
+        </div>
+
+        <div class="ecom-option-group">
+          <label class="option-label"><span>Cantidad:</span></label>
+          <div class="quantity-picker">
+            <button class="qty-btn" id="cModalQtyMinus" aria-label="Disminuir cantidad" disabled>&minus;</button>
+            <span class="qty-display" id="cModalQtyVal">1</span>
+            <button class="qty-btn" id="cModalQtyPlus" aria-label="Aumentar cantidad">&plus;</button>
+          </div>
+        </div>
+
+        <!-- Información del producto: tarjetas generadas desde las especificaciones del admin -->
+        <div class="ecom-specs-grid" id="cModalSpecs"></div>
+
+        <div class="ecom-actions-wrap">
+          <button type="button" class="btn btn-buy btn-ecom-cta" id="cModalAddBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 11.2a1.6 1.6 0 0 0 1.6 1.2h8.4a1.6 1.6 0 0 0 1.6-1.2L21 7H6"/></svg>
+            <span id="cModalAddBtnText">Agregar al carrito</span>
+          </button>
+          <a href="#" class="btn btn-ecom-secondary" id="cModalWaBtn" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.82.49 3.53 1.35 5L2 22l5.16-1.33A9.96 9.96 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm4.95 14.05c-.21.58-1.2 1.13-1.67 1.2-.47.07-.94.13-2.8-.62-2.22-.9-3.66-3.15-3.77-3.3-.11-.15-.9-1.2-.9-2.29s.57-1.63.77-1.85c.2-.22.44-.28.59-.28.15 0 .3 0 .43.01.14.01.33-.05.51.39.19.45.64 1.57.7 1.69.06.12.1.26.02.42-.08.16-.12.26-.24.4-.12.14-.25.31-.36.42-.12.12-.25.25-.11.49.14.24.63 1.04 1.35 1.68.93.83 1.71 1.09 1.95 1.21.24.12.38.1.52-.06.14-.16.6-.7.76-.94.16-.24.32-.2.53-.12.21.08 1.34.63 1.57.74.23.11.38.17.44.27.06.1.06.58-.15 1.16z"/></svg>
+            <span>¿Dudas? Consultar por WhatsApp</span>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
-</section>
+</div>
 
 <!-- ============ CARRITO (drawer lateral) ============ -->
 <div class="cart-backdrop" id="cartBackdrop"></div>

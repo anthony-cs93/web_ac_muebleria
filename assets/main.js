@@ -1420,6 +1420,8 @@ document.addEventListener("DOMContentLoaded", () => {
         <figcaption><strong>${escapeHtml(r.name)}</strong>${r.district ? ` · ${escapeHtml(r.district)}` : ""}${r.product ? `<span>${escapeHtml(r.product)}</span>` : ""}</figcaption>
       </figure>`).join("");
       section.hidden = false;
+      const navItem = document.getElementById("navItemFamilias");
+      if (navItem) navItem.hidden = false;
     })();
 
     // Delegación de clics en las tarjetas del catálogo

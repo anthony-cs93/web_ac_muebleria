@@ -28,12 +28,12 @@
 <nav class="nav" id="mainNav">
   <div class="nav-inner">
     <a href="#top" class="brand" id="navBrand"><img src="public/maderin/logo-maderin.png" alt="Maderin" class="brand-logo"></a>
-    <!-- Links: Productos, Sobre Maderin, AC Mueblería (sitio padre), Instagram -->
+    <!-- Links (mismo orden que la página): Tienda, Familias, Sobre Maderin, AC Mueblería (sitio padre), Instagram -->
     <ul class="nav-links" id="navLinks">
       <li><a href="#productos" id="navLinkProductos">Tienda</a></li>
+      <li hidden id="navItemFamilias"><a href="#familias" id="navLinkFamilias">Reseñas</a></li>
       <li><a href="#nosotros" id="navLinkNosotros">Sobre Maderin</a></li>
-      <li><a href="index.html" id="navLinkAc">AC Mueblería</a></li>
-      <li><a href="https://www.instagram.com/maderin.pe/" target="_blank" rel="noopener" id="navLinkIg">Instagram</a></li>
+      <li><a href="index.html" id="navLinkAc" class="nav-badge">AC Mueblería</a></li>
     </ul>
     <!-- Botón WhatsApp: data-wa-message define el mensaje prellenado al abrir chat -->
     <div class="nav-cta">
@@ -102,44 +102,6 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
   </a>
 </header>
-
-<!-- ============ SOBRE MADERIN ============ -->
-<!-- SECCIÓN FEATURES: 3 cards con thumbnail (imagen) en vez de icono SVG -->
-<section id="nosotros" class="reveal">
-  <div class="container">
-    <div class="head-row">
-      <div>
-        <span class="eyebrow">Sobre Maderin</span>
-        <h2 class="section-title">Muebles diseñados para que se adapten a tu estilo.</h2>
-      </div>
-      <p class="section-lede">Creamos ambientes seguros, didácticos y cálidos que estimulan la creatividad y el orden desde los primeros años.</p>
-    </div>
-    <div class="features-grid">
-      <!-- Cada feature: thumbnail con imagen + cuerpo con título y descripción -->
-      <article class="feature-card reveal">
-        <div class="feature-thumb" style="background-image:url('public/maderin/materiales.png')"></div>
-        <div class="feature-body">
-          <h3>Materiales seguros</h3>
-          <p>Maderas y acabados no tóxicos, pensados para el uso diario de niños.</p>
-        </div>
-      </article>
-      <article class="feature-card reveal">
-        <div class="feature-thumb" style="background-image:url('public/maderin/diseño.png')"></div>
-        <div class="feature-body">
-          <h3>Diseño para niños</h3>
-          <p>Bordes redondeados, tamaños ergonómicos y colores pensados para su etapa.</p>
-        </div>
-      </article>
-      <article class="feature-card reveal">
-        <div class="feature-thumb" style="background-image:url('public/maderin/colores.png')"></div>
-        <div class="feature-body">
-          <h3>Colores personalizados</h3>
-          <p>Medidas ya definidas con la opción de personalizar el color de los materiales.</p>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
 
 <!-- ============ CATÁLOGO E-COMMERCE ============ -->
 <!-- SECCIÓN CATÁLOGO: catálogo estilo e-commerce compacto con filtros, buscador, ordenamiento y modales de producto -->
@@ -343,6 +305,44 @@
       </div>
     </div>
     <div class="reviews-grid" id="maderinReviews"></div>
+  </div>
+</section>
+
+<!-- ============ SOBRE MADERIN ============ -->
+<!-- SECCIÓN FEATURES: 3 cards con thumbnail (imagen) en vez de icono SVG -->
+<section id="nosotros" class="reveal">
+  <div class="container">
+    <div class="head-row">
+      <div>
+        <span class="eyebrow">Sobre Maderin</span>
+        <h2 class="section-title">Muebles diseñados para que se adapten a tu estilo.</h2>
+      </div>
+      <p class="section-lede">Creamos ambientes seguros, didácticos y cálidos que estimulan la creatividad y el orden desde los primeros años.</p>
+    </div>
+    <div class="features-grid">
+      <!-- Cada feature: thumbnail con imagen + cuerpo con título y descripción -->
+      <article class="feature-card reveal">
+        <div class="feature-thumb" style="background-image:url('public/maderin/materiales.png')"></div>
+        <div class="feature-body">
+          <h3>Materiales seguros</h3>
+          <p>Maderas y acabados no tóxicos, pensados para el uso diario de niños.</p>
+        </div>
+      </article>
+      <article class="feature-card reveal">
+        <div class="feature-thumb" style="background-image:url('public/maderin/diseño.png')"></div>
+        <div class="feature-body">
+          <h3>Diseño para niños</h3>
+          <p>Bordes redondeados, tamaños ergonómicos y colores pensados para su etapa.</p>
+        </div>
+      </article>
+      <article class="feature-card reveal">
+        <div class="feature-thumb" style="background-image:url('public/maderin/colores.png')"></div>
+        <div class="feature-body">
+          <h3>Colores personalizados</h3>
+          <p>Medidas ya definidas con la opción de personalizar el color de los materiales.</p>
+        </div>
+      </article>
+    </div>
   </div>
 </section>
 

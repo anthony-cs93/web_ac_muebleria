@@ -93,6 +93,24 @@ body.theme-maderin .nav-links a {
 body.theme-maderin .nav-cta .btn-wa {
   font-family: var(--font-display);  /* botón WhatsApp con Nunito */
 }
+/* Badge "AC Mueblería": distingue el enlace al sitio padre del resto del menú */
+body.theme-maderin .nav-links a.nav-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: .85em;
+  font-weight: 700;
+  white-space: nowrap;
+}
+body.theme-maderin .nav-links a.nav-badge::after { content: "↗"; font-size: .9em; }
+body.theme-maderin .nav-links a.nav-badge:hover { background: var(--accent); color: #fff; }
+@media (max-width: 860px) {
+  body.theme-maderin .nav-links a.nav-badge { width: auto; margin-top: 8px; border-bottom: 1px solid var(--accent); }
+}
 
 /* Botones — azul medio en vez de marrón */
 body.theme-maderin .btn-wa {
@@ -530,6 +548,42 @@ body.theme-cdm .feature-card p{
   margin-top: 10px;
   font-size: 13.5px;
   color: var(--ink-soft);       /* texto oliva suave */
+}
+
+/* =========================== CDM — Reseñas =========================== */
+
+body.theme-cdm .reviews-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 8px;
+}
+body.theme-cdm .review-card{
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 30px 28px;
+  margin: 0;
+  display: flex; flex-direction: column; gap: 18px;
+}
+body.theme-cdm .review-stars{ display: flex; gap: 3px; color: var(--accent-2); }
+body.theme-cdm .review-stars svg{ width: 18px; height: 18px; }
+body.theme-cdm .review-card blockquote{
+  margin: 0; flex: 1;
+  font-family: var(--font-display);
+  font-size: 17px; line-height: 1.55;
+}
+body.theme-cdm .review-card figcaption{ display: flex; align-items: center; gap: 12px; }
+body.theme-cdm .review-card figcaption span:last-child{ display: flex; flex-direction: column; font-size: 14px; }
+body.theme-cdm .review-card small{ color: var(--ink-soft); font-size: 12.5px; }
+body.theme-cdm .review-avatar{
+  width: 38px; height: 38px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--accent); color: var(--paper);
+  font-family: var(--font-mono); font-size: 14px;
+}
+@media (max-width: 900px){
+  body.theme-cdm .reviews-grid{ grid-template-columns: 1fr; }
 }
 
 /* =========================== CDM — Catálogo =========================== */

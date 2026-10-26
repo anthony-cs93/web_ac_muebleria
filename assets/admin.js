@@ -531,16 +531,42 @@
 
   window.addEventListener("beforeunload", (e) => { if (isDirty()) { e.preventDefault(); e.returnValue = ""; } });
 
+  // ---------------------------------------------------------------- Carga
+  function setLoading(text) {
+    $("#loadingView").hidden = !text;
+    if (text) $("#loadingText").textContent = text;
+  }
+
+  // Ojo para ver u ocultar la contraseña
+  $("#pwToggle").addEventListener("click", () => {
+    const input = $("#loginPassword");
+    const show = input.type === "password";
+    input.type = show ? "text" : "password";
+    const btn = $("#pwToggle");
+    btn.setAttribute("aria-pressed", String(show));
+    btn.setAttribute("aria-label", show ? "Ocultar contraseña" : "Mostrar contraseña");
+    btn.title = btn.getAttribute("aria-label");
+    $(".icon-eye", btn).hidden = show;
+    $(".icon-eye-off", btn).hidden = !show;
+    input.focus();
+  });
+
   // ---------------------------------------------------------------- Acceso
   function showLogin(keepState) {
+    setLoading(false);
     $("#appView").hidden = true;
     $("#loginView").hidden = false;
     $("#loginPassword").value = "";
+    $("#loginPassword").type = "password";
+    $("#pwToggle").setAttribute("aria-pressed", "false");
+    $(".icon-eye", $("#pwToggle")).hidden = false;
+    $(".icon-eye-off", $("#pwToggle")).hidden = true;
     if (!keepState) state.saved = "";
     $("#loginPassword").focus();
   }
 
   async function enterApp(storage) {
+    setLoading("Cargando catálogo…");
     state.storage = storage;
     const banner = $("#storageBanner");
     if (storage === "none") {
@@ -563,6 +589,7 @@
     $("#loginView").hidden = true;
     $("#appView").hidden = false;
     setShop(state.shop);
+    setLoading(false);
   }
 
   $("#loginForm").addEventListener("submit", async (e) => {
@@ -571,12 +598,13 @@
     const err = $("#loginError");
     err.hidden = true;
     btn.disabled = true;
-    btn.textContent = "Entrando…";
+    btn.innerHTML = '<span class="spinner" aria-hidden="true"></span> Entrando…';
     try {
       await api("login", { method: "POST", body: { password: $("#loginPassword").value } });
       const s = await api("session");
       await enterApp(s.storage);
     } catch (ex) {
+      setLoading(false);
       err.textContent = ex.message;
       err.hidden = false;
       $("#loginPassword").select();
@@ -605,6 +633,7 @@
       $("#loginError").textContent = "No pude conectar con el servidor.";
       $("#loginError").hidden = false;
     }
+    setLoading(false);
     $("#loginView").hidden = false;
     $("#loginPassword").focus();
   })();

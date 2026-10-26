@@ -200,3 +200,30 @@ legend { padding: 0 6px; font-weight: 700; font-size: 13px; color: var(--ink-sof
   .editor form { max-height: 100dvh; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* Contraseña con ojo para mostrar/ocultar */
+.pw-wrap { position: relative; }
+.pw-wrap input { width: 100%; padding-right: 46px !important; }
+.pw-toggle {
+  position: absolute; top: 50%; right: 4px; transform: translateY(-50%);
+  width: 38px; height: 38px; border: 0; border-radius: 8px; background: transparent; color: var(--ink-soft); cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.pw-toggle:hover { color: var(--accent); background: var(--accent-soft); }
+.pw-toggle svg { width: 20px; height: 20px; }
+
+/* Pantalla de carga */
+.loading {
+  position: fixed; inset: 0; z-index: 100; background: var(--bg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  color: var(--ink-soft); font-weight: 600;
+}
+.loading p { margin: 0; }
+.spinner {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 3.5px solid var(--line); border-top-color: var(--accent);
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.btn .spinner { width: 16px; height: 16px; border-width: 2.5px; border-color: rgba(255, 255, 255, .45); border-top-color: #fff; }
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 2s; } }

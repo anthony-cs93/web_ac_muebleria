@@ -6,7 +6,10 @@ import adminHandler from './api/admin.js';
 import { LOCAL_UPLOADS_DIR } from './api/_lib.js';
 
 // Variables locales (ADMIN_PASSWORD, etc.) desde .env si existe; en Vercel se definen en el panel del proyecto
-try { process.loadEnvFile(); } catch { /* sin .env */ }
+// .env.local es el que genera `vercel env pull` (BLOB_STORE_ID + VERCEL_OIDC_TOKEN para usar el Blob real); lo del .env tiene prioridad
+for (const file of ['.env', '.env.local']) {
+  try { process.loadEnvFile(file); } catch { /* sin ese archivo */ }
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

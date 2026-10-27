@@ -5089,6 +5089,21 @@ body.theme-maderin .nav-cart.bump { animation: cartBump .45s ease; }
 .review-card figcaption strong { color: var(--ink); }
 .review-card figcaption span { display: block; margin-top: 2px; font-size: 12px; }
 
+/* Reseñas en móvil: foto circular a la izquierda; nombre, producto, estrellas y texto a la derecha */
+@media (max-width: 640px) {
+  body.theme-maderin .reviews-grid { grid-template-columns: 1fr; gap: 14px; margin-top: 22px; }
+  body.theme-maderin .review-card {
+    display: grid; grid-template-columns: 84px 1fr; grid-template-rows: auto auto 1fr; column-gap: 16px; align-content: start;
+    padding: 16px; border-radius: 22px; box-shadow: 0 8px 24px -14px rgba(45, 52, 102, .35);
+  }
+  body.theme-maderin .review-photo { grid-column: 1; grid-row: 1 / 4; width: 84px; height: 84px; aspect-ratio: 1; border-radius: 50%; object-fit: cover; }
+  body.theme-maderin .review-card figcaption { grid-column: 2; grid-row: 1; padding: 0; margin: 0; font-size: 12.5px; }
+  body.theme-maderin .review-card figcaption strong { color: var(--accent); font-family: var(--font-display); font-size: 16px; font-weight: 700; }
+  body.theme-maderin .review-card figcaption span { margin-top: 0; font-style: italic; }
+  body.theme-maderin .review-stars { grid-column: 2; grid-row: 2; padding: 4px 0 0; font-size: 13px; letter-spacing: 1px; }
+  body.theme-maderin .review-card blockquote { grid-column: 2; grid-row: 3; padding: 0; margin: 6px 0 0; font-size: 13.5px; line-height: 1.5; }
+}
+
 @media (max-width: 860px) {
   body.theme-maderin .nav-cart { width: 40px; height: 40px; }
 }

@@ -1559,12 +1559,11 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="thumb-quick-hint"><span class="quick-hint-pill">${SEARCH_ICON} Ficha rápida</span></div>
         </div>
         <div class="product-body compact-body">
-          <div class="p-card-header"><span class="p-card-cat">${esc(p.categoryLabel)}</span></div>
           <h3 class="p-card-name">${esc(p.name)}</h3>
-          <p class="desc">${esc(p.desc)}</p>
-          ${dots}
-          ${p.specs.length ? `<div class="product-specs-chips">${p.specs.map(s => `<span class="spec-chip">${esc(s)}</span>`).join("")}</div>` : ""}
-          <div class="p-stock p-stock--${av.state}"><span class="p-stock-dot"></span>${esc(av.label)}</div>
+          <div class="p-card-meta">
+            ${p.specs.length ? `<div class="p-card-dims" title="${esc(p.specs[0])}">${esc(p.specs[0])}</div>` : ""}
+            ${dots}
+          </div>
           <div class="product-footer-row">
             <div class="p-pricing">${priceBlock}</div>
             <div class="p-actions-group">

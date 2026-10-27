@@ -5222,6 +5222,19 @@ body.theme-cdm .cdm-color:hover { border-color: var(--accent); }
 body.theme-cdm .cdm-color.active { border-color: var(--accent); background: var(--paper-2); font-weight: 700; }
 body.theme-cdm .cdm-swatch { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(0, 0, 0, .18); flex-shrink: 0; }
 
+/* CDM — tarjeta compacta: título, medidas + colores, precio y botones */
+body.theme-cdm .compact-thumb { aspect-ratio: 4 / 3; }
+body.theme-cdm .compact-body { padding: 12px 14px 14px; gap: 0; }
+body.theme-cdm .compact-card .p-card-name { font-size: 15px; line-height: 1.25; margin: 0 0 4px; }
+body.theme-cdm .compact-card .p-card-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+body.theme-cdm .compact-card .p-card-dims { font-size: 12px; line-height: 1.3; color: var(--ink-soft); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body.theme-cdm .compact-card .cdm-dots { margin: 0 0 0 auto; flex-shrink: 0; gap: 5px; }
+body.theme-cdm .compact-card .cdm-dot-label { display: none; }
+body.theme-cdm .compact-card .product-footer-row { padding-top: 8px; gap: 8px; }
+body.theme-cdm .compact-card .p-pricing { flex-direction: row; align-items: baseline; flex-wrap: wrap; gap: 4px 8px; }
+body.theme-cdm .compact-card .p-actions-group { gap: 6px; }
+body.theme-cdm .compact-card .p-actions-group .btn { padding: 7px 8px; font-size: 12px; }
+
 /* =========================== CDM — tarjetas y modal (misma estructura que Maderin) =========================== */
 body.theme-cdm .compact-ecom-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 22px; }
 @media (min-width: 1200px) { body.theme-cdm .compact-ecom-grid { grid-template-columns: repeat(4, 1fr); } }
@@ -5230,7 +5243,7 @@ body.theme-cdm .compact-ecom-grid { grid-template-columns: repeat(auto-fill, min
 
 body.theme-cdm .compact-card { border-radius: 16px; border: 1px solid var(--line); }
 body.theme-cdm .compact-card:hover { border-color: var(--accent); box-shadow: 0 12px 32px -18px rgba(46, 47, 26, .4); }
-body.theme-cdm .compact-thumb { aspect-ratio: 1 / 1; background: var(--paper-2); border-bottom: 1px solid var(--line); }
+body.theme-cdm .compact-thumb { aspect-ratio: 4 / 3; background: var(--paper-2); border-bottom: 1px solid var(--line); }
 body.theme-cdm .compact-thumb .sample-badge {
   top: 10px; left: 10px; right: auto;
   background: var(--paper); color: var(--ink); border: 1px solid var(--line);

@@ -192,7 +192,9 @@ export function sanitizeProduct(raw, shop) {
     photo: safeSlug(raw.photo),
     img480: safeUrl(raw.img480),
     img900: safeUrl(raw.img900),
-    svg: safeSvg(raw.svg)
+    svg: safeSvg(raw.svg),
+    rating: raw.rating === null || raw.rating === undefined || raw.rating === '' ? null : Math.min(5, Math.max(0, Number(raw.rating) || 0)),
+    reviewsCount: Math.max(0, Math.round(Number(raw.reviewsCount) || 0))
   };
   if (shop === 'maderin') {
     Object.assign(p, {
@@ -203,8 +205,6 @@ export function sanitizeProduct(raw, shop) {
       material: text(raw.material, 120),
       ageRange: text(raw.ageRange, 60),
       finish: text(raw.finish, 160),
-      rating: raw.rating === null || raw.rating === undefined || raw.rating === '' ? null : Math.min(5, Math.max(0, Number(raw.rating) || 0)),
-      reviewsCount: Math.max(0, Math.round(Number(raw.reviewsCount) || 0)),
     });
   } else {
     Object.assign(p, {

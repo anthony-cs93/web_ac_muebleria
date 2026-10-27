@@ -96,14 +96,14 @@
       p.stock = ["order", "ready", "out"].includes(p.stock) ? p.stock : "order";
       p.deliveryTime = str(p.deliveryTime).trim() || null;
       p.hidden = !!p.hidden;
+      p.rating = num(p.rating);
+      p.reviewsCount = num(p.reviewsCount) || 0;
       p.svg = p.svg || iconSvg(p.category);
       if (shop === "maderin") {
         p.cardDesc = str(p.cardDesc) || p.desc;
         p.subtitle = str(p.subtitle) || p.name;
         p.sku = str(p.sku).trim() || null;
         for (const k of ["dimensions", "material", "ageRange", "finish"]) p[k] = str(p[k]).trim() || "Por confirmar";
-        p.rating = num(p.rating);
-        p.reviewsCount = num(p.reviewsCount) || 0;
         const colors = Array.isArray(p.colors) ? p.colors.filter((c) => c && c.name) : [];
         p.colors = colors.length ? colors.map((c) => ({ name: String(c.name), hex: /^#[0-9a-f]{3,8}$/i.test(c.hex) ? c.hex : "#E5DCCB" })) : [{ name: "Por definir", hex: "#E5DCCB" }];
       } else {

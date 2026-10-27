@@ -305,6 +305,8 @@
     f("stock").value = base.stock;
     f("deliveryTime").value = base.deliveryTime || "";
     f("hidden").checked = base.hidden;
+    f("rating").value = base.rating ?? "";
+    f("reviewsCount").value = base.reviewsCount || "";
     if (shop === "maderin") {
       f("subtitle").value = isNew ? "" : base.subtitle;
       f("cardDesc").value = isNew ? "" : base.cardDesc;
@@ -313,8 +315,6 @@
       f("dimensions").value = isNew ? "" : (base.dimensions === "Por confirmar" ? "" : base.dimensions);
       f("material").value = isNew ? "" : (base.material === "Por confirmar" ? "" : base.material);
       f("finish").value = isNew ? "" : (base.finish === "Por confirmar" ? "" : base.finish);
-      f("rating").value = base.rating ?? "";
-      f("reviewsCount").value = base.reviewsCount || "";
     } else {
       f("unit").value = base.unit;
       f("spec1").value = base.specs[0] || "";
@@ -342,6 +342,8 @@
     out.stock = f("stock").value;
     out.deliveryTime = f("deliveryTime").value.trim() || null;
     out.hidden = f("hidden").checked;
+    out.rating = f("rating").value === "" ? null : Number(f("rating").value);
+    out.reviewsCount = f("reviewsCount").value === "" ? 0 : Number(f("reviewsCount").value);
     const preset = f("badgePreset").value;
     out.badge = preset === "__custom" ? (f("badgeCustom").value.trim() || null) : (preset || null);
     if (shop === "maderin") {
@@ -352,8 +354,6 @@
       out.dimensions = f("dimensions").value.trim();
       out.material = f("material").value.trim();
       out.finish = f("finish").value.trim();
-      out.rating = f("rating").value === "" ? null : Number(f("rating").value);
-      out.reviewsCount = f("reviewsCount").value === "" ? 0 : Number(f("reviewsCount").value);
     } else {
       out.unit = f("unit").value.trim() || "unidad";
       out.specs = [f("spec1").value.trim(), f("spec2").value.trim()].filter(Boolean);
@@ -373,7 +373,7 @@
     const err = $("#editorError");
     if (!out.name) { err.textContent = "Escribe el nombre del producto."; err.hidden = false; f("name").focus(); return; }
     if (out.price !== null && !Number.isFinite(out.price)) { err.textContent = "El precio no es válido."; err.hidden = false; return; }
-    if (state.shop === "maderin" && out.rating !== null && (!Number.isFinite(out.rating) || out.rating < 0 || out.rating > 5)) { err.textContent = "La calificación debe estar entre 0 y 5."; err.hidden = false; return; }
+    if (out.rating !== null && (!Number.isFinite(out.rating) || out.rating < 0 || out.rating > 5)) { err.textContent = "La calificación debe estar entre 0 y 5."; err.hidden = false; return; }
     const items = list();
     if (editing.isNew) {
       out.id = uniqueId(slugify(out.name) || "producto");

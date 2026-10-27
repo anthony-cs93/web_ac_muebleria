@@ -590,6 +590,22 @@ body.theme-cdm .review-avatar{
 @media (max-width: 900px){
   body.theme-cdm .reviews-grid{ grid-template-columns: 1fr; }
 }
+/* Reseñas en móvil: avatar circular a la izquierda; nombre, distrito, estrellas y texto a la derecha */
+@media (max-width: 640px){
+  body.theme-cdm .reviews-grid{ gap: 14px; }
+  body.theme-cdm .review-card{
+    display: grid; grid-template-columns: 84px 1fr; grid-template-rows: auto auto 1fr; column-gap: 16px; align-content: start;
+    padding: 16px; border-radius: 22px; box-shadow: 0 8px 24px -14px rgba(46, 47, 26, .35);
+  }
+  body.theme-cdm .review-card figcaption{ display: contents; }
+  body.theme-cdm .review-avatar{ grid-column: 1; grid-row: 1 / 4; width: 84px; height: 84px; font-size: 30px; }
+  body.theme-cdm .review-card figcaption span:last-child{ grid-column: 2; grid-row: 1; font-size: 12.5px; }
+  body.theme-cdm .review-card figcaption strong{ color: var(--accent); font-family: var(--font-display); font-size: 16px; font-weight: 700; }
+  body.theme-cdm .review-card small{ font-style: italic; }
+  body.theme-cdm .review-stars{ grid-column: 2; grid-row: 2; gap: 2px; padding: 4px 0 0; }
+  body.theme-cdm .review-stars svg{ width: 14px; height: 14px; }
+  body.theme-cdm .review-card blockquote{ grid-column: 2; grid-row: 3; margin-top: 6px; padding: 0; font-size: 13.5px; line-height: 1.5; }
+}
 
 /* =========================== CDM — Catálogo =========================== */
 
@@ -5388,6 +5404,9 @@ body.theme-cdm .ecom-modal-header { padding-right: 44px; }
 
   /* Tienda: sin texto de apoyo y 2 productos por fila */
   body.theme-maderin .catalog-header-row > .section-lede{ display:none; }
+  /* CDM: catálogo limpio, sin texto de apoyo ni filtros */
+  body.theme-cdm #productos .head-row > .section-lede,
+  body.theme-cdm #cdmFilters{ display:none; }
   body.theme-maderin .compact-ecom-grid,
   body.theme-cdm .compact-ecom-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); gap:12px; }
 

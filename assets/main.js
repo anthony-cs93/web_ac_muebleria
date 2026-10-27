@@ -1362,6 +1362,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const priced = p.price != null;
       const soldOut = av.state === "out";
       const filled = p.rating != null ? Math.min(5, Math.max(1, Math.round(p.rating))) : 0;
+      const dims = p.dimensions && !/^por confirmar$/i.test(p.dimensions.trim()) ? p.dimensions.trim() : "";
       const thumb = ACCatalog.hasPhoto(p)
         ? `<img class="thumb-photo" src="${escAttr(photoUrl(p, 480))}" alt="${escAttr(p.name)}" loading="lazy" decoding="async">`
         : `<div class="thumb-icon-wrap">${p.svg}</div>`;
@@ -1378,13 +1379,11 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="thumb-quick-hint"><span class="quick-hint-pill">${SEARCH_ICON} Ficha rápida</span></div>
         </div>
         <div class="product-body compact-body">
-          <div class="p-card-header">
-            <span class="p-card-cat">${escAttr(p.categoryLabel)}</span>
+          <h3 class="p-card-name">${escAttr(p.name)}</h3>
+          <div class="p-card-meta">
+            ${dims ? `<div class="p-card-dims" title="${escAttr(dims)}">${escAttr(dims)}</div>` : ""}
             ${p.rating != null ? `<div class="p-card-rating"><span class="stars">${"★".repeat(filled)}${"☆".repeat(5 - filled)}</span><span class="rating-val">${p.rating.toFixed(1)}</span></div>` : ""}
           </div>
-          <h3 class="p-card-name">${escAttr(p.name)}</h3>
-          <p class="desc">${escAttr(p.cardDesc)}</p>
-          <div class="p-stock p-stock--${av.state}"><span class="p-stock-dot"></span>${escAttr(av.label)}</div>
           <div class="product-footer-row">
             <div class="p-pricing">${priceBlock}</div>
             <div class="p-actions-group">

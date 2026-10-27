@@ -5119,6 +5119,19 @@ body.theme-maderin .nav-cart.bump { animation: cartBump .45s ease; }
 body.theme-maderin .compact-card .product-footer-row { flex-direction: column; align-items: stretch; gap: 10px; }
 body.theme-maderin .compact-card .p-actions-group { width: 100%; }
 body.theme-maderin .compact-card .p-actions-group .btn { flex: 1; justify-content: center; padding-top: 9px; padding-bottom: 9px; }
+
+/* Tarjeta compacta de Maderin: título, evaluación, precios y botones */
+body.theme-maderin .compact-thumb { aspect-ratio: 4 / 3; }
+body.theme-maderin .compact-body { padding: 12px 14px 14px; gap: 0; }
+body.theme-maderin .compact-card .p-card-name { font-size: 15px; line-height: 1.25; margin: 0 0 4px; }
+body.theme-maderin .compact-card .p-card-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+body.theme-maderin .compact-card .p-card-meta:empty { display: none; }
+body.theme-maderin .compact-card .p-card-dims { font-size: 12px; line-height: 1.3; color: var(--ink-soft); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body.theme-maderin .compact-card .p-card-rating { margin-left: auto; flex-shrink: 0; }
+body.theme-maderin .compact-card .product-footer-row { padding-top: 8px; gap: 8px; }
+body.theme-maderin .compact-card .p-pricing { flex-direction: row; align-items: baseline; flex-wrap: wrap; gap: 4px 8px; }
+body.theme-maderin .compact-card .p-actions-group { gap: 6px; }
+body.theme-maderin .compact-card .p-actions-group .btn { padding: 7px 8px; font-size: 12px; white-space: nowrap; }
 .cart-fields label { min-width: 0; }
 .cart-fields input { width: 100%; box-sizing: border-box; }
 .cart-body { min-height: 120px; }

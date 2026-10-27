@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sour+Gummy:wght@500;700&family=Nunito:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+body{ background:#FDF8F4; color:#2D3466; font-family:'Nunito',sans-serif; }
+.photo{ position:absolute; right:0; top:0; width:500px; height:630px; background:#F2EDE4 url('../../public/maderin/hero.png') -830px 0 / auto 630px no-repeat; }
+.photo::before{ content:""; position:absolute; left:-1px; top:0; bottom:0; width:90px; background:linear-gradient(90deg,#FDF8F4,rgba(253,248,244,0)); }
+.logo{ position:absolute; left:64px; top:52px; width:330px; }
+h1{ position:absolute; left:72px; top:216px; width:610px; font-family:'Sour Gummy',sans-serif; font-weight:700; font-size:64px; line-height:1.08; }
+h1 span{ color:#415AA5; position:relative; white-space:nowrap; z-index:0; }
+h1 span::after{ content:""; position:absolute; left:-4px; right:-4px; bottom:2px; height:16px; background:#FFD966; z-index:-1; border-radius:8px; }
+.dots{ position:absolute; left:72px; bottom:58px; display:flex; gap:14px; align-items:center; }
+.dots b{ width:22px; height:22px; border-radius:50%; }
+.dots span{ margin-left:10px; font-size:24px; color:#6B7199; }
+</style></head>
+<body>
+<div class="photo"></div>
+<img class="logo" src="../../public/maderin/logo-maderin.png" alt="">
+<h1>Mobiliario infantil que fomenta su <span>autonomía</span></h1>
+<div class="dots">
+  <b style="background:#415AA5"></b><b style="background:#E8CA29"></b><b style="background:#BC539C"></b><b style="background:#F9B233"></b><b style="background:#72C6CE"></b><b style="background:#E0338A"></b><b style="background:#B0CD40"></b>
+  <span>Camas · Closets · Organizadores</span>
+</div>
+</body></html>

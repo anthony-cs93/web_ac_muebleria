@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "node server.js",
     "build": "echo 'Build complete'",
-    "lint": "node -c assets/main.js assets/catalog.js assets/admin.js server.js api/_lib.js api/catalog.js api/admin.js scripts/optimize-images.mjs",
-    "optimize:images": "node scripts/optimize-images.mjs",
+    "lint": "node -c assets/main.js assets/catalog.js assets/admin.js server.js api/_lib.js api/catalog.js api/admin.js scripts/optimize-images.mjs scripts/build-brand-assets.mjs",
+    "optimize:images": "node scripts/optimize-images.mjs scripts/build-brand-assets.mjs",
+    "build:brand": "node scripts/build-brand-assets.mjs",
     "start": "node server.js"
   },
   "dependencies": {

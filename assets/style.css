@@ -3654,6 +3654,19 @@ body.theme-ac .process-timeline-container {
   border-color: rgba(192, 86, 33, 0.2);
 }
 
+/* Evaluación compacta sobre la foto (esquina inferior derecha) */
+.compact-thumb .p-card-rating {
+  position: absolute; right: 8px; bottom: 8px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 7px; border-radius: 999px;
+  background: rgba(255, 255, 255, .82);
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
+  line-height: 1;
+}
+.compact-thumb .p-card-rating .stars { font-size: 11px; letter-spacing: 0; }
+.compact-thumb .p-card-rating .rating-val { font-size: 11px; }
+
 /* Quick Hint Pill */
 .thumb-quick-hint {
   position: absolute;
@@ -5095,13 +5108,11 @@ body.theme-maderin .compact-card .p-actions-group { width: 100%; }
 body.theme-maderin .compact-card .p-actions-group .btn { flex: 1; justify-content: center; padding-top: 9px; padding-bottom: 9px; }
 
 /* Tarjeta compacta de Maderin: título, evaluación, precios y botones */
+body.theme-maderin .compact-thumb .sample-badge { top: 8px; left: 8px; right: auto; max-width: calc(100% - 16px); width: fit-content; font-size: 9px; letter-spacing: .03em; padding: 3px 8px; }
 body.theme-maderin .compact-thumb { aspect-ratio: 4 / 3; }
 body.theme-maderin .compact-body { padding: 12px 14px 14px; gap: 0; }
 body.theme-maderin .compact-card .p-card-name { font-size: 15px; line-height: 1.25; margin: 0 0 4px; }
-body.theme-maderin .compact-card .p-card-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
-body.theme-maderin .compact-card .p-card-meta:empty { display: none; }
-body.theme-maderin .compact-card .p-card-dims { font-size: 12px; line-height: 1.3; color: var(--ink-soft); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-body.theme-maderin .compact-card .p-card-rating { margin-left: auto; flex-shrink: 0; }
+body.theme-maderin .compact-card .p-card-dims { font-size: 12px; line-height: 1.3; color: var(--ink-soft); margin: 0 0 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 body.theme-maderin .compact-card .product-footer-row { padding-top: 8px; gap: 8px; }
 body.theme-maderin .compact-card .p-pricing { flex-direction: row; align-items: baseline; flex-wrap: wrap; gap: 4px 8px; }
 body.theme-maderin .compact-card .p-actions-group { gap: 6px; }
@@ -5183,9 +5194,7 @@ body.theme-cdm .cdm-swatch { width: 16px; height: 16px; border-radius: 50%; bord
 body.theme-cdm .compact-thumb { aspect-ratio: 4 / 3; }
 body.theme-cdm .compact-body { padding: 12px 14px 14px; gap: 0; }
 body.theme-cdm .compact-card .p-card-name { font-size: 15px; line-height: 1.25; margin: 0 0 4px; }
-body.theme-cdm .compact-card .p-card-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
-body.theme-cdm .compact-card .p-card-dims { font-size: 12px; line-height: 1.3; color: var(--ink-soft); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-body.theme-cdm .compact-card .p-card-rating { margin-left: auto; flex-shrink: 0; }
+body.theme-cdm .compact-card .p-card-dims { font-size: 12px; line-height: 1.3; color: var(--ink-soft); margin: 0 0 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 body.theme-cdm .compact-card .cdm-dots { margin: 0 0 8px; gap: 5px; }
 body.theme-cdm .compact-card .cdm-dot-label { display: none; }
 body.theme-cdm .compact-card .product-footer-row { padding-top: 8px; gap: 8px; }
@@ -5208,7 +5217,12 @@ body.theme-cdm .compact-thumb .sample-badge {
   font-family: var(--font-body); font-size: 11px; font-weight: 800; letter-spacing: 0; text-transform: none;
   padding: 4px 10px; border-radius: 999px;
 }
+body.theme-cdm .compact-thumb .sample-badge { top: 8px; left: 8px; font-size: 10px; padding: 3px 8px; }
 body.theme-cdm .compact-thumb .sample-badge.promo { background: #ffecd9; color: #c05621; border-color: rgba(192, 86, 33, .2); }
+@media (max-width: 640px) {
+  body.theme-maderin .compact-thumb .sample-badge { top: 6px; left: 6px; max-width: calc(100% - 12px); font-size: 8px; letter-spacing: .02em; padding: 2px 6px; }
+  body.theme-cdm .compact-thumb .sample-badge { top: 6px; left: 6px; max-width: calc(100% - 12px); font-size: 9px; padding: 2px 6px; }
+}
 body.theme-cdm .compact-thumb .thumb-icon-wrap svg { width: 100%; height: 100%; }
 body.theme-cdm .thumb-quick-hint { background: rgba(46, 47, 26, .18); }
 body.theme-cdm .compact-body { padding: 16px; gap: 0; }
@@ -5354,6 +5368,20 @@ body.theme-cdm .ecom-modal-header { padding-right: 44px; }
   body.theme-cdm .hero-img-badges > div{ flex:1; }
   body.theme-maderin .hero-img-badges b,
   body.theme-cdm .hero-img-badges b{ display:block; color:#fff; font-family:var(--font-display); font-size:13px; font-weight:700; margin-bottom:1px; }
+
+  /* Tienda: sin texto de apoyo y 2 productos por fila */
+  body.theme-maderin .catalog-header-row > .section-lede{ display:none; }
+  body.theme-maderin .compact-ecom-grid,
+  body.theme-cdm .compact-ecom-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); gap:12px; }
+
+  body.theme-maderin .compact-card .p-actions-group,
+  body.theme-cdm .compact-card .p-actions-group{ flex-direction:column; gap:6px; }
+  body.theme-maderin .compact-card .p-actions-group .btn,
+  body.theme-cdm .compact-card .p-actions-group .btn{ width:100%; justify-content:center; }
+  body.theme-maderin .compact-body,
+  body.theme-cdm .compact-body{ padding:10px 10px 12px; }
+  body.theme-maderin .compact-card .p-card-name,
+  body.theme-cdm .compact-card .p-card-name{ font-size:14px; }
 
   /* La tienda arranca justo debajo del título */
   body.theme-maderin #productos,

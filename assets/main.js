@@ -1361,7 +1361,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const av = getAvailability(p);
       const priced = p.price != null;
       const soldOut = av.state === "out";
-      const filled = p.rating != null ? Math.min(5, Math.max(1, Math.round(p.rating))) : 0;
       const dims = p.dimensions && !/^por confirmar$/i.test(p.dimensions.trim()) ? p.dimensions.trim() : "";
       const thumb = ACCatalog.hasPhoto(p)
         ? `<img class="thumb-photo" src="${escAttr(photoUrl(p, 480))}" alt="${escAttr(p.name)}" loading="lazy" decoding="async">`
@@ -1376,14 +1375,12 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="product-thumb compact-thumb">
           ${p.badge ? `<span class="sample-badge${ACCatalog.isPromo(p.badge) ? " promo" : ""}">${escAttr(p.badge)}</span>` : ""}
           ${thumb}
+          ${p.rating != null ? `<div class="p-card-rating" aria-label="${p.rating.toFixed(1)} de 5 estrellas"><span class="stars" aria-hidden="true">★</span><span class="rating-val">${p.rating.toFixed(1)}</span></div>` : ""}
           <div class="thumb-quick-hint"><span class="quick-hint-pill">${SEARCH_ICON} Ficha rápida</span></div>
         </div>
         <div class="product-body compact-body">
           <h3 class="p-card-name">${escAttr(p.name)}</h3>
-          <div class="p-card-meta">
-            ${dims ? `<div class="p-card-dims" title="${escAttr(dims)}">${escAttr(dims)}</div>` : ""}
-            ${p.rating != null ? `<div class="p-card-rating"><span class="stars">${"★".repeat(filled)}${"☆".repeat(5 - filled)}</span><span class="rating-val">${p.rating.toFixed(1)}</span></div>` : ""}
-          </div>
+          ${dims ? `<div class="p-card-dims" title="${escAttr(dims)}">${escAttr(dims)}</div>` : ""}
           <div class="product-footer-row">
             <div class="p-pricing">${priceBlock}</div>
             <div class="p-actions-group">
@@ -1551,21 +1548,18 @@ document.addEventListener("DOMContentLoaded", () => {
       const action = !priced
         ? `<button type="button" class="btn btn-buy btn-consult" aria-label="Consultar precio por WhatsApp">${WA_ICON}<span>Consultar</span></button>`
         : `<button type="button" class="btn btn-buy btn-add-cart" aria-label="Agregar ${esc(p.name)} al carrito"${soldOut ? " disabled" : ""}>${CART_ICON}<span>${soldOut ? "Agotado" : "Agregar"}</span></button>`;
-      const filled = p.rating != null ? Math.min(5, Math.max(1, Math.round(p.rating))) : 0;
-      const rating = p.rating != null ? `<div class="p-card-rating"><span class="stars">${"★".repeat(filled)}${"☆".repeat(5 - filled)}</span><span class="rating-val">${p.rating.toFixed(1)}</span></div>` : "";
+      const rating = p.rating != null ? `<div class="p-card-rating" aria-label="${p.rating.toFixed(1)} de 5 estrellas"><span class="stars" aria-hidden="true">★</span><span class="rating-val">${p.rating.toFixed(1)}</span></div>` : "";
       const dots = p.colors.length ? `<div class="cdm-dots" role="group" aria-label="Color de ${esc(p.name)}">${p.colors.map((c, i) => `<button type="button" class="cdm-dot${i === 0 ? " active" : ""}" data-color="${esc(c.name)}" aria-pressed="${i === 0}" aria-label="${esc(c.name)}" title="${esc(c.name)}" style="--dot:${esc(c.hex)}"></button>`).join("")}<span class="cdm-dot-label">${esc(p.colors[0].name)}</span></div>` : "";
       return `<article class="product-card compact-card reveal in-view" data-id="${esc(p.id)}" data-category="${esc(p.category)}" role="button" tabindex="0" aria-label="Ver detalles de ${esc(p.name)}">
         <div class="product-thumb compact-thumb">
           ${p.badge ? `<span class="sample-badge${ACCatalog.isPromo(p.badge) ? " promo" : ""}">${esc(p.badge)}</span>` : ""}
           ${thumb}
+          ${rating}
           <div class="thumb-quick-hint"><span class="quick-hint-pill">${SEARCH_ICON} Ficha rápida</span></div>
         </div>
         <div class="product-body compact-body">
           <h3 class="p-card-name">${esc(p.name)}</h3>
-          <div class="p-card-meta">
-            ${p.specs.length ? `<div class="p-card-dims" title="${esc(p.specs[0])}">${esc(p.specs[0])}</div>` : ""}
-            ${rating}
-          </div>
+          ${p.specs.length ? `<div class="p-card-dims" title="${esc(p.specs[0])}">${esc(p.specs[0])}</div>` : ""}
           ${dots}
           <div class="product-footer-row">
             <div class="p-pricing">${priceBlock}</div>

@@ -14,7 +14,7 @@
 
   const state = {
     shop: "maderin",
-    catalog: { maderin: [], cdm: [] },
+    catalog: { maderin: [], cdm: [], textures: [] },
     saved: "",
     search: "",
     storage: "blob"
@@ -130,6 +130,7 @@
       : "Borra la búsqueda para poder reordenar.";
     $("#countMaderin").textContent = state.catalog.maderin.length;
     $("#countCdm").textContent = state.catalog.cdm.length;
+    $("#countTex").textContent = state.catalog.textures.length;
     refreshDirty();
   }
 
@@ -260,15 +261,68 @@
     $("#photoRemove").hidden = !C.hasPhoto(p);
   }
 
-  function colorRow(c = { name: "", hex: "#d8bc94" }) {
+  // ---------------------------------------------------------------- Texturas de un producto
+  const texBg = (id) => { const t = C.textureOf({ tex: id }); return t ? `url("${t.img}")` : ""; };
+  const texOptions = (current) => ['<option value="">Elegir textura…</option>']
+    .concat(state.catalog.textures.map((t) => `<option value="${esc(t.id)}"${t.id === current ? " selected" : ""}>${esc(t.name)}</option>`)).join("");
+
+  function colorRow(c = { name: "", hex: "#E5DCCB" }) {
     const row = document.createElement("div");
     row.className = "color-row";
-    row.innerHTML = `<input type="color" value="${esc(/^#[0-9a-f]{6}$/i.test(c.hex) ? c.hex : "#d8bc94")}" aria-label="Color">
-      <input type="text" value="${esc(c.name)}" maxlength="40" placeholder="Nombre del color" aria-label="Nombre del color">
-      <button type="button" class="icon-btn" aria-label="Quitar color">✕</button>`;
-    row.querySelector("button").addEventListener("click", () => row.remove());
+    row.dataset.hex = /^#[0-9a-f]{3,8}$/i.test(c.hex) ? c.hex : "#E5DCCB";
+    row.innerHTML = `<span class="tex-dot" aria-hidden="true"></span>
+      <select aria-label="Textura">${texOptions(c.tex)}</select>
+      <input type="text" value="${esc(c.name)}" maxlength="40" placeholder="Nombre" aria-label="Nombre de la textura">
+      <button type="button" class="icon-btn" aria-label="Quitar textura">✕</button>`;
+    const sel = row.querySelector("select");
+    const nameInput = row.querySelector('input[type="text"]');
+    row.dataset.auto = (state.catalog.textures.find((t) => t.id === c.tex) || {}).name === c.name ? c.name : "";
+    const paintDot = () => {
+      const dot = row.querySelector(".tex-dot");
+      dot.style.backgroundImage = texBg(sel.value);
+      dot.style.backgroundColor = sel.value ? "" : row.dataset.hex;
+    };
+    paintDot();
+    sel.addEventListener("change", () => {
+      const t = state.catalog.textures.find((x) => x.id === sel.value);
+      if (t && (!nameInput.value.trim() || nameInput.value === row.dataset.auto)) { nameInput.value = t.name; row.dataset.auto = t.name; }
+      paintDot();
+      previewIdx = $$(".color-row", editor).indexOf(row);
+      renderTexPreview();
+    });
+    nameInput.addEventListener("input", renderTexPreview);
+    row.querySelector("button").addEventListener("click", () => { row.remove(); previewIdx = 0; renderTexPreview(); });
     return row;
   }
+
+  let previewIdx = 0;
+  // Vista previa: producto + textura elegida en grande + círculos como los ve el cliente
+  function renderTexPreview() {
+    if (!editing) return;
+    const rows = $$(".color-row", editor).map((row) => ({
+      tex: row.querySelector("select").value, hex: row.dataset.hex, name: row.querySelector('input[type="text"]').value.trim()
+    }));
+    if (previewIdx >= rows.length) previewIdx = 0;
+    const cur = rows[previewIdx];
+    const p = editing.product;
+    $("#texPreviewProd").innerHTML = C.hasPhoto(p) ? `<img src="${esc(C.photoUrl(p, 900, state.shop))}" alt="">` : p.svg;
+    const tile = $("#texPreviewTile");
+    tile.style.backgroundImage = cur ? texBg(cur.tex) : "";
+    tile.style.backgroundColor = cur && !cur.tex ? cur.hex : "";
+    tile.hidden = !cur;
+    $("#texPreviewName").textContent = cur ? (cur.name || (cur.tex ? "Sin nombre" : "Elige una textura")) : "Sin texturas";
+    $("#texPreviewHint").textContent = cur
+      ? (cur.tex ? "Haz clic en los círculos para comparar. Así los verá el cliente." : "Esta opción aún no tiene textura; elige una de la lista.")
+      : "Agrega una textura para ver cómo se muestra.";
+    $("#texPreviewDots").innerHTML = rows.map((r, i) =>
+      `<button type="button" class="tex-chip${i === previewIdx ? " active" : ""}" data-i="${i}" title="${esc(r.name)}" aria-label="${esc(r.name || "Textura")}" aria-pressed="${i === previewIdx}" style="${r.tex ? `background-image:${esc(texBg(r.tex))}` : `background-color:${esc(r.hex)}`}"></button>`).join("");
+  }
+  $("#texPreviewDots").addEventListener("click", (e) => {
+    const b = e.target.closest(".tex-chip");
+    if (!b) return;
+    previewIdx = Number(b.dataset.i);
+    renderTexPreview();
+  });
 
   function updateDiscountPreview() {
     const price = f("price").value === "" ? null : Number(f("price").value);
@@ -323,7 +377,9 @@
     const colorList = $("#colorList");
     colorList.innerHTML = "";
     base.colors.filter((c) => c.name !== "Por definir").forEach((c) => colorList.appendChild(colorRow(c)));
+    previewIdx = 0;
     renderPhotoPreview(base);
+    renderTexPreview();
     $("#photoMsg").textContent = "JPG, PNG o WebP. Se optimiza sola para la web.";
     updateDiscountPreview();
     editor.showModal();
@@ -358,10 +414,12 @@
       out.unit = f("unit").value.trim() || "unidad";
       out.specs = [f("spec1").value.trim(), f("spec2").value.trim()].filter(Boolean);
     }
-    out.colors = $$(".color-row", editor).map((row) => ({
-      hex: row.querySelector('input[type="color"]').value,
-      name: row.querySelector('input[type="text"]').value.trim()
-    })).filter((c) => c.name);
+    out.colors = $$(".color-row", editor).map((row) => {
+      const c = { hex: row.dataset.hex, name: row.querySelector('input[type="text"]').value.trim() };
+      const tex = row.querySelector("select").value;
+      if (tex) c.tex = tex;
+      return c;
+    }).filter((c) => c.name);
     // El icono de respaldo sigue a la categoría mientras no haya foto
     if (!C.hasPhoto(out)) out.svg = C.iconSvg(out.category);
     return out;
@@ -403,7 +461,9 @@
   $("#addColor").addEventListener("click", () => {
     const row = colorRow();
     $("#colorList").appendChild(row);
-    row.querySelector('input[type="text"]').focus();
+    previewIdx = $$(".color-row", editor).length - 1;
+    renderTexPreview();
+    row.querySelector("select").focus();
   });
 
   // Foto: se reduce en el navegador (480 y 900 px, WebP) y se sube al almacenamiento
@@ -443,6 +503,7 @@
       Object.assign(editing.product, { img480: res.img480, img900: res.img900, photo: undefined });
       delete editing.product.photo;
       renderPhotoPreview(editing.product);
+      renderTexPreview();
       msg.textContent = "Foto lista. Aplica los cambios y publica para verla en la tienda.";
     } catch (err) {
       msg.textContent = err.status === 401 ? "Tu sesión venció. Vuelve a entrar." : `No se pudo subir: ${err.message}`;
@@ -454,7 +515,102 @@
     for (const k of ["img480", "img900", "photo"]) delete editing.product[k];
     editing.product.svg = C.iconSvg(f("category").value);
     renderPhotoPreview(editing.product);
+    renderTexPreview();
     $("#photoMsg").textContent = "Foto quitada. Se mostrará el icono de la categoría.";
+  });
+
+  // ---------------------------------------------------------------- Biblioteca de texturas (compartida)
+  const MAX_TEX = 10;
+  const texDialog = $("#texDialog");
+  const syncTextures = () => C.setTextures(state.catalog.textures);
+  const texUsage = (id) => [...state.catalog.maderin, ...state.catalog.cdm].filter((p) => p.colors.some((c) => c.tex === id)).length;
+
+  function renderTexLib() {
+    const items = state.catalog.textures;
+    $("#texGrid").innerHTML = items.map((t) => `<li class="tex-card" data-id="${esc(t.id)}">
+      <div class="tex-img" style="background-image:url(&quot;${esc(t.img)}&quot;)"></div>
+      <input type="text" value="${esc(t.name)}" maxlength="40" aria-label="Nombre de la textura">
+      <button type="button" data-act="del">Eliminar</button>
+    </li>`).join("") || '<li class="muted small">Aún no hay texturas. Sube la primera.</li>';
+    $("#countTex").textContent = items.length;
+    $("#texUploadBtn").hidden = items.length >= MAX_TEX;
+    $("#texMsg").textContent = items.length >= MAX_TEX
+      ? "Llegaste al máximo de 10 texturas. Elimina una para subir otra."
+      : `${items.length} de ${MAX_TEX}. JPG, PNG o WebP; se recorta a cuadrado y se optimiza sola.`;
+    refreshDirty();
+  }
+  // Tras cambiar la biblioteca, las listas desplegables del editor (si está abierto) se actualizan
+  function refreshEditorTextures() {
+    if (!editing) return;
+    $$(".color-row", editor).forEach((row) => {
+      const sel = row.querySelector("select");
+      const cur = state.catalog.textures.some((t) => t.id === sel.value) ? sel.value : "";
+      sel.innerHTML = texOptions(cur);
+      const dot = row.querySelector(".tex-dot");
+      dot.style.backgroundImage = texBg(cur);
+      dot.style.backgroundColor = cur ? "" : row.dataset.hex;
+    });
+    renderTexPreview();
+  }
+  const openTexLib = () => { renderTexLib(); texDialog.showModal(); };
+  const closeTexLib = () => { texDialog.close(); refreshEditorTextures(); renderRows(); };
+  $("#texBtn").addEventListener("click", openTexLib);
+  $("#openTexLib").addEventListener("click", openTexLib);
+  $("#texClose").addEventListener("click", closeTexLib);
+  $("#texDone").addEventListener("click", closeTexLib);
+  texDialog.addEventListener("cancel", () => setTimeout(() => { refreshEditorTextures(); renderRows(); }));
+  texDialog.addEventListener("click", (e) => { if (e.target === texDialog) closeTexLib(); });
+  $("#texGrid").addEventListener("change", (e) => {
+    const card = e.target.closest(".tex-card");
+    const t = card && state.catalog.textures.find((x) => x.id === card.dataset.id);
+    if (!t || e.target.tagName !== "INPUT") return;
+    t.name = e.target.value.trim() || t.name;
+    e.target.value = t.name;
+    refreshDirty();
+  });
+  $("#texGrid").addEventListener("click", (e) => {
+    const btn = e.target.closest('[data-act="del"]');
+    const card = btn && btn.closest(".tex-card");
+    if (!card) return;
+    const t = state.catalog.textures.find((x) => x.id === card.dataset.id);
+    const n = texUsage(t.id);
+    if (!confirm(n ? `"${t.name}" se usa en ${n} producto(s). Si la eliminas, esos productos mostrarán un color liso en su lugar. ¿Eliminar?` : `¿Eliminar la textura "${t.name}"?`)) return;
+    state.catalog.textures = state.catalog.textures.filter((x) => x.id !== t.id);
+    syncTextures();
+    renderTexLib();
+  });
+  function cropSquareDataUrl(img, size) {
+    const side = Math.min(img.naturalWidth, img.naturalHeight);
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = Math.min(size, side);
+    const ctx = canvas.getContext("2d");
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(img, (img.naturalWidth - side) / 2, (img.naturalHeight - side) / 2, side, side, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL("image/webp", 0.85);
+  }
+  $("#texInput").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    e.target.value = "";
+    if (!file) return;
+    if (state.catalog.textures.length >= MAX_TEX) return;
+    const msg = $("#texMsg");
+    msg.textContent = "Subiendo textura…";
+    try {
+      const name = file.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ").trim().slice(0, 40) || "Textura";
+      const base = slugify(name) || "textura";
+      let id = base;
+      const taken = new Set(state.catalog.textures.map((t) => t.id));
+      for (let n = 2; taken.has(id); n++) id = `${base}-${n}`;
+      const img = await loadImage(file);
+      const res = await api("upload", { method: "POST", body: { kind: "texture", id, img: cropSquareDataUrl(img, 256) } });
+      state.catalog.textures.push({ id, name, img: res.img });
+      syncTextures();
+      renderTexLib();
+      toast("Textura subida. Ponle nombre y publica para verla en la tienda.");
+    } catch (err) {
+      msg.textContent = err.status === 401 ? "Tu sesión venció. Vuelve a entrar." : `No se pudo subir: ${err.message}`;
+      if (err.status === 401) { texDialog.close(); showLogin(true); }
+    }
   });
 
   // ---------------------------------------------------------------- Nuevo, restaurar, descartar, publicar
@@ -472,6 +628,7 @@
   $("#discardBtn").addEventListener("click", () => {
     if (!confirm("¿Descartar todos los cambios sin publicar?")) return;
     state.catalog = JSON.parse(state.saved);
+    syncTextures();
     renderRows();
   });
 
@@ -480,11 +637,13 @@
     btn.disabled = true;
     $("#saveStatus").textContent = "Publicando…";
     try {
-      const res = await api("save", { method: "POST", body: { maderin: state.catalog.maderin, cdm: state.catalog.cdm } });
+      const res = await api("save", { method: "POST", body: { maderin: state.catalog.maderin, cdm: state.catalog.cdm, textures: state.catalog.textures } });
       state.catalog = {
         maderin: C.normalize(res.catalog.maderin, "maderin"),
-        cdm: C.normalize(res.catalog.cdm, "cdm")
+        cdm: C.normalize(res.catalog.cdm, "cdm"),
+        textures: res.catalog.textures || []
       };
+      syncTextures();
       state.saved = snapshot();
       renderRows();
       toast("Publicado. La tienda ya muestra los cambios.");
@@ -582,8 +741,10 @@
       try { remote = await api("catalog"); } catch (e) { /* usa los valores originales */ }
       state.catalog = {
         maderin: remote && Array.isArray(remote.maderin) ? C.normalize(remote.maderin, "maderin") : C.defaultsFor("maderin"),
-        cdm: remote && Array.isArray(remote.cdm) ? C.normalize(remote.cdm, "cdm") : C.defaultsFor("cdm")
+        cdm: remote && Array.isArray(remote.cdm) ? C.normalize(remote.cdm, "cdm") : C.defaultsFor("cdm"),
+        textures: remote && Array.isArray(remote.textures) ? remote.textures : []
       };
+      syncTextures();
       state.saved = snapshot();
     }
     $("#loginView").hidden = true;

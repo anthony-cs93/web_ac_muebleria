@@ -78,6 +78,22 @@
   const str = (v, fallback = "") => (typeof v === "string" ? v : fallback);
   const num = (v) => (v === null || v === undefined || v === "" || !Number.isFinite(Number(v)) || Number(v) < 0 ? null : Number(v));
 
+  // Colores = texturas de la biblioteca compartida (tex = id) con un color liso de respaldo (hex)
+  const normColor = (c) => {
+    const out = { name: String(c.name), hex: /^#[0-9a-f]{3,8}$/i.test(c.hex) ? c.hex : "#E5DCCB" };
+    if (typeof c.tex === "string" && c.tex) out.tex = c.tex;
+    return out;
+  };
+  let textures = [];
+  const setTextures = (list) => { textures = Array.isArray(list) ? list.filter((t) => t && t.id && t.img) : []; };
+  const getTextures = () => textures;
+  const textureOf = (c) => (c && c.tex ? textures.find((t) => t.id === c.tex) || null : null);
+  // Valor CSS `background` del círculo de un color: textura si existe, si no el color liso
+  const swatchBg = (c) => {
+    const t = textureOf(c);
+    return t ? `url("${t.img}") center/cover no-repeat, ${c.hex}` : c.hex;
+  };
+
   function normalize(list, shop) {
     const cfg = SHOPS[shop];
     const seen = new Set();
@@ -105,11 +121,11 @@
         p.sku = str(p.sku).trim() || null;
         for (const k of ["dimensions", "material", "ageRange", "finish"]) p[k] = str(p[k]).trim() || "Por confirmar";
         const colors = Array.isArray(p.colors) ? p.colors.filter((c) => c && c.name) : [];
-        p.colors = colors.length ? colors.map((c) => ({ name: String(c.name), hex: /^#[0-9a-f]{3,8}$/i.test(c.hex) ? c.hex : "#E5DCCB" })) : [{ name: "Por definir", hex: "#E5DCCB" }];
+        p.colors = colors.length ? colors.map(normColor) : [{ name: "Por definir", hex: "#E5DCCB" }];
       } else {
         p.specs = (Array.isArray(p.specs) ? p.specs : []).map((s) => str(s).trim()).filter(Boolean);
         p.unit = str(p.unit).trim() || "unidad";
-        p.colors = (Array.isArray(p.colors) ? p.colors : []).filter((c) => c && c.name).map((c) => ({ name: String(c.name), hex: /^#[0-9a-f]{3,8}$/i.test(c.hex) ? c.hex : "#E5DCCB" }));
+        p.colors = (Array.isArray(p.colors) ? p.colors : []).filter((c) => c && c.name).map(normColor);
       }
       return p;
     });
@@ -160,9 +176,10 @@
 
   async function load(shop) {
     const remote = await fetchRemote();
+    if (remote) setTextures(remote.textures);
     if (remote && Array.isArray(remote[shop])) return normalize(remote[shop], shop);
     return defaultsFor(shop);
   }
 
-  window.ACCatalog = { DEFAULTS, SHOPS, BADGES, ICONS, load, defaultsFor, normalize, iconSvg, hasPhoto, photoUrl, stockInfo, isPromo };
+  window.ACCatalog = { DEFAULTS, SHOPS, BADGES, ICONS, load, defaultsFor, normalize, iconSvg, hasPhoto, photoUrl, stockInfo, isPromo, setTextures, getTextures, textureOf, swatchBg };
 })();

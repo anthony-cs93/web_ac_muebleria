@@ -1228,7 +1228,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = `color-swatch-btn ${i === 0 ? "active" : ""}`;
-          btn.innerHTML = `<span class="swatch-circle" style="background: ${color.hex};"></span><span>${color.name}</span>`;
+          btn.innerHTML = `<span class="swatch-circle${ACCatalog.textureOf(color) ? " is-tex" : ""}" style="background: ${ACCatalog.swatchBg(color)};"></span><span>${color.name}</span>`;
           btn.addEventListener("click", () => {
             modalColorSwatches.querySelectorAll(".color-swatch-btn").forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
@@ -1549,7 +1549,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ? `<button type="button" class="btn btn-buy btn-consult" aria-label="Consultar precio por WhatsApp">${WA_ICON}<span>Consultar</span></button>`
         : `<button type="button" class="btn btn-buy btn-add-cart" aria-label="Agregar ${esc(p.name)} al carrito"${soldOut ? " disabled" : ""}>${CART_ICON}<span>${soldOut ? "Agotado" : "Agregar"}</span></button>`;
       const rating = p.rating != null ? `<div class="p-card-rating" aria-label="${p.rating.toFixed(1)} de 5 estrellas"><span class="stars" aria-hidden="true">★</span><span class="rating-val">${p.rating.toFixed(1)}</span></div>` : "";
-      const dots = p.colors.length ? `<div class="cdm-dots" role="group" aria-label="Color de ${esc(p.name)}">${p.colors.map((c, i) => `<button type="button" class="cdm-dot${i === 0 ? " active" : ""}" data-color="${esc(c.name)}" aria-pressed="${i === 0}" aria-label="${esc(c.name)}" title="${esc(c.name)}" style="--dot:${esc(c.hex)}"></button>`).join("")}<span class="cdm-dot-label">${esc(p.colors[0].name)}</span></div>` : "";
+      const dots = p.colors.length ? `<div class="cdm-dots" role="group" aria-label="Color de ${esc(p.name)}">${p.colors.map((c, i) => `<button type="button" class="cdm-dot${i === 0 ? " active" : ""}" data-color="${esc(c.name)}" aria-pressed="${i === 0}" aria-label="${esc(c.name)}" title="${esc(c.name)}" style="background:${esc(ACCatalog.swatchBg(c))}"></button>`).join("")}<span class="cdm-dot-label">${esc(p.colors[0].name)}</span></div>` : "";
       return `<article class="product-card compact-card reveal in-view" data-id="${esc(p.id)}" data-category="${esc(p.category)}" role="button" tabindex="0" aria-label="Ver detalles de ${esc(p.name)}">
         <div class="product-thumb compact-thumb">
           ${p.badge ? `<span class="sample-badge${ACCatalog.isPromo(p.badge) ? " promo" : ""}">${esc(p.badge)}</span>` : ""}
@@ -1641,7 +1641,7 @@ document.addEventListener("DOMContentLoaded", () => {
       el.colorGroup.hidden = !hasColors;
       el.colorInd.hidden = !hasColors || photo;
       el.colorLabel.textContent = el.colorText.textContent = modalColor;
-      el.swatches.innerHTML = p.colors.map(c => `<button type="button" class="color-swatch-btn${c.name === modalColor ? " active" : ""}" data-color="${esc(c.name)}"><span class="swatch-circle" style="background:${esc(c.hex)}"></span><span>${esc(c.name)}</span></button>`).join("");
+      el.swatches.innerHTML = p.colors.map(c => `<button type="button" class="color-swatch-btn${c.name === modalColor ? " active" : ""}" data-color="${esc(c.name)}"><span class="swatch-circle${ACCatalog.textureOf(c) ? " is-tex" : ""}" style="background:${esc(ACCatalog.swatchBg(c))}"></span><span>${esc(c.name)}</span></button>`).join("");
 
       el.specs.innerHTML = specCards(p);
       updateButtons(p);

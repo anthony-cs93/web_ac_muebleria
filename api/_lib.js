@@ -214,10 +214,28 @@ export function sanitizeProduct(raw, shop) {
   }
   p.colors = (Array.isArray(raw.colors) ? raw.colors : []).slice(0, 12).map((c) => ({
     name: text(c && c.name, 40),
-    hex: /^#[0-9a-f]{3,8}$/i.test(c && c.hex) ? c.hex : '#E5DCCB'
-  })).filter((c) => c.name);
+    hex: /^#[0-9a-f]{3,8}$/i.test(c && c.hex) ? c.hex : '#E5DCCB',
+    tex: safeSlug(c && c.tex)
+  })).filter((c) => c.name).map((c) => { if (c.tex === undefined) delete c.tex; return c; });
   for (const k of Object.keys(p)) if (p[k] === undefined) delete p[k];
   return p;
+}
+
+// Biblioteca de texturas compartida por las dos tiendas (máx. 10)
+export const MAX_TEXTURES = 10;
+export function sanitizeTextures(list) {
+  if (!Array.isArray(list)) throw Object.assign(new Error('Lista de texturas inválida'), { status: 400 });
+  const seen = new Set();
+  const out = [];
+  for (const raw of list.slice(0, MAX_TEXTURES)) {
+    const id = safeSlug(raw && raw.id);
+    const name = text(raw && raw.name, 40);
+    const img = safeUrl(raw && raw.img);
+    if (!id || !name || !img || seen.has(id)) continue;
+    seen.add(id);
+    out.push({ id, name, img });
+  }
+  return out;
 }
 
 export function sanitizeShop(list, shop) {

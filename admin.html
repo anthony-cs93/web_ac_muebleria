@@ -64,6 +64,7 @@
             <button type="button" id="restoreBtn">Restaurar productos originales de la web</button>
           </div>
         </details>
+        <button type="button" class="btn btn-ghost" id="texBtn">Texturas <span class="count" id="countTex"></span></button>
         <button type="button" class="btn btn-primary" id="newBtn">+ Nuevo producto</button>
       </div>
     </div>
@@ -184,12 +185,24 @@
       </fieldset>
 
       <fieldset>
-        <legend>Colores</legend>
-        <p class="muted small" style="margin:0 0 8px">Opcional. Si agregas colores, el cliente elige uno al comprar.</p>
+        <legend>Texturas</legend>
+        <p class="muted small" style="margin:0 0 8px">Opcional. Elige las texturas de la biblioteca compartida (Maderin y Corazón de Madera). El cliente elige una al comprar.</p>
+        <div class="tex-preview" id="texPreview" aria-live="polite">
+          <div class="tex-preview-prod" id="texPreviewProd"></div>
+          <div class="tex-preview-tile" id="texPreviewTile"></div>
+          <div class="tex-preview-info">
+            <strong id="texPreviewName">Sin texturas</strong>
+            <span class="muted small" id="texPreviewHint">Agrega una textura para ver cómo se muestra.</span>
+            <div class="tex-preview-dots" id="texPreviewDots" role="group" aria-label="Así se ven en la tienda"></div>
+          </div>
+        </div>
         <div class="colors">
-          <span class="colors-title">Colores disponibles</span>
+          <span class="colors-title">Texturas disponibles en este producto</span>
           <div id="colorList"></div>
-          <button type="button" class="btn btn-ghost btn-sm" id="addColor">+ Agregar color</button>
+          <div class="colors-actions">
+            <button type="button" class="btn btn-ghost btn-sm" id="addColor">+ Agregar textura</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="openTexLib">Administrar biblioteca</button>
+          </div>
         </div>
       </fieldset>
 
@@ -210,6 +223,23 @@
       <button type="submit" class="btn btn-primary">Aplicar cambios</button>
     </footer>
   </form>
+</dialog>
+
+<!-- ============ BIBLIOTECA DE TEXTURAS (compartida) ============ -->
+<dialog class="editor tex-dialog" id="texDialog" aria-labelledby="texTitle">
+  <div class="editor-head">
+    <h2 id="texTitle">Biblioteca de texturas</h2>
+    <button type="button" class="icon-btn" id="texClose" aria-label="Cerrar">✕</button>
+  </div>
+  <div class="editor-body">
+    <p class="muted small" style="margin:0">Las mismas texturas sirven para Maderin y Corazón de Madera. Máximo 10. Recuerda publicar los cambios para que se vean en la tienda.</p>
+    <ul class="tex-grid" id="texGrid"></ul>
+    <div class="tex-add">
+      <label class="btn btn-ghost file-btn" id="texUploadBtn">+ Subir textura<input type="file" id="texInput" accept="image/jpeg,image/png,image/webp" hidden></label>
+      <span class="muted small" id="texMsg">JPG, PNG o WebP. Se recorta a cuadrado y se optimiza sola.</span>
+    </div>
+  </div>
+  <footer class="editor-foot"><button type="button" class="btn btn-primary" id="texDone">Listo</button></footer>
 </dialog>
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>

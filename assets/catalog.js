@@ -125,6 +125,9 @@
       } else {
         p.specs = (Array.isArray(p.specs) ? p.specs : []).map((s) => str(s).trim()).filter(Boolean);
         p.unit = str(p.unit).trim() || "unidad";
+        p.custom = p.custom && typeof p.custom === "object"
+          ? { label: str(p.custom.label).trim() || "Personalización", hint: str(p.custom.hint).trim(), max: Math.min(200, Math.max(5, Math.round(Number(p.custom.max)) || 60)), required: !!p.custom.required }
+          : null;
         p.colors = (Array.isArray(p.colors) ? p.colors : []).filter((c) => c && c.name).map(normColor);
       }
       return p;

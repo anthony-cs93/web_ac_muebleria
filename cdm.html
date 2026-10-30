@@ -277,7 +277,6 @@
             <span class="price-old" id="cModalOldPrice" hidden></span>
             <span class="price-discount-pill" id="cModalDiscount" hidden></span>
           </div>
-          <span class="price-note">La personalización (nombre, fecha, dedicatoria) se coordina por WhatsApp antes de fabricar.</span>
           <div class="p-stock" id="cModalStock"></div>
         </div>
 
@@ -289,6 +288,12 @@
             <strong id="cModalSelectedColorText"></strong>
           </label>
           <div class="color-swatches-row" id="cModalColorSwatches"></div>
+        </div>
+
+        <div class="ecom-option-group" id="cModalCustomGroup" hidden>
+          <label class="option-label" for="cModalCustomInput"><span id="cModalCustomLabel">Personalización:</span><strong id="cModalCustomReq"></strong></label>
+          <input type="text" class="custom-input" id="cModalCustomInput" autocomplete="off">
+          <div class="custom-meta"><span class="custom-err" id="cModalCustomErr" role="alert" hidden>Escribe este dato para continuar.</span><span class="custom-count" id="cModalCustomCount"></span></div>
         </div>
 
         <div class="ecom-option-group">
@@ -337,7 +342,7 @@
     <div class="cart-fields">
       <label>Tu nombre<input type="text" id="cartName" autocomplete="name" placeholder="Ej. María"></label>
       <label>Distrito de entrega<input type="text" id="cartDistrict" autocomplete="address-level2" placeholder="Ej. Surco"></label>
-      <label class="cart-field-wide">Personalización (nombre, fecha, dedicatoria)<textarea id="cartNotes" rows="2" maxlength="300" placeholder="Ej. Cuadro con el nombre Valentina y fecha 12/03/2026"></textarea></label>
+      <label class="cart-field-wide">Nota adicional (opcional)<textarea id="cartNotes" rows="2" maxlength="300" placeholder="Ej. Es para un regalo, necesito la entrega antes del viernes"></textarea></label>
     </div>
     <div class="cart-total-row"><span>Subtotal</span><strong id="cartSubtotal">S/ 0</strong></div>
     <p class="cart-note">Los detalles personalizados se coordinan por WhatsApp antes de fabricar. El envío también. Pagas por transferencia, Yape o link de pago (Mercado Pago).</p>

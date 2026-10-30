@@ -371,6 +371,13 @@
       f("finish").value = isNew ? "" : (base.finish === "Por confirmar" ? "" : base.finish);
     } else {
       f("unit").value = base.unit;
+      const cu = base.custom;
+      f("customOn").checked = !!cu;
+      f("customLabel").value = cu ? cu.label : "";
+      f("customHint").value = cu ? cu.hint : "";
+      f("customMax").value = cu ? cu.max : "";
+      f("customRequired").checked = !!(cu && cu.required);
+      $("#customFields").hidden = !cu;
       f("spec1").value = base.specs[0] || "";
       f("spec2").value = base.specs[1] || "";
     }
@@ -412,6 +419,9 @@
       out.finish = f("finish").value.trim();
     } else {
       out.unit = f("unit").value.trim() || "unidad";
+      out.custom = f("customOn").checked
+        ? { label: f("customLabel").value.trim() || "Personalización", hint: f("customHint").value.trim(), max: Number(f("customMax").value) || 60, required: f("customRequired").checked }
+        : null;
       out.specs = [f("spec1").value.trim(), f("spec2").value.trim()].filter(Boolean);
     }
     out.colors = $$(".color-row", editor).map((row) => {
@@ -451,6 +461,10 @@
   $("#editorCancel").addEventListener("click", closeEditor);
   editor.addEventListener("click", (e) => { if (e.target === editor) closeEditor(); });
   editor.addEventListener("cancel", () => { editing = null; });
+  f("customOn").addEventListener("change", () => {
+    $("#customFields").hidden = !f("customOn").checked;
+    if (f("customOn").checked) f("customLabel").focus();
+  });
   f("price").addEventListener("input", updateDiscountPreview);
   f("oldPrice").addEventListener("input", updateDiscountPreview);
   f("badgePreset").addEventListener("change", () => {

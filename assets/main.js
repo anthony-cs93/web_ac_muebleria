@@ -937,7 +937,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cart = (Array.isArray(cart) ? cart : []).filter(l => {
       const p = l && productById(l.id);
       return p && p.price != null && !isSoldOut(p) && Number.isInteger(l.qty) && l.qty > 0 && typeof l.color === "string";
-    }).map(l => ({ id: l.id, color: l.color, qty: Math.min(l.qty, MAX_LINE_QTY) }));
+    }).map(l => ({ id: l.id, color: l.color, qty: Math.min(l.qty, MAX_LINE_QTY), text: productById(l.id).custom && typeof l.text === "string" ? l.text.slice(0, 200) : "" }));
 
     function saveCart() {
       try { localStorage.setItem(storageKey, JSON.stringify(cart)); } catch (e) { /* sin almacenamiento: el carrito vive solo en esta visita */ }
@@ -954,12 +954,13 @@ document.addEventListener("DOMContentLoaded", () => {
       toastTimer = setTimeout(() => cartToast.classList.remove("show"), 3200);
     }
 
-    function addToCart(id, color, qty) {
+    function addToCart(id, color, qty, text = "") {
       const product = productById(id);
       if (!product || product.price == null || isSoldOut(product)) return;
-      const line = cart.find(l => l.id === id && l.color === color);
+      text = product.custom ? String(text || "").trim().slice(0, 200) : "";
+      const line = cart.find(l => l.id === id && l.color === color && (l.text || "") === text);
       if (line) line.qty = Math.min(line.qty + qty, MAX_LINE_QTY);
-      else cart.push({ id, color, qty: Math.min(qty, MAX_LINE_QTY) });
+      else cart.push({ id, color, qty: Math.min(qty, MAX_LINE_QTY), text });
       saveCart();
       renderCart();
       if (navCartBtn) {
@@ -991,6 +992,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="cart-line-info">
             <strong>${esc(p.name)}</strong>
             ${l.color ? `<span>${esc(l.color)}</span>` : ""}
+            ${l.text ? `<span class="cart-line-custom">${esc(p.custom ? p.custom.label : "Personalización")}: “${esc(l.text)}”</span>` : ""}
             <div class="cart-line-qty">
               <button type="button" data-act="minus" aria-label="Disminuir cantidad"${l.qty <= 1 ? " disabled" : ""}>&minus;</button>
               <span>${l.qty}</span>
@@ -1030,12 +1032,12 @@ document.addEventListener("DOMContentLoaded", () => {
     function buildOrderMessage() {
       const lines = cart.map(l => {
         const p = productById(l.id);
-        return `• ${l.qty} × ${p.name}${l.color ? ` (${l.color})` : ""} — S/ ${p.price * l.qty}`;
+        return `• ${l.qty} × ${p.name}${l.color ? ` (${l.color})` : ""}${l.text ? ` — ${p.custom ? p.custom.label : "Personalización"}: "${l.text}"` : ""} — S/ ${p.price * l.qty}`;
       });
       const name = cartNameInput ? cartNameInput.value.trim() : "";
       const district = cartDistrictInput ? cartDistrictInput.value.trim() : "";
       const notes = cartNotesInput ? cartNotesInput.value.trim() : "";
-      const extra = [name && `Nombre: ${name}`, district && `Distrito de entrega: ${district}`, notes && `Personalización: ${notes}`].filter(Boolean);
+      const extra = [name && `Nombre: ${name}`, district && `Distrito de entrega: ${district}`, notes && `Nota adicional: ${notes}`].filter(Boolean);
       return [
         `Hola ${brand}, quiero hacer este pedido:`,
         "",
@@ -1048,7 +1050,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ].join("\n");
     }
 
-    // Recuerda nombre, distrito y personalización entre visitas
+    // Recuerda nombre, distrito y nota adicional entre visitas
     const fieldInputs = [cartNameInput, cartDistrictInput, cartNotesInput];
     try {
       const saved = JSON.parse(localStorage.getItem(fieldsKey)) || {};
@@ -1589,7 +1591,7 @@ document.addEventListener("DOMContentLoaded", () => {
       isBlocked: modalIsOpen
     });
 
-    const waMessage = (p, color, qty) => `Hola Corazón de Madera, quiero consultar por: "${p.name}"${qty > 1 ? ` (${qty} unidades)` : ""}${color ? ` en color ${color}` : ""}. ¿Me ayudan con precio, personalización y disponibilidad?`;
+    const waMessage = (p, color, qty, text = "") => `Hola Corazón de Madera, quiero consultar por: "${p.name}"${qty > 1 ? ` (${qty} unidades)` : ""}${color ? ` en color ${color}` : ""}${text ? ` — ${p.custom ? p.custom.label : "Personalización"}: "${text}"` : ""}. ¿Me ayudan con precio, personalización y disponibilidad?`;
 
     // ---------------- Tarjetas ----------------
     function renderCard(p) {
@@ -1646,6 +1648,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let navIndex = 0;
     let qty = 1;
     let modalColor = "";
+    let modalText = "";
 
     function specCards(p) {
       const cards = [];
@@ -1663,13 +1666,14 @@ document.addEventListener("DOMContentLoaded", () => {
       el.qtyVal.textContent = qty;
       el.qtyMinus.disabled = qty <= 1;
       el.qtyPlus.disabled = qty >= 10;
-      el.wa.href = waLink(waMessage(p, modalColor, qty));
+      el.wa.href = waLink(waMessage(p, modalColor, qty, modalText.trim()));
     }
 
     function populate() {
       const p = navList[navIndex];
       if (!p) return;
       qty = 1;
+      modalText = "";
       modalColor = colorOf(p);
       el.counter.textContent = `${String(navIndex + 1).padStart(2, "0")} / ${String(navList.length).padStart(2, "0")}`;
       el.prev.hidden = el.next.hidden = navList.length < 2;
@@ -1702,6 +1706,20 @@ document.addEventListener("DOMContentLoaded", () => {
       el.swatches.innerHTML = p.colors.map(c => `<button type="button" class="color-swatch-btn${c.name === modalColor ? " active" : ""}" aria-pressed="${c.name === modalColor}" data-color="${esc(c.name)}"><span class="swatch-circle${ACCatalog.textureOf(c) ? " is-tex" : ""}" style="background:${esc(ACCatalog.swatchBg(c))}"></span><span>${esc(c.name)}</span></button>`).join("");
 
       el.specs.innerHTML = specCards(p);
+
+      // Personalización (opcional, la configura el admin por producto)
+      const cg = $("cModalCustomGroup"), ci = $("cModalCustomInput");
+      cg.hidden = !p.custom;
+      $("cModalCustomErr").hidden = true;
+      ci.classList.remove("invalid");
+      ci.value = "";
+      if (p.custom) {
+        $("cModalCustomLabel").textContent = `${p.custom.label}:`;
+        $("cModalCustomReq").textContent = p.custom.required ? "(obligatorio)" : "(opcional)";
+        ci.maxLength = p.custom.max;
+        ci.placeholder = p.custom.hint || "";
+        $("cModalCustomCount").textContent = `0 / ${p.custom.max}`;
+      }
       updateButtons(p);
     }
 
@@ -1755,12 +1773,25 @@ document.addEventListener("DOMContentLoaded", () => {
       el.swatches.addEventListener("mouseout", (e) => peekCdm(e, true));
       el.swatches.addEventListener("focusin", (e) => peekCdm(e, false));
       el.swatches.addEventListener("focusout", (e) => peekCdm(e, true));
+      $("cModalCustomInput").addEventListener("input", (e) => {
+        const p = navList[navIndex];
+        modalText = e.target.value;
+        $("cModalCustomCount").textContent = `${modalText.length} / ${p.custom ? p.custom.max : 0}`;
+        if (modalText.trim()) { e.target.classList.remove("invalid"); $("cModalCustomErr").hidden = true; }
+        updateButtons(p);
+      });
       el.add.addEventListener("click", () => {
         const p = navList[navIndex];
         if (!p) return;
-        if (p.price == null) { openWhatsApp(waMessage(p, modalColor, qty)); return; }
+        if (p.custom && p.custom.required && !modalText.trim()) {
+          $("cModalCustomErr").hidden = false;
+          $("cModalCustomInput").classList.add("invalid");
+          $("cModalCustomInput").focus();
+          return;
+        }
+        if (p.price == null) { openWhatsApp(waMessage(p, modalColor, qty, modalText.trim())); return; }
         closeModal();
-        cartApi.add(p.id, modalColor, qty);
+        cartApi.add(p.id, modalColor, qty, modalText.trim());
       });
       document.addEventListener("keydown", (e) => {
         if (!modalIsOpen()) return;
@@ -1787,7 +1818,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const p = byId(card.getAttribute("data-id"));
       if (!p) return;
       if (e.target.closest(".btn-consult")) { openWhatsApp(waMessage(p, colorOf(p), 1)); return; }
-      if (e.target.closest(".btn-add-cart")) { cartApi.add(p.id, colorOf(p), 1); return; }
+      if (e.target.closest(".btn-add-cart")) {
+        // Si la personalización es obligatoria, se pide el texto en la ficha antes de agregar
+        if (p.custom && p.custom.required) { openModal(p.id); return; }
+        cartApi.add(p.id, colorOf(p), 1);
+        return;
+      }
       openModal(p.id);
     });
     grid.addEventListener("keydown", (e) => {

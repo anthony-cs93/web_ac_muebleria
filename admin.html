@@ -201,6 +201,23 @@
       </fieldset>
 
       <fieldset class="only-cdm">
+        <legend>Personalización</legend>
+        <label class="check"><input type="checkbox" name="customOn"> Permitir que el cliente escriba un texto (nombre, fecha, dedicatoria…)</label>
+        <div class="grid-2" id="customFields" hidden>
+          <label>Título del campo
+            <input name="customLabel" maxlength="40" placeholder="Ej. Nombre a grabar">
+          </label>
+          <label>Largo máximo (caracteres)
+            <input name="customMax" type="number" min="5" max="200" step="1" placeholder="60">
+          </label>
+          <label class="span-2">Texto de ejemplo (aparece dentro del cuadro)
+            <input name="customHint" maxlength="80" placeholder="Ej. Valentina y Diego · 12/03/2026">
+          </label>
+          <label class="check span-2"><input type="checkbox" name="customRequired"> Obligatorio (no se puede agregar al carrito sin este texto)</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="only-cdm">
         <legend>Detalles de la tarjeta</legend>
         <div class="grid-2">
           <label>Medidas<input name="spec1" maxlength="60" placeholder="Ej. 30 × 40 cm"></label>

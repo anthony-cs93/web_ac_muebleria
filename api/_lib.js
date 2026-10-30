@@ -211,6 +211,16 @@ export function sanitizeProduct(raw, shop) {
       specs: (Array.isArray(raw.specs) ? raw.specs : []).slice(0, 4).map((s) => text(s, 60)).filter(Boolean),
       unit: text(raw.unit, 20) || 'unidad'
     });
+    // Personalización: campo de texto que el cliente completa al comprar (opcional por producto)
+    if (raw.custom && typeof raw.custom === 'object') {
+      const max = Math.round(Number(raw.custom.max));
+      p.custom = {
+        label: text(raw.custom.label, 40) || 'Personalización',
+        hint: text(raw.custom.hint, 80),
+        max: Number.isFinite(max) ? Math.min(200, Math.max(5, max)) : 60,
+        required: !!raw.custom.required
+      };
+    }
   }
   p.colors = (Array.isArray(raw.colors) ? raw.colors : []).slice(0, 12).map((c) => ({
     name: text(c && c.name, 40),

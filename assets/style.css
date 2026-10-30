@@ -490,6 +490,14 @@ body.theme-cdm .brand span{
 }
 body.theme-cdm .nav-links a{ color: rgba(247,242,230,.75); }  /* links crema suave */
 body.theme-cdm .nav-links a:hover{ color: var(--paper); }       /* hover crema puro */
+/* Badge "AC Mueblería": distingue el enlace al sitio padre del resto del menú (igual que en Maderin) */
+body.theme-cdm .nav-links a.nav-badge{
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border: 1px solid rgba(247,242,230,.6); border-radius: 999px;
+  color: var(--paper); font-size: .85em; font-weight: 700; white-space: nowrap;
+}
+body.theme-cdm .nav-links a.nav-badge::after{ content: "↗"; font-size: .9em; }
+body.theme-cdm .nav-links a.nav-badge:hover{ background: var(--paper); color: var(--accent); }
 body.theme-cdm .nav-toggle svg{ color: var(--paper); }          /* hamburguesa crema */
 body.theme-cdm .nav-cta .btn-wa{
   background: var(--accent-2);  /* champán */
@@ -5434,7 +5442,8 @@ body.theme-cdm .ecom-modal-header { padding-right: 44px; }
   body.theme-maderin .nav-links li,
   body.theme-cdm .nav-links li{ width:100%; }
   body.theme-maderin .nav-links a:not(.nav-badge),
-  body.theme-cdm .nav-links a{ display:block; }  /* el padding de cada enlace suma altura */
+  body.theme-cdm .nav-links a:not(.nav-badge){ display:block; }  /* el padding de cada enlace suma altura */
+  body.theme-cdm .nav-links a.nav-badge{ width:auto; margin-top:8px; }
   body.theme-maderin #navWaBtn,
   body.theme-cdm #navWaBtn{ display:none; }  /* WhatsApp ya está en el botón flotante */
 

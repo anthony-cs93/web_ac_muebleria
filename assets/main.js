@@ -1575,8 +1575,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Estado compartido: filtro activo (define la navegación del modal) y color elegido por tarjeta
     let activeFilter = "todos";
-    const cardColor = {};
-    const colorOf = (p) => cardColor[p.id] || (p.colors.length ? p.colors[0].name : "");
+    // El color solo se elige dentro de la ficha; sin elección, el primero
+    const colorOf = (p) => (p.colors.length ? p.colors[0].name : "");
     const visibleProducts = () => products.filter(p => activeFilter === "todos" || p.category === activeFilter);
 
     const modal = document.getElementById("cdmProductModal");
@@ -1608,7 +1608,6 @@ document.addEventListener("DOMContentLoaded", () => {
         ? `<button type="button" class="btn btn-buy btn-consult" aria-label="Consultar precio por WhatsApp">${WA_ICON}<span>Consultar</span></button>`
         : `<button type="button" class="btn btn-buy btn-add-cart" aria-label="Agregar ${esc(p.name)} al carrito"${soldOut ? " disabled" : ""}>${CART_ICON}<span>${soldOut ? "Agotado" : "Agregar"}</span></button>`;
       const rating = p.rating != null ? `<div class="p-card-rating" aria-label="${p.rating.toFixed(1)} de 5 estrellas"><span class="stars" aria-hidden="true">★</span><span class="rating-val">${p.rating.toFixed(1)}</span></div>` : "";
-      const dots = p.colors.length ? `<div class="cdm-dots" role="group" aria-label="Color de ${esc(p.name)}">${p.colors.map((c, i) => `<button type="button" class="cdm-dot${i === 0 ? " active" : ""}" data-color="${esc(c.name)}" aria-pressed="${i === 0}" aria-label="${esc(c.name)}" title="${esc(c.name)}" style="background:${esc(ACCatalog.swatchBg(c))}"></button>`).join("")}<span class="cdm-dot-label">${esc(p.colors[0].name)}</span></div>` : "";
       return `<article class="product-card compact-card reveal in-view" data-id="${esc(p.id)}" data-category="${esc(p.category)}" role="button" tabindex="0" aria-label="Ver detalles de ${esc(p.name)}">
         <div class="product-thumb compact-thumb">
           ${p.badge ? `<span class="sample-badge${ACCatalog.isPromo(p.badge) ? " promo" : ""}">${esc(p.badge)}</span>` : ""}
@@ -1619,7 +1618,6 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="product-body compact-body">
           <h3 class="p-card-name">${esc(p.name)}</h3>
           ${p.specs.length ? `<div class="p-card-dims" title="${esc(p.specs[0])}">${esc(p.specs[0])}</div>` : ""}
-          ${dots}
           <div class="product-footer-row">
             <div class="p-pricing">${priceBlock}</div>
             <div class="p-actions-group">
@@ -1802,25 +1800,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ---------------- Interacción en la grilla ----------------
-    function selectCardColor(card, btn) {
-      const id = card.getAttribute("data-id");
-      cardColor[id] = btn.getAttribute("data-color");
-      card.querySelectorAll(".cdm-dot").forEach((b) => { const on = b === btn; b.classList.toggle("active", on); b.setAttribute("aria-pressed", on); });
-      const label = card.querySelector(".cdm-dot-label");
-      if (label) label.textContent = cardColor[id];
-    }
-
     grid.addEventListener("click", (e) => {
       const card = e.target.closest(".product-card");
       if (!card) return;
-      const dot = e.target.closest(".cdm-dot");
-      if (dot) { selectCardColor(card, dot); return; }
       const p = byId(card.getAttribute("data-id"));
       if (!p) return;
-      if (e.target.closest(".btn-consult")) { openWhatsApp(waMessage(p, colorOf(p), 1)); return; }
+      if (e.target.closest(".btn-consult")) { openWhatsApp(waMessage(p, p.colors.length === 1 ? colorOf(p) : "", 1)); return; }
       if (e.target.closest(".btn-add-cart")) {
-        // Si la personalización es obligatoria, se pide el texto en la ficha antes de agregar
-        if (p.custom && p.custom.required) { openModal(p.id); return; }
+        // Con varios colores o personalización obligatoria, se elige en la ficha antes de agregar
+        if (p.colors.length > 1 || (p.custom && p.custom.required)) { openModal(p.id); return; }
         cartApi.add(p.id, colorOf(p), 1);
         return;
       }

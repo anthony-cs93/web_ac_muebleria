@@ -174,10 +174,10 @@
             <svg id="mModalSvg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 34V20l18-12 18 12v14"/><path d="M6 34h36M12 34v6M36 34v6"/><path d="M12 24h24"/></svg>
           </div>
 
-          <!-- Color seleccionado en vivo indicador -->
-          <div class="preview-color-indicator">
-            <span>Color visual:</span>
+          <!-- Muestra de la textura elegida, sobre la foto -->
+          <div class="preview-color-indicator" id="mModalColorIndicator">
             <strong id="mModalActiveColorLabel">Pino Natural</strong>
+            <button type="button" class="tex-sample" id="mModalTexSample" aria-label="Ver en grande"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button>
           </div>
         </div>
 
@@ -239,10 +239,10 @@
 
         <p class="ecom-desc" id="mModalDesc">Estructura baja inspirada en la metodología Montessori que promueve la libertad de movimiento y autonomía de tu pequeño, con bordes redondeados y selladores ecológicos no tóxicos.</p>
 
-        <!-- Selector de Color / Acabado -->
+        <!-- Selector de color -->
         <div class="ecom-option-group">
           <label class="option-label">
-            <span>Color / Acabado:</span>
+            <span>Color:</span>
             <strong id="mModalSelectedColorText">Pino Natural</strong>
           </label>
           <div class="color-swatches-row" id="mModalColorSwatches">

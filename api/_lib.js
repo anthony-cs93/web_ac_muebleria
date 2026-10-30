@@ -233,7 +233,8 @@ export function sanitizeTextures(list) {
     const img = safeUrl(raw && raw.img);
     if (!id || !name || !img || seen.has(id)) continue;
     seen.add(id);
-    out.push({ id, name, img });
+    const thumb = safeUrl(raw.thumb);
+    out.push(thumb ? { id, name, img, thumb } : { id, name, img });
   }
   return out;
 }

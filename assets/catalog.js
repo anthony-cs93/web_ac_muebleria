@@ -91,7 +91,7 @@
   // Valor CSS `background` del círculo de un color: textura si existe, si no el color liso
   const swatchBg = (c) => {
     const t = textureOf(c);
-    return t ? `url("${t.img}") center/cover no-repeat, ${c.hex}` : c.hex;
+    return t ? `url("${t.thumb || t.img}") center/cover no-repeat, ${c.hex}` : c.hex;
   };
 
   function normalize(list, shop) {

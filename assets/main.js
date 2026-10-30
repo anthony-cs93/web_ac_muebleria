@@ -13,6 +13,51 @@ function openWhatsApp(message){
   window.open(waLink(message), "_blank", "noopener");
 }
 
+// Muestra de la textura elegida, sobre la foto del producto. Con textura, al hacer clic se abre en grande.
+function showTexSample(indicator, sample, color){
+  if (!indicator || !sample) return;
+  indicator.hidden = !color;
+  if (!color) return;
+  const tex = ACCatalog.textureOf(color);
+  sample.style.background = ACCatalog.swatchBg(color);
+  sample.classList.toggle("has-tex", !!tex);
+  sample.disabled = !tex;
+  sample.dataset.big = tex ? tex.img : "";
+  sample.dataset.name = color.name;
+  const label = indicator.querySelector("strong");
+  if (label) label.textContent = color.name;
+}
+
+// Ventana con la textura en grande (clic en la muestra sobre la foto)
+(function(){
+  let box = null;
+  const close = () => { if (box) box.hidden = true; };
+  function build(){
+    box = document.createElement("div");
+    box.className = "tex-lightbox";
+    box.hidden = true;
+    box.setAttribute("role", "dialog");
+    box.setAttribute("aria-modal", "true");
+    box.innerHTML = `<figure><div class="tex-lightbox-img"></div><figcaption></figcaption><button type="button" class="tex-lightbox-close" aria-label="Cerrar">✕</button></figure>`;
+    box.addEventListener("click", (e) => { if (e.target === box || e.target.closest(".tex-lightbox-close")) close(); });
+    document.body.appendChild(box);
+  }
+  document.addEventListener("click", (e) => {
+    const sample = e.target.closest(".tex-sample");
+    if (!sample || !sample.dataset.big) return;
+    e.preventDefault();
+    if (!box) build();
+    box.querySelector(".tex-lightbox-img").style.backgroundImage = `url("${sample.dataset.big}")`;
+    box.querySelector("figcaption").textContent = sample.dataset.name || "";
+    box.hidden = false;
+    box.querySelector(".tex-lightbox-close").focus();
+  });
+  // Escape cierra solo esta ventana, no la ficha del producto
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && box && !box.hidden) { e.stopImmediatePropagation(); e.preventDefault(); close(); }
+  }, true);
+})();
+
 // --- Nav móvil ---
 document.addEventListener("DOMContentLoaded", () => {
   const toggle = document.querySelector(".nav-toggle");
@@ -1195,6 +1240,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (modalColorText) {
         modalColorText.textContent = selectedColor;
       }
+      showTexSample(document.getElementById("mModalColorIndicator"), document.getElementById("mModalTexSample"),
+        product.colors.length === 1 && product.colors[0].name === "Por definir" ? null : product.colors[0]);
 
       // Información de encabezado
       if (modalCatTag) modalCatTag.textContent = product.categoryLabel;
@@ -1228,15 +1275,25 @@ document.addEventListener("DOMContentLoaded", () => {
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = `color-swatch-btn ${i === 0 ? "active" : ""}`;
-          btn.innerHTML = `<span class="swatch-circle${ACCatalog.textureOf(color) ? " is-tex" : ""}" style="background: ${ACCatalog.swatchBg(color)};"></span><span>${color.name}</span>`;
+          btn.setAttribute("aria-pressed", String(i === 0));
+          btn.innerHTML = `<span class="swatch-circle${ACCatalog.textureOf(color) ? " is-tex" : ""}" style="background: ${escapeHtml(ACCatalog.swatchBg(color))};"></span><span>${escapeHtml(color.name)}</span>`;
           btn.addEventListener("click", () => {
-            modalColorSwatches.querySelectorAll(".color-swatch-btn").forEach(b => b.classList.remove("active"));
+            modalColorSwatches.querySelectorAll(".color-swatch-btn").forEach(b => { b.classList.remove("active"); b.setAttribute("aria-pressed", "false"); });
             btn.classList.add("active");
+            btn.setAttribute("aria-pressed", "true");
             selectedColor = color.name;
             if (modalColorIndicator) modalColorIndicator.textContent = selectedColor;
             if (modalColorText) modalColorText.textContent = selectedColor;
+            showTexSample(document.getElementById("mModalColorIndicator"), document.getElementById("mModalTexSample"), color);
             updateWhatsAppButton(product);
           });
+          // Vista rápida: al pasar el mouse se ve la textura sin elegirla; al salir vuelve la elegida
+          const peek = (c) => showTexSample(document.getElementById("mModalColorIndicator"), document.getElementById("mModalTexSample"), c, true);
+          btn.addEventListener("mouseenter", () => peek(color));
+          btn.addEventListener("focus", () => peek(color));
+          const unpeek = () => peek(product.colors.find((c) => c.name === selectedColor) || color);
+          btn.addEventListener("mouseleave", unpeek);
+          btn.addEventListener("blur", unpeek);
           modalColorSwatches.appendChild(btn);
         });
       }
@@ -1639,9 +1696,10 @@ document.addEventListener("DOMContentLoaded", () => {
       // Colores (opcionales)
       const hasColors = p.colors.length > 0;
       el.colorGroup.hidden = !hasColors;
-      el.colorInd.hidden = !hasColors || photo;
+      el.colorInd.hidden = !hasColors;
       el.colorLabel.textContent = el.colorText.textContent = modalColor;
-      el.swatches.innerHTML = p.colors.map(c => `<button type="button" class="color-swatch-btn${c.name === modalColor ? " active" : ""}" data-color="${esc(c.name)}"><span class="swatch-circle${ACCatalog.textureOf(c) ? " is-tex" : ""}" style="background:${esc(ACCatalog.swatchBg(c))}"></span><span>${esc(c.name)}</span></button>`).join("");
+      showTexSample(el.colorInd, $("cModalTexSample"), p.colors.find((c) => c.name === modalColor) || p.colors[0] || null);
+      el.swatches.innerHTML = p.colors.map(c => `<button type="button" class="color-swatch-btn${c.name === modalColor ? " active" : ""}" aria-pressed="${c.name === modalColor}" data-color="${esc(c.name)}"><span class="swatch-circle${ACCatalog.textureOf(c) ? " is-tex" : ""}" style="background:${esc(ACCatalog.swatchBg(c))}"></span><span>${esc(c.name)}</span></button>`).join("");
 
       el.specs.innerHTML = specCards(p);
       updateButtons(p);
@@ -1679,8 +1737,24 @@ document.addEventListener("DOMContentLoaded", () => {
         modalColor = btn.getAttribute("data-color");
         el.swatches.querySelectorAll(".color-swatch-btn").forEach(b => b.classList.toggle("active", b === btn));
         el.colorLabel.textContent = el.colorText.textContent = modalColor;
-        updateButtons(navList[navIndex]);
+        const cur = navList[navIndex];
+        showTexSample(el.colorInd, $("cModalTexSample"), cur.colors.find((c) => c.name === modalColor));
+        el.swatches.querySelectorAll(".color-swatch-btn").forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
+        updateButtons(cur);
       });
+      // Vista rápida: al pasar el mouse se ve la textura sin elegirla; al salir vuelve la elegida
+      const peekCdm = (e, out) => {
+        const btn = e.target.closest(".color-swatch-btn");
+        if (!btn) return;
+        const cur = navList[navIndex];
+        const name = out ? modalColor : btn.getAttribute("data-color");
+        showTexSample(el.colorInd, $("cModalTexSample"), cur.colors.find((c) => c.name === name), true);
+        el.colorLabel.textContent = name;
+      };
+      el.swatches.addEventListener("mouseover", (e) => peekCdm(e, false));
+      el.swatches.addEventListener("mouseout", (e) => peekCdm(e, true));
+      el.swatches.addEventListener("focusin", (e) => peekCdm(e, false));
+      el.swatches.addEventListener("focusout", (e) => peekCdm(e, true));
       el.add.addEventListener("click", () => {
         const p = navList[navIndex];
         if (!p) return;

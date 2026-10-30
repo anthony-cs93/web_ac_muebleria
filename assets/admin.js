@@ -262,7 +262,7 @@
   }
 
   // ---------------------------------------------------------------- Texturas de un producto
-  const texBg = (id) => { const t = C.textureOf({ tex: id }); return t ? `url("${t.img}")` : ""; };
+  const texBg = (id) => { const t = C.textureOf({ tex: id }); return t ? `url("${t.thumb || t.img}")` : ""; };
   const texOptions = (current) => ['<option value="">Elegir textura…</option>']
     .concat(state.catalog.textures.map((t) => `<option value="${esc(t.id)}"${t.id === current ? " selected" : ""}>${esc(t.name)}</option>`)).join("");
 
@@ -528,7 +528,7 @@
   function renderTexLib() {
     const items = state.catalog.textures;
     $("#texGrid").innerHTML = items.map((t) => `<li class="tex-card" data-id="${esc(t.id)}">
-      <div class="tex-img" style="background-image:url(&quot;${esc(t.img)}&quot;)"></div>
+      <div class="tex-img" style="background-image:url(&quot;${esc(t.thumb || t.img)}&quot;)"></div>
       <input type="text" value="${esc(t.name)}" maxlength="40" aria-label="Nombre de la textura">
       <button type="button" data-act="del">Eliminar</button>
     </li>`).join("") || '<li class="muted small">Aún no hay texturas. Sube la primera.</li>';
@@ -536,7 +536,7 @@
     $("#texUploadBtn").hidden = items.length >= MAX_TEX;
     $("#texMsg").textContent = items.length >= MAX_TEX
       ? "Llegaste al máximo de 10 texturas. Elimina una para subir otra."
-      : `${items.length} de ${MAX_TEX}. JPG, PNG o WebP; se recorta a cuadrado y se optimiza sola.`;
+      : `${items.length} de ${MAX_TEX}. JPG, PNG o WebP; se recorta a cuadrado y se optimiza sola. Sube la imagen en buena calidad (mínimo 800 px).`;
     refreshDirty();
   }
   // Tras cambiar la biblioteca, las listas desplegables del editor (si está abierto) se actualizan
@@ -579,14 +579,14 @@
     syncTextures();
     renderTexLib();
   });
-  function cropSquareDataUrl(img, size) {
+  function cropSquareDataUrl(img, size, quality = 0.85) {
     const side = Math.min(img.naturalWidth, img.naturalHeight);
     const canvas = document.createElement("canvas");
     canvas.width = canvas.height = Math.min(size, side);
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingQuality = "high";
     ctx.drawImage(img, (img.naturalWidth - side) / 2, (img.naturalHeight - side) / 2, side, side, 0, 0, canvas.width, canvas.height);
-    return canvas.toDataURL("image/webp", 0.85);
+    return canvas.toDataURL("image/webp", quality);
   }
   $("#texInput").addEventListener("change", async (e) => {
     const file = e.target.files[0];
@@ -602,8 +602,8 @@
       const taken = new Set(state.catalog.textures.map((t) => t.id));
       for (let n = 2; taken.has(id); n++) id = `${base}-${n}`;
       const img = await loadImage(file);
-      const res = await api("upload", { method: "POST", body: { kind: "texture", id, img: cropSquareDataUrl(img, 256) } });
-      state.catalog.textures.push({ id, name, img: res.img });
+      const res = await api("upload", { method: "POST", body: { kind: "texture", id, img: cropSquareDataUrl(img, 800, 0.9), thumb: cropSquareDataUrl(img, 160, 0.85) } });
+      state.catalog.textures.push({ id, name, img: res.img, thumb: res.thumb });
       syncTextures();
       renderTexLib();
       toast("Textura subida. Ponle nombre y publica para verla en la tienda.");
@@ -617,13 +617,6 @@
   $("#newBtn").addEventListener("click", () => openEditor(null));
   $("#searchInput").addEventListener("input", (e) => { state.search = e.target.value; renderRows(); });
   $$(".tab").forEach((t) => t.addEventListener("click", () => setShop(t.dataset.shop)));
-
-  $("#restoreBtn").addEventListener("click", () => {
-    $(".more").open = false;
-    if (!confirm(`¿Restaurar los productos originales de ${C.SHOPS[state.shop].label}? Se reemplaza toda la lista actual (hasta que publiques puedes descartar).`)) return;
-    state.catalog[state.shop] = C.defaultsFor(state.shop);
-    renderRows();
-  });
 
   $("#discardBtn").addEventListener("click", () => {
     if (!confirm("¿Descartar todos los cambios sin publicar?")) return;

@@ -5,7 +5,7 @@
 //   GET  op=catalog   catálogo guardado (sin caché)
 //   POST op=save      { maderin?: [...], cdm?: [...], textures?: [...] }  -> publica los cambios
 //   POST op=upload    { id, img480, img900 } (data URLs webp/jpeg/png)  -> URLs de las fotos
-//   POST op=upload    { kind: 'texture', id, img }  -> { img } (textura de la biblioteca compartida)
+//   POST op=upload    { kind: 'texture', id, img, thumb }  -> { img, thumb } (textura de la biblioteca compartida)
 import {
   adminConfigured, createToken, isAuthed, passwordMatches, readCatalog, readJsonBody, sanitizeShop, sanitizeTextures, sendJson,
   sessionCookie, slugify, storageMode, storePhoto, writeCatalog
@@ -66,8 +66,13 @@ export default async function handler(req, res) {
       const body = await readJsonBody(req);
       const base = slugify(body.id || 'producto') || 'producto';
       if (body.kind === 'texture') {
-        const { buffer, contentType, ext } = decodeImage(body.img);
-        return sendJson(res, 200, { img: await storePhoto(`textura-${base}.${ext}`, buffer, contentType) }, noStore);
+        const big = decodeImage(body.img);
+        const out = { img: await storePhoto(`textura-${base}.${big.ext}`, big.buffer, big.contentType) };
+        if (body.thumb) {
+          const small = decodeImage(body.thumb);
+          out.thumb = await storePhoto(`textura-${base}-mini.${small.ext}`, small.buffer, small.contentType);
+        }
+        return sendJson(res, 200, out, noStore);
       }
       const out = {};
       for (const [key, w] of [['img480', 480], ['img900', 900]]) {

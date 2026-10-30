@@ -563,48 +563,31 @@ body.theme-cdm .reviews-grid{
   gap: 24px;
   margin-top: 8px;
 }
+/* Tarjeta: foto pequeña + nombre y distrito arriba, comentario debajo */
 body.theme-cdm .review-card{
-  background: var(--paper-2);
+  background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 30px 28px;
+  padding: 22px 24px 26px;
   margin: 0;
-  display: flex; flex-direction: column; gap: 18px;
+  display: grid; grid-template-columns: 64px 1fr; grid-template-rows: auto 1fr;
+  column-gap: 16px; row-gap: 16px; align-items: center; align-content: start;
+  box-shadow: 0 10px 28px -16px rgba(46, 47, 26, .35);
 }
-body.theme-cdm .review-stars{ display: flex; gap: 3px; color: var(--accent-2); }
-body.theme-cdm .review-stars svg{ width: 18px; height: 18px; }
+body.theme-cdm .review-photo{ grid-column: 1; grid-row: 1; width: 64px; height: 64px; aspect-ratio: 1; border-radius: 50%; object-fit: cover; display: block; }
+body.theme-cdm .review-card figcaption{ grid-column: 2; grid-row: 1; display: flex; flex-direction: column; gap: 2px; }
+body.theme-cdm .review-card figcaption strong{ color: var(--accent); font-family: var(--font-display); font-size: 18px; font-weight: 700; }
+body.theme-cdm .review-card small{ color: var(--ink-soft); font-size: 13px; font-style: italic; }
 body.theme-cdm .review-card blockquote{
-  margin: 0; flex: 1;
-  font-family: var(--font-display);
-  font-size: 17px; line-height: 1.55;
-}
-body.theme-cdm .review-card figcaption{ display: flex; align-items: center; gap: 12px; }
-body.theme-cdm .review-card figcaption span:last-child{ display: flex; flex-direction: column; font-size: 14px; }
-body.theme-cdm .review-card small{ color: var(--ink-soft); font-size: 12.5px; }
-body.theme-cdm .review-avatar{
-  width: 38px; height: 38px; border-radius: 50%;
-  display: grid; place-items: center;
-  background: var(--accent); color: var(--paper);
-  font-family: var(--font-mono); font-size: 14px;
+  grid-column: 1 / -1; grid-row: 2; margin: 0; align-self: start;
+  font-size: 15.5px; line-height: 1.55;
 }
 @media (max-width: 900px){
   body.theme-cdm .reviews-grid{ grid-template-columns: 1fr; }
 }
-/* Reseñas en móvil: avatar circular a la izquierda; nombre, distrito, estrellas y texto a la derecha */
 @media (max-width: 640px){
   body.theme-cdm .reviews-grid{ gap: 14px; }
-  body.theme-cdm .review-card{
-    display: grid; grid-template-columns: 84px 1fr; grid-template-rows: auto auto 1fr; column-gap: 16px; align-content: start;
-    padding: 16px; border-radius: 22px; box-shadow: 0 8px 24px -14px rgba(46, 47, 26, .35);
-  }
-  body.theme-cdm .review-card figcaption{ display: contents; }
-  body.theme-cdm .review-avatar{ grid-column: 1; grid-row: 1 / 4; width: 84px; height: 84px; font-size: 30px; }
-  body.theme-cdm .review-card figcaption span:last-child{ grid-column: 2; grid-row: 1; font-size: 12.5px; }
-  body.theme-cdm .review-card figcaption strong{ color: var(--accent); font-family: var(--font-display); font-size: 16px; font-weight: 700; }
-  body.theme-cdm .review-card small{ font-style: italic; }
-  body.theme-cdm .review-stars{ grid-column: 2; grid-row: 2; gap: 2px; padding: 4px 0 0; }
-  body.theme-cdm .review-stars svg{ width: 14px; height: 14px; }
-  body.theme-cdm .review-card blockquote{ grid-column: 2; grid-row: 3; margin-top: 6px; padding: 0; font-size: 13.5px; line-height: 1.5; }
+  body.theme-cdm .review-card{ padding: 18px; border-radius: 22px; }
 }
 
 /* =========================== CDM — Catálogo =========================== */

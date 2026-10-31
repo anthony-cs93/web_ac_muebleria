@@ -5,6 +5,11 @@
 // TODO: reemplaza este número por el WhatsApp real del negocio (formato: 51XXXXXXXXX, sin "+")
 const WHATSAPP_NUMBER = "51943613883";
 
+// Recojo en tienda (se muestra en el carrito y va en el pedido de WhatsApp)
+const PICKUP_ADDRESS = "Ca. Argentina #201 - Comas";
+const PICKUP_MAP_URL = "https://maps.app.goo.gl/jKDX4kuzcDRxq7tb6";
+const PICKUP_COORDS = [-11.960141, -77.058542]; // misma ubicación del enlace de Maps, para la vista previa
+
 function waLink(message){
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
@@ -922,7 +927,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const navCartCount = document.getElementById("navCartCount");
     const cartNameInput = document.getElementById("cartName");
     const cartDistrictInput = document.getElementById("cartDistrict");
+    const cartAddressInput = document.getElementById("cartAddress");
+    const cartAddressLabel = document.getElementById("cartAddressLabel");
     const cartNotesInput = document.getElementById("cartNotes");
+    const deliveryRadios = Array.from(document.querySelectorAll('input[name="cartDelivery"]'));
+    const cartDistrictLabel = document.getElementById("cartDistrictLabel");
     const cartToast = document.getElementById("cartToast");
     const cartToastText = document.getElementById("cartToastText");
     let toastTimer = null;
@@ -1029,6 +1038,72 @@ document.addEventListener("DOMContentLoaded", () => {
       if (navCartBtn) navCartBtn.focus();
     }
 
+    const deliveryMode = () => {
+      const on = deliveryRadios.find(r => r.checked);
+      return on ? on.value : "delivery";
+    };
+    // Vista previa interactiva de la ubicación (Leaflet + OpenStreetMap, se descarga al primer uso)
+    let leafletPromise = null;
+    const loadLeaflet = () => leafletPromise || (leafletPromise = new Promise((resolve, reject) => {
+      if (window.L) return resolve(window.L);
+      const css = document.createElement("link");
+      css.rel = "stylesheet";
+      css.href = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css";
+      document.head.appendChild(css);
+      const sc = document.createElement("script");
+      sc.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js";
+      sc.onload = () => resolve(window.L);
+      sc.onerror = () => { leafletPromise = null; reject(new Error("mapa no disponible")); };
+      document.head.appendChild(sc);
+    }));
+    let pickupMap = null;
+    function showPickupMap(box) {
+      if (pickupMap) { setTimeout(() => pickupMap.invalidateSize(), 50); return; }
+      loadLeaflet().then((L) => {
+        if (pickupMap || box.hidden) return;
+        pickupMap = L.map(box, { center: PICKUP_COORDS, zoom: 16, scrollWheelZoom: false, doubleClickZoom: false, attributionControl: true });
+        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "&copy; OpenStreetMap" }).addTo(pickupMap);
+        const pin = L.divIcon({
+          className: "map-pin", iconSize: [32, 42], iconAnchor: [16, 42],
+          html: '<svg viewBox="0 0 32 42" aria-hidden="true"><path d="M16 0C7.2 0 0 7 0 15.7 0 27 16 42 16 42s16-15 16-26.3C32 7 24.8 0 16 0Z" fill="#d93025"/><circle cx="16" cy="15.5" r="6" fill="#fff"/></svg>'
+        });
+        L.marker(PICKUP_COORDS, { icon: pin, keyboard: false, title: PICKUP_ADDRESS }).addTo(pickupMap);
+        // Un clic en el mapa (no al arrastrar) abre la ubicación en Google Maps
+        pickupMap.on("click", () => window.open(PICKUP_MAP_URL, "_blank", "noopener"));
+        // La rueda del mouse solo hace zoom tras hacer clic en el mapa, para no atrapar el scroll del carrito
+        pickupMap.on("focus", () => pickupMap.scrollWheelZoom.enable());
+        pickupMap.on("blur", () => pickupMap.scrollWheelZoom.disable());
+        setTimeout(() => pickupMap.invalidateSize(), 350);
+      }).catch(() => {
+        box.hidden = true; // sin mapa, queda el enlace "Ver ubicación"
+      });
+    }
+
+    let mapExpanded = false;
+    document.getElementById("cartMapToggle")?.addEventListener("click", () => { mapExpanded = !mapExpanded; syncDelivery(); });
+    // Muestra la dirección de recojo o los datos de envío según la opción elegida
+    function syncDelivery() {
+      const pickup = deliveryMode() === "pickup";
+      const pickupInfo = document.getElementById("cartPickupInfo");
+      const deliveryInfo = document.getElementById("cartDeliveryInfo");
+      if (pickupInfo) pickupInfo.hidden = !pickup;
+      const mapBox = document.getElementById("cartPickupMap");
+      const mapToggle = document.getElementById("cartMapToggle");
+      if (!pickup) mapExpanded = false;
+      if (mapBox) {
+        mapBox.hidden = !(pickup && mapExpanded);
+        if (pickup && mapExpanded) showPickupMap(mapBox); // se carga solo al desplegarlo
+      }
+      if (mapToggle) {
+        mapToggle.setAttribute("aria-expanded", String(pickup && mapExpanded));
+        mapToggle.textContent = pickup && mapExpanded ? "Ocultar mapa" : "Ver ubicación";
+      }
+      if (deliveryInfo) deliveryInfo.hidden = pickup;
+      if (cartAddressLabel) cartAddressLabel.hidden = pickup;
+      if (cartDistrictLabel) cartDistrictLabel.hidden = pickup;
+    }
+    document.querySelectorAll("[data-pickup-address]").forEach(el => { el.textContent = PICKUP_ADDRESS; });
+
     function buildOrderMessage() {
       const lines = cart.map(l => {
         const p = productById(l.id);
@@ -1036,8 +1111,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       const name = cartNameInput ? cartNameInput.value.trim() : "";
       const district = cartDistrictInput ? cartDistrictInput.value.trim() : "";
+      const address = cartAddressInput ? cartAddressInput.value.trim() : "";
       const notes = cartNotesInput ? cartNotesInput.value.trim() : "";
-      const extra = [name && `Nombre: ${name}`, district && `Distrito de entrega: ${district}`, notes && `Nota adicional: ${notes}`].filter(Boolean);
+      const pickup = deliveryMode() === "pickup";
+      const delivery = pickup
+        ? `Entrega: Recojo en tienda — ${PICKUP_ADDRESS} (${PICKUP_MAP_URL})`
+        : `Entrega: Envío a domicilio${address ? ` — Dirección: ${address}` : ""}${district ? ` — Distrito: ${district}` : ""} (costo de envío por confirmar)`;
+      const extra = [name && `Nombre: ${name}`, deliveryRadios.length && delivery, notes && `Nota adicional: ${notes}`].filter(Boolean);
       return [
         `Hola ${brand}, quiero hacer este pedido:`,
         "",
@@ -1046,30 +1126,45 @@ document.addEventListener("DOMContentLoaded", () => {
         `Total: S/ ${cartTotal()}`,
         ...(extra.length ? ["", ...extra] : []),
         "",
-        "¿Me confirman disponibilidad, costo de envío y cómo pagar? (transferencia, Yape o link de Mercado Pago)"
+        pickup
+          ? "¿Me confirman disponibilidad y cómo pagar? (transferencia, Yape o link de Mercado Pago)"
+          : "¿Me confirman disponibilidad, costo de envío y cómo pagar? (transferencia, Yape o link de Mercado Pago)"
       ].join("\n");
     }
 
     // Recuerda nombre, distrito y nota adicional entre visitas
-    const fieldInputs = [cartNameInput, cartDistrictInput, cartNotesInput];
+    const fieldInputs = [cartNameInput, cartAddressInput, cartDistrictInput, cartNotesInput];
     try {
       const saved = JSON.parse(localStorage.getItem(fieldsKey)) || {};
       if (cartNameInput && saved.name) cartNameInput.value = saved.name;
+      if (cartAddressInput && saved.address) cartAddressInput.value = saved.address;
       if (cartDistrictInput && saved.district) cartDistrictInput.value = saved.district;
       if (cartNotesInput && saved.notes) cartNotesInput.value = saved.notes;
+      if (saved.delivery) deliveryRadios.forEach(r => { r.checked = r.value === saved.delivery; });
     } catch (e) { /* sin datos guardados */ }
+    syncDelivery();
     fieldInputs.forEach(input => {
       if (!input) return;
       input.addEventListener("input", () => {
         try {
           localStorage.setItem(fieldsKey, JSON.stringify({
             name: cartNameInput ? cartNameInput.value : "",
+            address: cartAddressInput ? cartAddressInput.value : "",
             district: cartDistrictInput ? cartDistrictInput.value : "",
-            notes: cartNotesInput ? cartNotesInput.value : ""
+            notes: cartNotesInput ? cartNotesInput.value : "",
+            delivery: deliveryMode()
           }));
         } catch (e) { /* ignorar */ }
       });
     });
+    deliveryRadios.forEach(r => r.addEventListener("change", () => {
+      syncDelivery();
+      try {
+        const saved = JSON.parse(localStorage.getItem(fieldsKey)) || {};
+        saved.delivery = deliveryMode();
+        localStorage.setItem(fieldsKey, JSON.stringify(saved));
+      } catch (e) { /* ignorar */ }
+    }));
 
     if (cartItemsEl) {
       cartItemsEl.addEventListener("click", (e) => {

@@ -387,12 +387,30 @@
     <button type="button" class="btn btn-buy" id="cartEmptyCta">Ver la tienda</button>
   </div>
   <div class="cart-foot" id="cartFoot">
+    <fieldset class="cart-delivery" id="cartDelivery">
+      <legend>¿Cómo recibes tu pedido?</legend>
+      <label class="delivery-opt">
+        <input type="radio" name="cartDelivery" value="pickup">
+        <span><b>Recojo en tienda</b><small data-pickup-address></small></span>
+      </label>
+      <label class="delivery-opt">
+        <input type="radio" name="cartDelivery" value="delivery" checked>
+        <span><b>Envío a domicilio</b><small>Costo por confirmar</small></span>
+      </label>
+      <p class="delivery-info" id="cartPickupInfo" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+        <span><span data-pickup-address></span> · <button type="button" class="link-btn" id="cartMapToggle" aria-expanded="false" aria-controls="cartPickupMap">Ver ubicación</button></span>
+      </p>
+      <div class="delivery-map" id="cartPickupMap" role="region" aria-label="Mapa de la ubicación de la tienda" hidden></div>
+      <p class="delivery-info" id="cartDeliveryInfo">El costo del envío se confirma por WhatsApp según tu distrito.</p>
+    </fieldset>
     <div class="cart-fields">
-      <label>Tu nombre<input type="text" id="cartName" autocomplete="name" placeholder="Ej. María"></label>
-      <label>Distrito de entrega<input type="text" id="cartDistrict" autocomplete="address-level2" placeholder="Ej. Surco"></label>
+      <label class="cart-field-wide">Tu nombre<input type="text" id="cartName" autocomplete="name" placeholder="Ej. María"></label>
+      <label class="cart-field-wide" id="cartAddressLabel">Dirección de entrega<input type="text" id="cartAddress" autocomplete="street-address" placeholder="Ej. Av. Los Olivos 123, Dpto. 402"></label>
+      <label class="cart-field-wide" id="cartDistrictLabel">Distrito<input type="text" id="cartDistrict" autocomplete="address-level2" placeholder="Ej. Surco"></label>
     </div>
     <div class="cart-total-row"><span>Subtotal</span><strong id="cartSubtotal">S/ 0</strong></div>
-    <p class="cart-note">El envío se coordina por WhatsApp. Pagas por transferencia, Yape o link de pago (Mercado Pago).</p>
+    <p class="cart-note">Pagas por transferencia, Yape o link de pago (Mercado Pago).</p>
     <button type="button" class="btn btn-buy btn-cart-send" id="cartSendBtn">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-1 2.6.1 1.2.6 2.4 1.4 3.4 1.5 2 3.4 3.5 5.7 4.2.7.2 1.3.2 1.9.1.6-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/></svg>
       Enviar pedido por WhatsApp

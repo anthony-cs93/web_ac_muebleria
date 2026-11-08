@@ -922,9 +922,9 @@
 
   // Portada por defecto de cada página (lo que se ve cuando no hay campaña vigente)
   const HERO_DEFAULT = {
-    maderin: { image: "public/maderin/hero.png", title: "Mobiliario infantil para fomentar su autonomía.", text: "Mobiliario diseñado para que los niños mejoren su independencia y crezcan a su propio ritmo", cta: "Ver catálogo infantil" },
-    cdm: { image: "public/cdm/hero.png", title: "Regalos que dicen\nlo que las palabras\nno alcanzan.", text: "Corazón de Madera crea detalles personalizados en madera y melamina — cuadros, organizadores y recuerdos — para cumpleaños, aniversarios y toda ocasión especial.", cta: "Ver productos" },
-    ac: { image: "public/ac_muebleria/hero-img.png", title: "Muebles que transforman tu espacio", text: "Cocinas, closets, muebles de TV y proyectos completos, fabricados en nuestro taller de principio a fin.", cta: "Cotiza tu proyecto" }
+    maderin: { image: "public/maderin/hero.png", html: 'Mobiliario infantil para <span class="hl">fomentar su autonomía</span>.', text: "Mobiliario diseñado para que los niños mejoren su independencia y crezcan a su propio ritmo", cta: "Ver catálogo infantil", ghost: "Síguenos en Instagram", micro: "Pedidos por WhatsApp · Entrega en Lima", badges: [["Materiales seguros", "Madera pino y melamina"], ["Diseño Montessori", "Pensado para jugar y crecer"]] },
+    cdm: { image: "public/cdm/hero.png", html: "Regalos que dicen<br>lo que las palabras<br><em>no alcanzan.</em>", text: "Corazón de Madera crea detalles personalizados en madera y melamina — cuadros, organizadores y recuerdos — para cumpleaños, aniversarios y toda ocasión especial.", cta: "Ver productos", ghost: "Síguenos en Instagram", micro: "Pedidos por WhatsApp · Personalización incluida", badges: [["Personalizado", "con nombres y fechas"], ["Entrega rápida", "ideal para regalos"], ["Hecho a mano", "en madera y melamina"]] },
+    ac: { image: "public/ac_muebleria/hero-img.png", html: "Muebles que <em>transforman tu espacio</em>", text: "Cocinas, closets, muebles de TV y proyectos completos, fabricados en nuestro taller de principio a fin.", cta: "Cotiza tu proyecto", ghost: "Ver nuestros trabajos", micro: "Cotización en menos de 30 minutos, sin compromiso", badges: [["+100", "proyectos entregados"], ["+200", "diseños 3D realizados"]] }
   };
   // Plantillas de temporada: nombre, textos y fechas sugeridas (mes-día)
   const HERO_TEMPLATES = [
@@ -938,13 +938,18 @@
   ];
   const nl2br = (t) => esc(t).replace(/\n/g, "<br>");
 
-  // Vista previa de una portada: lo que verá el cliente (aproximado)
+  // Vista previa de una portada con el mismo diseño de la página (v.title vacío = título de siempre)
   function heroPreviewHtml(shop, v) {
+    const d = HERO_DEFAULT[shop];
     const full = v.mode === "full";
     const img = v.image ? ` style="background-image:url(&quot;${esc(v.image)}&quot;)"` : "";
+    const btn = (t, cls) => (t ? `<span class="${cls}">${esc(t)}</span>` : "");
     const copy = full
-      ? (v.cta && v.ctaUrl ? `<span class="hp-btn">${esc(v.cta)}</span>` : "")
-      : `<h3>${nl2br(v.title)}</h3><p>${esc(v.text)}</p>${v.cta ? `<span class="hp-btn">${esc(v.cta)}</span>` : ""}`;
+      ? (v.cta && v.ctaUrl ? btn(v.cta, "hp-btn hp-corner") : "")
+      : `<h3>${v.title ? nl2br(v.title) : d.html}</h3><p class="hp-lede">${esc(v.text)}</p>
+         <div class="hp-actions">${btn(v.cta, "hp-btn")}${btn(d.ghost, "hp-ghost")}</div>
+         <p class="hp-micro">${esc(d.micro)}</p>
+         <div class="hp-badges">${d.badges.map(([b, t]) => `<div><b>${esc(b)}</b>${esc(t)}</div>`).join("")}</div>`;
     return `<div class="hp hp-${shop}${full ? " hp-full" : ""}${v.image ? "" : " hp-noimg"}"${img}>${v.image ? "" : `<span class="hp-empty">Sin imagen</span>`}<div class="hp-overlay"></div><div class="hp-copy">${copy}</div></div>`;
   }
 
@@ -955,10 +960,10 @@
     const c = id && heroes().find((x) => x.id === id);
     const d = HERO_DEFAULT[heroNowShop];
     if (c) {
-      $("#heroNow").innerHTML = heroPreviewHtml(heroNowShop, { mode: c.mode, image: c.image, title: c.title || d.title, text: c.text || d.text, cta: c.ctaLabel || (c.mode === "full" ? "" : d.cta), ctaUrl: c.ctaUrl });
+      $("#heroNow").innerHTML = heroPreviewHtml(heroNowShop, { mode: c.mode, image: c.image, title: c.title, text: c.text || d.text, cta: c.ctaLabel || (c.mode === "full" ? "" : d.cta), ctaUrl: c.ctaUrl });
       $("#heroNowCaption").textContent = `Campaña en vivo: «${c.name}»${c.end ? `, hasta el ${fmtD(c.end)}` : ""}.`;
     } else {
-      $("#heroNow").innerHTML = heroPreviewHtml(heroNowShop, { mode: "text", image: d.image, title: d.title, text: d.text, cta: d.cta });
+      $("#heroNow").innerHTML = heroPreviewHtml(heroNowShop, { mode: "text", image: d.image, title: "", text: d.text, cta: d.cta });
       $("#heroNowCaption").textContent = "Portada por defecto (no hay campañas en vivo hoy).";
     }
   }
@@ -1000,7 +1005,7 @@
     $("#heroPreview").innerHTML = heroPreviewHtml(shop, {
       mode: full ? "full" : "text",
       image: heroDraft.c.image,
-      title: f.title.value.trim() || d.title,
+      title: f.title.value.trim(),
       text: f.text.value.trim() || d.text,
       cta: f.ctaLabel.value.trim() || (full ? "" : d.cta),
       ctaUrl: f.ctaUrl.value.trim()

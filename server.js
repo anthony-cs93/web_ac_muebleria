@@ -3,6 +3,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import catalogHandler from './api/catalog.js';
 import adminHandler from './api/admin.js';
+import ordersHandler from './api/orders.js';
+import mpWebhookHandler from './api/mp-webhook.js';
 import { LOCAL_UPLOADS_DIR } from './api/_lib.js';
 
 // Variables locales (ADMIN_PASSWORD, etc.) desde .env si existe; en Vercel se definen en el panel del proyecto
@@ -20,6 +22,8 @@ const PORT = process.env.PORT || 3000;
 // API (en producción estas rutas las sirve Vercel desde /api; aquí se montan igual para probar en local)
 app.get('/api/catalog', catalogHandler);
 app.all('/api/admin', express.json({ limit: '5mb' }), adminHandler);
+app.all('/api/orders', express.json({ limit: '5mb' }), ordersHandler);
+app.all('/api/mp-webhook', express.json({ limit: '1mb' }), mpWebhookHandler);
 app.use('/uploads', express.static(LOCAL_UPLOADS_DIR)); // fotos subidas desde el admin en modo local
 
 // Serve static assets from root directory

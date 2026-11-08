@@ -75,6 +75,14 @@
   };
   const iconSvg = (cat) => `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">${ICONS[cat] || ICONS.guardado}</svg>`;
 
+  // Formato de precios: S/1,250 (sin espacio, coma de miles; con céntimos solo si los hay: S/1,250.50)
+  const formatPEN = (n) => {
+    const v = Number(n) || 0;
+    const abs = Math.abs(v);
+    const [int, dec] = (Number.isInteger(abs) ? String(abs) : abs.toFixed(2)).split(".");
+    return `${v < 0 ? "-" : ""}S/${int.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}${dec ? `.${dec}` : ""}`;
+  };
+
   const str = (v, fallback = "") => (typeof v === "string" ? v : fallback);
   const num = (v) => (v === null || v === undefined || v === "" || !Number.isFinite(Number(v)) || Number(v) < 0 ? null : Number(v));
 
@@ -87,6 +95,14 @@
   let textures = [];
   const setTextures = (list) => { textures = Array.isArray(list) ? list.filter((t) => t && t.id && t.img) : []; };
   const getTextures = () => textures;
+  // Costos de envío por distrito (se cargan con el catálogo): { maderin: { Distrito: { ok, cost, note } }, cdm: {...} }
+  let shipping = {};
+  const setShipping = (s) => { shipping = s && typeof s === "object" ? s : {}; };
+  // Distritos a los que se envía, con su costo, ordenados por nombre
+  const shippingFor = (shop) => Object.entries(shipping[shop] || {})
+    .filter(([, v]) => v && v.ok && Number.isFinite(Number(v.cost)))
+    .map(([district, v]) => ({ district, cost: Number(v.cost), note: v.note || "" }))
+    .sort((a, b) => a.district.localeCompare(b.district, "es"));
   const textureOf = (c) => (c && c.tex ? textures.find((t) => t.id === c.tex) || null : null);
   // Valor CSS `background` del círculo de un color: textura si existe, si no el color liso
   const swatchBg = (c) => {
@@ -107,7 +123,7 @@
       p.price = num(p.price);
       p.oldPrice = num(p.oldPrice);
       if (p.oldPrice !== null && (p.price === null || p.oldPrice <= p.price)) p.oldPrice = null;
-      p.discount = p.oldPrice !== null ? `Ahorra S/ ${p.oldPrice - p.price}` : null;
+      p.discount = p.oldPrice !== null ? `Ahorra ${formatPEN(p.oldPrice - p.price)}` : null;
       p.badge = str(p.badge).trim() || null;
       p.stock = ["order", "ready", "out"].includes(p.stock) ? p.stock : "order";
       p.deliveryTime = str(p.deliveryTime).trim() || null;
@@ -179,10 +195,10 @@
 
   async function load(shop) {
     const remote = await fetchRemote();
-    if (remote) setTextures(remote.textures);
+    if (remote) { setTextures(remote.textures); setShipping(remote.shipping); }
     if (remote && Array.isArray(remote[shop])) return normalize(remote[shop], shop);
     return defaultsFor(shop);
   }
 
-  window.ACCatalog = { DEFAULTS, SHOPS, BADGES, ICONS, load, defaultsFor, normalize, iconSvg, hasPhoto, photoUrl, stockInfo, isPromo, setTextures, getTextures, textureOf, swatchBg };
+  window.ACCatalog = { DEFAULTS, SHOPS, BADGES, ICONS, load, defaultsFor, normalize, iconSvg, hasPhoto, photoUrl, stockInfo, isPromo, setTextures, getTextures, textureOf, swatchBg, setShipping, shippingFor, formatPEN };
 })();

@@ -3,13 +3,16 @@
 //   POST op=login     { password }  -> cookie de sesión
 //   POST op=logout
 //   GET  op=catalog   catálogo guardado (sin caché)
-//   POST op=save      { maderin?: [...], cdm?: [...], textures?: [...] }  -> publica los cambios
+//   POST op=save      { maderin?: [...], cdm?: [...], textures?: [...], shipping?: {...}, coupons?: [...] }  -> publica los cambios
+//   GET  op=orders    pedidos de los clientes (más recientes primero)
+//   POST op=order-update { code, status?, note? }  -> cambia el estado de un pedido
 //   POST op=upload    { id, img480, img900 } (data URLs webp/jpeg/png)  -> URLs de las fotos
 //   POST op=upload    { kind: 'texture', id, img, thumb }  -> { img, thumb } (textura de la biblioteca compartida)
 import {
-  adminConfigured, createToken, isAuthed, passwordMatches, readCatalog, readJsonBody, sanitizeShop, sanitizeTextures, sendJson,
-  sessionCookie, slugify, storageMode, storePhoto, writeCatalog
+  adminConfigured, createToken, isAuthed, passwordMatches, readCatalog, readJsonBody, sanitizeCoupons, sanitizeShipping, sanitizeShop, sanitizeTextures,
+  sendJson, sessionCookie, slugify, storageMode, storePhoto, writeCatalog
 } from './_lib.js';
+import { STATUSES, addHistory, findOrderByCode, listOrders, mpSyncOrder, saveOrder, validCode } from './_orders.js';
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -57,9 +60,39 @@ export default async function handler(req, res) {
         if (body[shop] !== undefined) next[shop] = sanitizeShop(body[shop], shop);
       }
       if (body.textures !== undefined) next.textures = sanitizeTextures(body.textures);
+      if (body.shipping !== undefined) next.shipping = sanitizeShipping(body.shipping);
+      if (body.coupons !== undefined) next.coupons = sanitizeCoupons(body.coupons);
       next.updatedAt = new Date().toISOString();
       await writeCatalog(next);
       return sendJson(res, 200, { ok: true, updatedAt: next.updatedAt, catalog: next }, noStore);
+    }
+
+    if (req.method === 'GET' && op === 'orders') {
+      // Los pedidos cancelados se muestran durante 30 días desde la cancelación (siguen guardados)
+      const cutoff = Date.now() - 30 * 24 * 3600 * 1000;
+      const orders = (await listOrders()).filter((o) => o.status !== 'cancelled' || Date.parse(o.cancelledAt || o.updatedAt || o.createdAt) >= cutoff);
+      // Pagos con tarjeta aún pendientes: se confirman con Mercado Pago (por si el aviso automático no llegó)
+      const synced = await Promise.all(orders.map((o) => (o.payment.method === 'card' && o.status === 'pending' ? mpSyncOrder(o).catch(() => o) : o)));
+      return sendJson(res, 200, { orders: synced }, noStore);
+    }
+
+    if (req.method === 'POST' && op === 'order-update') {
+      const body = await readJsonBody(req, 20 * 1024);
+      const order = validCode(body.code) ? await findOrderByCode(body.code) : null;
+      if (!order) return sendJson(res, 404, { error: 'Pedido no encontrado' }, noStore);
+      if (body.status !== undefined) {
+        if (!STATUSES.includes(body.status)) return sendJson(res, 400, { error: 'Estado no válido' }, noStore);
+        if (body.status !== order.status) {
+          order.status = body.status;
+          if (body.status === 'paid') order.payment.paidAt = new Date().toISOString();
+          if (body.status === 'cancelled') order.cancelledAt = new Date().toISOString();
+          else delete order.cancelledAt;
+          addHistory(order, `Estado cambiado a «${body.status}» desde el admin`);
+        }
+      }
+      if (typeof body.note === 'string' && body.note.trim()) addHistory(order, `Nota: ${body.note.trim().slice(0, 300)}`);
+      await saveOrder(order);
+      return sendJson(res, 200, { order }, noStore);
     }
 
     if (req.method === 'POST' && op === 'upload') {

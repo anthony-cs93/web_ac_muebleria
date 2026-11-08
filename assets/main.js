@@ -5,11 +5,6 @@
 // TODO: reemplaza este número por el WhatsApp real del negocio (formato: 51XXXXXXXXX, sin "+")
 const WHATSAPP_NUMBER = "51943613883";
 
-// Recojo en tienda (se muestra en el carrito y va en el pedido de WhatsApp)
-const PICKUP_ADDRESS = "Ca. Argentina #201 - Comas";
-const PICKUP_MAP_URL = "https://maps.app.goo.gl/jKDX4kuzcDRxq7tb6";
-const PICKUP_COORDS = [-11.960141, -77.058542]; // misma ubicación del enlace de Maps, para la vista previa
-
 function waLink(message){
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
@@ -269,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
         img: "public/ac_muebleria/trabajos/cocina-01.png",
         waText: "Hola AC Mueblería, me interesa cotizar un proyecto similar a Cocina en L (Capri + Cuarzo negro).",
         filter: "cocinas",
-        price: "Desde S/ 6,500",
+        price: "Desde S/6,500",
         time: "15 días",
         install: "8 días",
         cta: "Quiero una cocina así"
@@ -288,7 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
         img: "public/ac_muebleria/trabajos/vestidor-01.png",
         waText: "Hola AC Mueblería, me interesa cotizar un proyecto similar a Closet modular (Toquilla).",
         filter: "closets",
-        price: "Desde S/ 1,800",
+        price: "Desde S/1,800",
         time: "10 días",
         install: "4 días",
         cta: "Quiero un closet así"
@@ -307,7 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
         img: "public/ac_muebleria/trabajos/mueble-tv-01.png",
         waText: "Hola AC Mueblería, me interesa cotizar un proyecto similar a Mueble de TV flotante con Wall panel.",
         filter: "tv",
-        price: "Desde S/ 1,500",
+        price: "Desde S/1,500",
         time: "5 días",
         install: "3 días",
         cta: "Quiero un mueble de TV así"
@@ -326,7 +321,7 @@ document.addEventListener("DOMContentLoaded", () => {
         img: "public/ac_muebleria/trabajos/organizador-01.png",
         waText: "Hola AC Mueblería, me interesa cotizar un proyecto similar a Mueble organizador bajo escalera.",
         filter: "organizadores",
-        price: "Desde S/ 1,000",
+        price: "Desde S/1,000",
         time: "5 días",
         install: "2 días",
         cta: "Quiero un organizador así"
@@ -345,7 +340,7 @@ document.addEventListener("DOMContentLoaded", () => {
         img: "public/ac_muebleria/trabajos/escritorio-01.png",
         waText: "Hola AC Mueblería, me interesa cotizar un proyecto similar a Módulos de oficina.",
         filter: "oficinas",
-        price: "Desde S/ 2,500",
+        price: "Desde S/2,500",
         time: "10 días",
         install: "5 días",
         cta: "Quiero una oficina así"
@@ -364,7 +359,7 @@ document.addEventListener("DOMContentLoaded", () => {
         img: "public/ac_muebleria/trabajos/isla-cocina-01.png",
         waText: "Hola AC Mueblería, me interesa cotizar un proyecto similar a Mueble bar con vitrinas vidriadas.",
         filter: "cocinas",
-        price: "Desde S/ 2,000",
+        price: "Desde S/2,000",
         time: "8 días",
         install: "3 días",
         cta: "Quiero un mueble bar así"
@@ -925,13 +920,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const cartHeadCount = document.getElementById("cartHeadCount");
     const navCartBtn = document.getElementById("navCartBtn");
     const navCartCount = document.getElementById("navCartCount");
-    const cartNameInput = document.getElementById("cartName");
-    const cartDistrictInput = document.getElementById("cartDistrict");
-    const cartAddressInput = document.getElementById("cartAddress");
-    const cartAddressLabel = document.getElementById("cartAddressLabel");
-    const cartNotesInput = document.getElementById("cartNotes");
-    const deliveryRadios = Array.from(document.querySelectorAll('input[name="cartDelivery"]'));
-    const cartDistrictLabel = document.getElementById("cartDistrictLabel");
     const cartToast = document.getElementById("cartToast");
     const cartToastText = document.getElementById("cartToastText");
     let toastTimer = null;
@@ -991,6 +979,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       cartEmptyEl.hidden = count > 0;
       cartFootEl.hidden = count === 0;
+      const clearBtn = document.getElementById("cartClearBtn");
+      if (clearBtn) clearBtn.hidden = count === 0;
       cartItemsEl.hidden = count === 0;
 
       cartItemsEl.innerHTML = cart.map((l, i) => {
@@ -1009,13 +999,13 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
           </div>
           <div class="cart-line-side">
-            <strong>S/ ${p.price * l.qty}</strong>
+            <strong>${ACCatalog.formatPEN(p.price * l.qty)}</strong>
             <button type="button" data-act="remove" class="cart-line-remove" aria-label="Quitar ${esc(p.name)} del carrito">Quitar</button>
           </div>
         </div>`;
       }).join("");
 
-      if (cartSubtotalEl) cartSubtotalEl.textContent = `S/ ${cartTotal()}`;
+      if (cartSubtotalEl) cartSubtotalEl.textContent = ACCatalog.formatPEN(cartTotal());
     }
 
     function openCart() {
@@ -1037,134 +1027,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!(cfg.isBlocked && cfg.isBlocked())) document.body.style.overflow = "";
       if (navCartBtn) navCartBtn.focus();
     }
-
-    const deliveryMode = () => {
-      const on = deliveryRadios.find(r => r.checked);
-      return on ? on.value : "delivery";
-    };
-    // Vista previa interactiva de la ubicación (Leaflet + OpenStreetMap, se descarga al primer uso)
-    let leafletPromise = null;
-    const loadLeaflet = () => leafletPromise || (leafletPromise = new Promise((resolve, reject) => {
-      if (window.L) return resolve(window.L);
-      const css = document.createElement("link");
-      css.rel = "stylesheet";
-      css.href = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css";
-      document.head.appendChild(css);
-      const sc = document.createElement("script");
-      sc.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js";
-      sc.onload = () => resolve(window.L);
-      sc.onerror = () => { leafletPromise = null; reject(new Error("mapa no disponible")); };
-      document.head.appendChild(sc);
-    }));
-    let pickupMap = null;
-    function showPickupMap(box) {
-      if (pickupMap) { setTimeout(() => pickupMap.invalidateSize(), 50); return; }
-      loadLeaflet().then((L) => {
-        if (pickupMap || box.hidden) return;
-        pickupMap = L.map(box, { center: PICKUP_COORDS, zoom: 16, scrollWheelZoom: false, doubleClickZoom: false, attributionControl: true });
-        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "&copy; OpenStreetMap" }).addTo(pickupMap);
-        const pin = L.divIcon({
-          className: "map-pin", iconSize: [32, 42], iconAnchor: [16, 42],
-          html: '<svg viewBox="0 0 32 42" aria-hidden="true"><path d="M16 0C7.2 0 0 7 0 15.7 0 27 16 42 16 42s16-15 16-26.3C32 7 24.8 0 16 0Z" fill="#d93025"/><circle cx="16" cy="15.5" r="6" fill="#fff"/></svg>'
-        });
-        L.marker(PICKUP_COORDS, { icon: pin, keyboard: false, title: PICKUP_ADDRESS }).addTo(pickupMap);
-        // Un clic en el mapa (no al arrastrar) abre la ubicación en Google Maps
-        pickupMap.on("click", () => window.open(PICKUP_MAP_URL, "_blank", "noopener"));
-        // La rueda del mouse solo hace zoom tras hacer clic en el mapa, para no atrapar el scroll del carrito
-        pickupMap.on("focus", () => pickupMap.scrollWheelZoom.enable());
-        pickupMap.on("blur", () => pickupMap.scrollWheelZoom.disable());
-        setTimeout(() => pickupMap.invalidateSize(), 350);
-      }).catch(() => {
-        box.hidden = true; // sin mapa, queda el enlace "Ver ubicación"
-      });
-    }
-
-    let mapExpanded = false;
-    document.getElementById("cartMapToggle")?.addEventListener("click", () => { mapExpanded = !mapExpanded; syncDelivery(); });
-    // Muestra la dirección de recojo o los datos de envío según la opción elegida
-    function syncDelivery() {
-      const pickup = deliveryMode() === "pickup";
-      const pickupInfo = document.getElementById("cartPickupInfo");
-      const deliveryInfo = document.getElementById("cartDeliveryInfo");
-      if (pickupInfo) pickupInfo.hidden = !pickup;
-      const mapBox = document.getElementById("cartPickupMap");
-      const mapToggle = document.getElementById("cartMapToggle");
-      if (!pickup) mapExpanded = false;
-      if (mapBox) {
-        mapBox.hidden = !(pickup && mapExpanded);
-        if (pickup && mapExpanded) showPickupMap(mapBox); // se carga solo al desplegarlo
-      }
-      if (mapToggle) {
-        mapToggle.setAttribute("aria-expanded", String(pickup && mapExpanded));
-        mapToggle.textContent = pickup && mapExpanded ? "Ocultar mapa" : "Ver ubicación";
-      }
-      if (deliveryInfo) deliveryInfo.hidden = pickup;
-      if (cartAddressLabel) cartAddressLabel.hidden = pickup;
-      if (cartDistrictLabel) cartDistrictLabel.hidden = pickup;
-    }
-    document.querySelectorAll("[data-pickup-address]").forEach(el => { el.textContent = PICKUP_ADDRESS; });
-
-    function buildOrderMessage() {
-      const lines = cart.map(l => {
-        const p = productById(l.id);
-        return `• ${l.qty} × ${p.name}${l.color ? ` (${l.color})` : ""}${l.text ? ` — ${p.custom ? p.custom.label : "Personalización"}: "${l.text}"` : ""} — S/ ${p.price * l.qty}`;
-      });
-      const name = cartNameInput ? cartNameInput.value.trim() : "";
-      const district = cartDistrictInput ? cartDistrictInput.value.trim() : "";
-      const address = cartAddressInput ? cartAddressInput.value.trim() : "";
-      const notes = cartNotesInput ? cartNotesInput.value.trim() : "";
-      const pickup = deliveryMode() === "pickup";
-      const delivery = pickup
-        ? `Entrega: Recojo en tienda — ${PICKUP_ADDRESS} (${PICKUP_MAP_URL})`
-        : `Entrega: Envío a domicilio${address ? ` — Dirección: ${address}` : ""}${district ? ` — Distrito: ${district}` : ""} (costo de envío por confirmar)`;
-      const extra = [name && `Nombre: ${name}`, deliveryRadios.length && delivery, notes && `Nota adicional: ${notes}`].filter(Boolean);
-      return [
-        `Hola ${brand}, quiero hacer este pedido:`,
-        "",
-        ...lines,
-        "",
-        `Total: S/ ${cartTotal()}`,
-        ...(extra.length ? ["", ...extra] : []),
-        "",
-        pickup
-          ? "¿Me confirman disponibilidad y cómo pagar? (transferencia, Yape o link de Mercado Pago)"
-          : "¿Me confirman disponibilidad, costo de envío y cómo pagar? (transferencia, Yape o link de Mercado Pago)"
-      ].join("\n");
-    }
-
-    // Recuerda nombre, distrito y nota adicional entre visitas
-    const fieldInputs = [cartNameInput, cartAddressInput, cartDistrictInput, cartNotesInput];
-    try {
-      const saved = JSON.parse(localStorage.getItem(fieldsKey)) || {};
-      if (cartNameInput && saved.name) cartNameInput.value = saved.name;
-      if (cartAddressInput && saved.address) cartAddressInput.value = saved.address;
-      if (cartDistrictInput && saved.district) cartDistrictInput.value = saved.district;
-      if (cartNotesInput && saved.notes) cartNotesInput.value = saved.notes;
-      if (saved.delivery) deliveryRadios.forEach(r => { r.checked = r.value === saved.delivery; });
-    } catch (e) { /* sin datos guardados */ }
-    syncDelivery();
-    fieldInputs.forEach(input => {
-      if (!input) return;
-      input.addEventListener("input", () => {
-        try {
-          localStorage.setItem(fieldsKey, JSON.stringify({
-            name: cartNameInput ? cartNameInput.value : "",
-            address: cartAddressInput ? cartAddressInput.value : "",
-            district: cartDistrictInput ? cartDistrictInput.value : "",
-            notes: cartNotesInput ? cartNotesInput.value : "",
-            delivery: deliveryMode()
-          }));
-        } catch (e) { /* ignorar */ }
-      });
-    });
-    deliveryRadios.forEach(r => r.addEventListener("change", () => {
-      syncDelivery();
-      try {
-        const saved = JSON.parse(localStorage.getItem(fieldsKey)) || {};
-        saved.delivery = deliveryMode();
-        localStorage.setItem(fieldsKey, JSON.stringify(saved));
-      } catch (e) { /* ignorar */ }
-    }));
 
     if (cartItemsEl) {
       cartItemsEl.addEventListener("click", (e) => {
@@ -1195,9 +1057,10 @@ document.addEventListener("DOMContentLoaded", () => {
       saveCart();
       renderCart();
     });
-    document.getElementById("cartSendBtn")?.addEventListener("click", () => {
-      if (!cart.length) return;
-      openWhatsApp(buildOrderMessage());
+    // Seguir comprando: cierra el carrito y vuelve al catálogo
+    document.getElementById("cartContinueBtn")?.addEventListener("click", () => {
+      closeCart();
+      document.getElementById("productos")?.scrollIntoView({ behavior: "smooth" });
     });
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") closeCart();
@@ -1352,10 +1215,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Precio
-      if (modalCurrentPrice) modalCurrentPrice.textContent = product.price == null ? "Precio por confirmar" : `S/ ${product.price}`;
+      if (modalCurrentPrice) modalCurrentPrice.textContent = product.price == null ? "Precio por confirmar" : ACCatalog.formatPEN(product.price);
       if (modalOldPrice) {
         modalOldPrice.hidden = !product.oldPrice;
-        if (product.oldPrice) modalOldPrice.textContent = `S/ ${product.oldPrice}`;
+        if (product.oldPrice) modalOldPrice.textContent = ACCatalog.formatPEN(product.oldPrice);
       }
       if (modalDiscountTag) {
         modalDiscountTag.hidden = !product.discount;
@@ -1430,7 +1293,7 @@ document.addEventListener("DOMContentLoaded", () => {
         modalAddBtn.disabled = soldOut;
         if (modalAddBtnText) {
           modalAddBtnText.textContent = soldOut ? "Agotado por ahora"
-            : hasPrice ? `Agregar al carrito · S/ ${total}`
+            : hasPrice ? `Agregar al carrito · ${ACCatalog.formatPEN(total)}`
             : "Consultar precio por WhatsApp";
         }
       }
@@ -1439,7 +1302,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!modalWhatsAppBtn) return;
       const qtyText = selectedQuantity > 1 ? ` (${selectedQuantity} unidades)` : "";
       const message = hasPrice
-        ? `Hola Maderin, tengo una consulta sobre: "${product.name}"${qtyText} en acabado ${selectedColor} (Precio: S/ ${total}). ¿Tienen disponibilidad y fecha de entrega?`
+        ? `Hola Maderin, tengo una consulta sobre: "${product.name}"${qtyText} en acabado ${selectedColor} (Precio: ${ACCatalog.formatPEN(total)}). ¿Tienen disponibilidad y fecha de entrega?`
         : `Hola Maderin, tengo una consulta sobre: "${product.name}". ¿Me indican precio, medidas y fecha de entrega?`;
 
       modalWhatsAppBtn.href = waLink(message);
@@ -1520,7 +1383,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ? `<img class="thumb-photo" src="${escAttr(photoUrl(p, 480))}" alt="${escAttr(p.name)}" loading="lazy" decoding="async">`
         : `<div class="thumb-icon-wrap">${p.svg}</div>`;
       const priceBlock = priced
-        ? `<div class="p-price-row"><span class="p-current-price">S/ ${p.price}</span>${p.oldPrice ? `<span class="p-old-price">S/ ${p.oldPrice}</span>` : ""}</div>${p.discount ? `<span class="p-discount-tag">${escAttr(p.discount)}</span>` : ""}`
+        ? `<div class="p-price-row"><span class="p-current-price">${ACCatalog.formatPEN(p.price)}</span>${p.oldPrice ? `<span class="p-old-price">${ACCatalog.formatPEN(p.oldPrice)}</span>` : ""}</div>${p.discount ? `<span class="p-discount-tag">${escAttr(p.discount)}</span>` : ""}`
         : `<div class="p-price-row"><span class="p-current-price p-price-pending">Precio por confirmar</span></div>`;
       const action = !priced
         ? `<button type="button" class="btn btn-buy btn-consult" data-consult-id="${escAttr(p.id)}" aria-label="Consultar precio por WhatsApp">${WA_ICON}<span>Consultar</span></button>`
@@ -1556,6 +1419,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const escapeHtml = (str) => String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     const cartApi = setupCart({
       products: maderinProducts,
+      shop: "maderin",
       storageKey: "maderinCart",
       fieldsKey: "maderinCartFields",
       brand: "Maderin",
@@ -1679,6 +1543,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const cartApi = setupCart({
       products,
+      shop: "cdm",
       storageKey: "cdmCart",
       fieldsKey: "cdmCartFields",
       brand: "Corazón de Madera",
@@ -1697,7 +1562,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ? `<img class="thumb-photo" src="${esc(ACCatalog.photoUrl(p, 480, "cdm"))}" alt="${esc(p.name)}" loading="lazy" decoding="async">`
         : `<div class="thumb-icon-wrap">${p.svg}</div>`;
       const priceBlock = priced
-        ? `<div class="p-price-row"><span class="p-current-price">S/ ${p.price}</span>${p.oldPrice ? `<span class="p-old-price">S/ ${p.oldPrice}</span>` : ""}<span class="p-unit">/ ${esc(p.unit)}</span></div>${p.discount ? `<span class="p-discount-tag">${esc(p.discount)}</span>` : ""}`
+        ? `<div class="p-price-row"><span class="p-current-price">${ACCatalog.formatPEN(p.price)}</span>${p.oldPrice ? `<span class="p-old-price">${ACCatalog.formatPEN(p.oldPrice)}</span>` : ""}<span class="p-unit">/ ${esc(p.unit)}</span></div>${p.discount ? `<span class="p-discount-tag">${esc(p.discount)}</span>` : ""}`
         : `<div class="p-price-row"><span class="p-current-price p-price-pending">Precio a consultar</span></div>`;
       const action = !priced
         ? `<button type="button" class="btn btn-buy btn-consult" aria-label="Consultar precio por WhatsApp">${WA_ICON}<span>Consultar</span></button>`
@@ -1755,7 +1620,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const priced = p.price != null;
       const soldOut = availability(p).state === "out";
       el.add.disabled = soldOut;
-      el.addText.textContent = soldOut ? "Agotado por ahora" : priced ? `Agregar al carrito · S/ ${p.price * qty}` : "Consultar precio por WhatsApp";
+      el.addText.textContent = soldOut ? "Agotado por ahora" : priced ? `Agregar al carrito · ${ACCatalog.formatPEN(p.price * qty)}` : "Consultar precio por WhatsApp";
       el.qtyVal.textContent = qty;
       el.qtyMinus.disabled = qty <= 1;
       el.qtyPlus.disabled = qty >= 10;
@@ -1780,9 +1645,9 @@ document.addEventListener("DOMContentLoaded", () => {
       el.category.textContent = p.categoryLabel;
       el.unit.textContent = `Se vende por ${p.unit}`;
       el.title.textContent = p.name;
-      el.price.textContent = p.price == null ? "Precio a consultar" : `S/ ${p.price}`;
+      el.price.textContent = p.price == null ? "Precio a consultar" : ACCatalog.formatPEN(p.price);
       el.oldPrice.hidden = !p.oldPrice;
-      if (p.oldPrice) el.oldPrice.textContent = `S/ ${p.oldPrice}`;
+      if (p.oldPrice) el.oldPrice.textContent = ACCatalog.formatPEN(p.oldPrice);
       el.discount.hidden = !p.discount;
       if (p.discount) el.discount.textContent = p.discount;
       const av = availability(p);

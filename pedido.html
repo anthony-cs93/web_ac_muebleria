@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="public/favicon/cdm-32.png" id="pdFavicon">
+<title>Tu pedido | AC Mueblería</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="theme-cdm checkout-page">
+
+<header class="co-head">
+  <div class="co-head-inner">
+    <a href="cdm.html" class="co-brand" id="pdBrand"><img src="public/cdm/logo.png" alt="Corazón de Madera" id="pdLogo"></a>
+    <a href="cdm.html" class="co-back" id="pdBack">← Volver a la tienda</a>
+  </div>
+</header>
+
+<main class="co-main pd-main">
+  <p class="pd-loading" id="pdLoading">Cargando tu pedido…</p>
+  <div class="pd-error" id="pdError" hidden></div>
+
+  <div id="pdContent" hidden>
+    <div class="pd-hero" id="pdHero"></div>
+
+    <section class="co-card pd-track" aria-label="Avance de tu pedido">
+      <ol class="pd-steps" id="pdSteps"></ol>
+    </section>
+
+    <div class="co-grid pd-grid">
+      <div class="pd-left">
+        <section class="co-card" id="pdPay" hidden></section>
+        <section class="co-card" id="pdProof" hidden>
+          <h2>Sube tu comprobante</h2>
+          <p class="co-note" id="pdProofNote">Sube una captura de tu pago (JPG, PNG o WebP). Así podemos confirmarlo más rápido.</p>
+          <div class="pd-proof-img" id="pdProofImg" hidden></div>
+          <label class="btn btn-buy pd-upload"><span id="pdUploadText">Subir comprobante</span><input type="file" id="pdFile" accept="image/jpeg,image/png,image/webp" hidden></label>
+          <p class="co-error" id="pdUploadError" role="alert" hidden></p>
+          <a class="pd-wa" id="pdWa" href="#" target="_blank" rel="noopener">¿Prefieres avisarnos por WhatsApp?</a>
+        </section>
+      </div>
+
+      <aside class="co-summary" aria-label="Resumen del pedido">
+        <h2>Tu pedido <span class="pd-code" id="pdCode"></span></h2>
+        <ul class="co-items" id="pdItems"></ul>
+        <dl class="co-totals">
+          <div><dt>Subtotal</dt><dd id="pdSubtotal"></dd></div>
+          <div class="co-saving-row" id="pdProdDiscRow" hidden><dt>Descuentos del producto</dt><dd id="pdProdDisc"></dd></div>
+          <div class="co-saving-row" id="pdCouponRow" hidden><dt id="pdCouponLabel">Cupón</dt><dd id="pdCouponAmt"></dd></div>
+          <div><dt>Envío</dt><dd id="pdShipping"></dd></div>
+          <div id="pdFeeRow" hidden><dt>Recargo tarjeta (3.5%)</dt><dd id="pdFee"></dd></div>
+          <div class="co-total"><dt>Total</dt><dd id="pdTotal"></dd></div>
+        </dl>
+        <p class="pd-delivery" id="pdDelivery"></p>
+        <p class="pd-delivery" id="pdEta" hidden></p>
+        <p class="pd-delivery" id="pdBoleta" hidden>Boleta solicitada: la emitiremos con tu DNI al entregar tu pedido.</p>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<script src="assets/catalog.js"></script>
+<script src="assets/pedido.js"></script>
+</body>
+</html>

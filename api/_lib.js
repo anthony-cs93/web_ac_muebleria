@@ -152,6 +152,7 @@ export async function storePhoto(name, buffer, contentType) {
 }
 
 export const LOCAL_UPLOADS_DIR = path.join(LOCAL_DIR, 'fotos');
+export const LOCAL_DATA_DIR = LOCAL_DIR;
 
 // ---------------------------------------------------------------- Validación del catálogo
 const CATEGORIES = {
@@ -245,6 +246,59 @@ export function sanitizeTextures(list) {
     seen.add(id);
     const thumb = safeUrl(raw.thumb);
     out.push(thumb ? { id, name, img, thumb } : { id, name, img });
+  }
+  return out;
+}
+
+// Costos de envío por distrito y tienda: { maderin: { "Miraflores": { ok, cost, note } }, cdm: { ... } }
+export const DISTRICTS = [
+  'Ancón', 'Ate', 'Barranco', 'Breña', 'Carabayllo', 'Chaclacayo', 'Chorrillos', 'Cieneguilla', 'Comas', 'El Agustino',
+  'Independencia', 'Jesús María', 'La Molina', 'La Victoria', 'Lima (Cercado)', 'Lince', 'Los Olivos', 'Lurigancho (Chosica)',
+  'Lurín', 'Magdalena del Mar', 'Miraflores', 'Pachacámac', 'Pucusana', 'Pueblo Libre', 'Puente Piedra', 'Punta Hermosa',
+  'Punta Negra', 'Rímac', 'San Bartolo', 'San Borja', 'San Isidro', 'San Juan de Lurigancho', 'San Juan de Miraflores',
+  'San Luis', 'San Martín de Porres', 'San Miguel', 'Santa Anita', 'Santa María del Mar', 'Santa Rosa', 'Santiago de Surco',
+  'Surquillo', 'Villa El Salvador', 'Villa María del Triunfo',
+  'Bellavista', 'Callao', 'Carmen de la Legua Reynoso', 'La Perla', 'La Punta', 'Mi Perú', 'Ventanilla'
+];
+export function sanitizeShipping(raw) {
+  const out = { maderin: {}, cdm: {} };
+  if (!raw || typeof raw !== 'object') return out;
+  for (const shop of ['maderin', 'cdm']) {
+    const src = raw[shop] && typeof raw[shop] === 'object' ? raw[shop] : {};
+    for (const d of DISTRICTS) {
+      const v = src[d];
+      if (!v || typeof v !== 'object') continue;
+      const cost = Number(v.cost);
+      const ok = !!v.ok && Number.isFinite(cost) && cost >= 0 && cost < 10000;
+      out[shop][d] = { ok, cost: ok ? Math.round(cost * 100) / 100 : null, note: text(v.note, 120) };
+    }
+  }
+  return out;
+}
+
+// Cupones de descuento (solo los ve el admin; la tienda los valida en el servidor)
+export function sanitizeCoupons(list) {
+  if (!Array.isArray(list)) return [];
+  const seen = new Set();
+  const out = [];
+  for (const raw of list.slice(0, 40)) {
+    if (!raw || typeof raw !== 'object') continue;
+    const code = text(raw.code, 30).toUpperCase().replace(/[^A-Z0-9_-]/g, '');
+    const value = Number(raw.value);
+    const type = raw.type === 'amount' ? 'amount' : 'percent';
+    if (!code || seen.has(code) || !Number.isFinite(value) || value <= 0) continue;
+    if (type === 'percent' && value > 90) continue;
+    seen.add(code);
+    const min = Number(raw.minSubtotal);
+    out.push({
+      code,
+      type,
+      value: Math.round(value * 100) / 100,
+      shops: ['maderin', 'cdm'].filter((s) => Array.isArray(raw.shops) ? raw.shops.includes(s) : true),
+      minSubtotal: Number.isFinite(min) && min > 0 ? Math.round(min * 100) / 100 : 0,
+      expires: /^\d{4}-\d{2}-\d{2}$/.test(raw.expires || '') && raw.expires >= '2025-01-01' && raw.expires <= `${new Date().getFullYear()}-12-31` ? raw.expires : '',
+      active: raw.active !== false
+    });
   }
   return out;
 }

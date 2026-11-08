@@ -247,3 +247,59 @@ legend { padding: 0 6px; font-weight: 700; font-size: 13px; color: var(--ink-sof
 @keyframes spin { to { transform: rotate(360deg); } }
 .btn .spinner { width: 16px; height: 16px; border-width: 2.5px; border-color: rgba(255, 255, 255, .45); border-top-color: #fff; }
 @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 2s; } }
+
+/* Pedidos */
+.count-alert { background: var(--danger); color: #fff; }
+.orders-view { display: none; }
+.content.is-orders > .toolbar, .content.is-orders > #reorderHint, .content.is-orders > #rows, .content.is-orders > #emptyMsg { display: none; }
+.content.is-orders > .orders-view { display: block; }
+.orders-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { padding: 7px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); font-size: 13px; font-weight: 600; cursor: pointer; color: var(--ink-soft); }
+.chip[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+.orders { list-style: none; margin: 0; padding: 0 0 90px; display: grid; gap: 10px; }
+.order { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.order > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: auto 1fr auto auto; gap: 12px; align-items: center; padding: 12px 14px; }
+.order > summary::-webkit-details-marker { display: none; }
+.order-code { font-weight: 800; letter-spacing: .02em; }
+.order-meta { min-width: 0; font-size: 13px; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.order-meta b { color: var(--ink); }
+.order-total { font-weight: 800; }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; background: #eee; color: #444; }
+.badge-pending { background: #fff3cd; color: #8a6100; }
+.badge-review { background: #dbeafe; color: #1d4ed8; }
+.badge-paid { background: #dcfce7; color: #15803d; }
+.badge-preparing, .badge-ready { background: #ede9fe; color: #6d28d9; }
+.badge-delivered { background: #e5e7eb; color: #374151; }
+.badge-cancelled { background: #fee2e2; color: #b91c1c; }
+.order-body { padding: 4px 14px 14px; display: grid; gap: 12px; border-top: 1px solid var(--line); }
+.order-body h4 { margin: 10px 0 4px; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-soft); }
+.order-items { margin: 0; padding-left: 18px; font-size: 14px; }
+.order-items small { color: var(--ink-soft); }
+.order-totals { font-size: 14px; display: grid; gap: 2px; max-width: 320px; }
+.order-totals div { display: flex; justify-content: space-between; gap: 12px; }
+.order-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.order-actions select { height: 38px; padding: 0 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.order-proof img { max-width: 220px; max-height: 220px; border-radius: 10px; border: 1px solid var(--line); display: block; }
+.order-history { margin: 0; padding-left: 18px; font-size: 12.5px; color: var(--ink-soft); }
+@media (max-width: 720px) { .order > summary { grid-template-columns: 1fr auto; } .order-meta { grid-column: 1 / -1; order: 3; white-space: normal; } }
+
+/* Envíos */
+.ship-dialog { width: min(760px, calc(100vw - 24px)); }
+.ship-tools { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.ship-tabs { display: flex; gap: 6px; }
+.ship-table-wrap { overflow: auto; max-height: 50vh; border: 1px solid var(--line); border-radius: 10px; }
+.ship-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.ship-table th { position: sticky; top: 0; background: var(--accent-soft); text-align: left; padding: 8px 10px; font-size: 12px; text-transform: uppercase; letter-spacing: .03em; }
+.ship-table td { padding: 5px 10px; border-top: 1px solid var(--line); }
+.ship-table select, .ship-table input { height: 34px; padding: 0 8px; border: 1px solid var(--line); border-radius: 8px; background: #fff; min-width: 0; width: 100%; }
+.ship-table input[type="number"] { width: 100px; }
+.ship-table tr.is-bad td { background: #fde8e8; }
+.ship-table tr.is-no td { background: #f1f1f1; color: var(--ink-soft); }
+
+/* Cupones */
+.coupon-dialog { width: min(900px, calc(100vw - 24px)); }
+.coupon-table input[type="text"] { text-transform: uppercase; letter-spacing: .03em; min-width: 110px; }
+.coupon-table input[type="number"] { width: 88px; }
+.coupon-table input[type="date"] { width: 150px; }
+.coupon-table select { width: auto; }
+.coupon-table tr.is-off td { color: var(--ink-soft); background: #f6f6f6; }

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="public/favicon/cdm-32.png" id="coFavicon">
+<title>Finalizar compra | AC Mueblería</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="theme-cdm checkout-page">
+<script>
+  // Tema y tienda según ?tienda=maderin|cdm (por defecto cdm)
+  (function () {
+    var shop = new URLSearchParams(location.search).get("tienda") === "maderin" ? "maderin" : "cdm";
+    document.body.className = "theme-" + shop + " checkout-page";
+    document.body.dataset.shop = shop;
+  })();
+</script>
+
+<header class="co-head">
+  <div class="co-head-inner">
+    <a href="cdm.html" class="co-brand" id="coBrand"><img src="public/cdm/logo.png" alt="Corazón de Madera" id="coLogo"></a>
+    <a href="cdm.html" class="co-back" id="coBack">← Volver a la tienda</a>
+  </div>
+</header>
+
+<main class="co-main">
+  <h1 class="co-title">Finalizar compra</h1>
+
+  <div class="co-existing" id="coExisting" hidden></div>
+
+  <div class="co-empty" id="coEmpty" hidden>
+    <p>Tu carrito está vacío.</p>
+    <a class="btn btn-buy" id="coEmptyLink" href="cdm.html">Volver a la tienda</a>
+  </div>
+
+  <div class="co-grid" id="coGrid" hidden>
+    <form class="co-form" id="coForm" novalidate>
+      <p class="co-required-note"><span class="co-req">*</span> Campos obligatorios</p>
+
+      <section class="co-card" id="coCard1">
+        <h2><span class="co-step" id="coStep1" aria-hidden="true">1</span> Tus datos <span class="co-done-tag" id="coDone1" hidden>Listo</span></h2>
+        <div class="co-fields">
+          <div class="co-field co-wide">
+            <label for="coName">Nombre y apellido <span class="co-req">*</span></label>
+            <input type="text" id="coName" autocomplete="name" maxlength="80" placeholder="Ej. María Pérez" aria-describedby="coNameErr">
+            <p class="co-err" id="coNameErr" role="alert"></p>
+          </div>
+          <div class="co-field">
+            <label for="coPhone">Celular <span class="co-req">*</span></label>
+            <input type="tel" id="coPhone" autocomplete="tel-national" inputmode="numeric" maxlength="13" placeholder="987 654 321" aria-describedby="coPhoneHint coPhoneErr">
+            <p class="co-hint" id="coPhoneHint">9 dígitos. Te escribiremos a este número.</p>
+            <p class="co-err" id="coPhoneErr" role="alert"></p>
+          </div>
+          <div class="co-field">
+            <label for="coEmail">Email <span class="co-optional">(opcional)</span></label>
+            <input type="email" id="coEmail" autocomplete="email" maxlength="120" placeholder="maria@correo.com" aria-describedby="coEmailErr">
+            <p class="co-err" id="coEmailErr" role="alert"></p>
+          </div>
+          <div class="co-field co-wide co-boleta">
+            <label class="co-check"><input type="checkbox" id="coBoleta"> <span>Quiero boleta <span class="co-optional">(opcional)</span></span></label>
+            <div class="co-boleta-fields" id="coBoletaFields" hidden>
+              <label for="coDni">DNI <span class="co-req">*</span></label>
+              <input type="text" id="coDni" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="8 dígitos" aria-describedby="coDniErr">
+              <p class="co-err" id="coDniErr" role="alert"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="co-card" id="coCard2">
+        <h2><span class="co-step" id="coStep2" aria-hidden="true">2</span> Entrega <span class="co-done-tag" id="coDone2" hidden>Listo</span></h2>
+        <div class="co-options" role="radiogroup" aria-label="Entrega">
+          <label class="co-opt"><input type="radio" name="coDelivery" value="delivery" checked><span><b>Envío a domicilio</b><small>Elige tu distrito para ver el costo</small></span></label>
+          <label class="co-opt"><input type="radio" name="coDelivery" value="pickup"><span><b>Recojo en tienda</b><small id="coPickupAddr"></small></span></label>
+        </div>
+        <div class="co-fields" id="coDeliveryFields">
+          <div class="co-field co-wide">
+            <label for="coAddress">Dirección de entrega <span class="co-req">*</span></label>
+            <input type="text" id="coAddress" autocomplete="street-address" maxlength="160" placeholder="Ej. Av. Los Olivos 123, Dpto. 402" aria-describedby="coAddressErr">
+            <p class="co-err" id="coAddressErr" role="alert"></p>
+          </div>
+          <div class="co-field co-wide">
+            <label for="coDistrict">Distrito <span class="co-req">*</span></label>
+            <select id="coDistrict" aria-describedby="coDistrictNote coDistrictErr"></select>
+            <p class="co-err" id="coDistrictErr" role="alert"></p>
+            <p class="co-hint" id="coDistrictNote">¿No ves tu distrito? Escríbenos por <a id="coDistrictWa" href="#" target="_blank" rel="noopener">WhatsApp</a> y vemos cómo enviarte tu pedido.</p>
+          </div>
+        </div>
+        <div class="co-pickup" id="coPickupInfo" hidden>
+          <p>Recoge tu pedido en <b id="coPickupText"></b>. <button type="button" class="link-btn" id="coMapToggle" aria-expanded="false" aria-controls="coMap">Ver ubicación</button></p>
+          <div class="delivery-map" id="coMap" role="region" aria-label="Mapa de la ubicación de la tienda" hidden></div>
+        </div>
+        <p class="co-eta" id="coEta" hidden></p>
+      </section>
+
+      <section class="co-card" id="coCard3">
+        <h2><span class="co-step" id="coStep3" aria-hidden="true">3</span> Forma de pago <span class="co-req">*</span> <span class="co-done-tag" id="coDone3" hidden>Listo</span></h2>
+        <div class="co-options co-options-col" role="radiogroup" aria-label="Forma de pago" aria-describedby="coMethodErr">
+          <label class="co-opt"><input type="radio" name="coMethod" value="yape"><span><b>Yape</b><small>Sin comisión · pagas con el QR o el número</small></span></label>
+          <label class="co-opt"><input type="radio" name="coMethod" value="transfer"><span><b>Transferencia bancaria (BCP)</b><small>Sin comisión · cuenta en soles o interbancaria</small></span></label>
+          <label class="co-opt"><input type="radio" name="coMethod" value="card"><span><b>Tarjeta de crédito o débito</b><small>Recargo de 3.5% · te enviamos el link de pago por WhatsApp</small></span></label>
+        </div>
+        <p class="co-err" id="coMethodErr" role="alert"></p>
+        <p class="co-note" id="coMethodNote"></p>
+      </section>
+
+      <section class="co-card">
+        <div class="co-field">
+          <label for="coNotes">Nota adicional <span class="co-optional">(opcional)</span></label>
+          <textarea id="coNotes" rows="2" maxlength="300" placeholder="Ej. Es para un regalo, necesito la entrega antes del viernes"></textarea>
+        </div>
+        <input type="text" id="coWebsite" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="co-trap">
+      </section>
+
+      <p class="co-error" id="coError" role="alert" hidden></p>
+      <button type="submit" class="btn btn-buy co-submit" id="coSubmit">Confirmar pedido</button>
+      <p class="co-legal" id="coLegal">Al confirmar, creamos tu pedido y te mostramos cómo completar el pago. Coordinaremos contigo la fabricación y la entrega.</p>
+    </form>
+
+    <aside class="co-summary" aria-label="Resumen del pedido">
+      <h2>Resumen</h2>
+      <ul class="co-items" id="coItems"></ul>
+
+      <div class="co-coupon" id="coCoupon">
+        <label for="coCouponInput">¿Tienes un cupón?</label>
+        <div class="co-coupon-row">
+          <input type="text" id="coCouponInput" maxlength="30" autocomplete="off" autocapitalize="characters" placeholder="Código de descuento">
+          <button type="button" class="btn btn-coupon" id="coCouponBtn">Aplicar</button>
+        </div>
+        <p class="co-coupon-msg" id="coCouponMsg" role="status"></p>
+      </div>
+
+      <dl class="co-totals">
+        <div><dt>Subtotal</dt><dd id="coSubtotal"></dd></div>
+        <div class="co-saving-row" id="coProdDiscRow" hidden><dt>Descuentos del producto</dt><dd id="coProdDisc"></dd></div>
+        <div class="co-saving-row" id="coCouponRow" hidden><dt id="coCouponLabel">Cupón</dt><dd id="coCouponAmt"></dd></div>
+        <div><dt>Envío</dt><dd id="coShipping"></dd></div>
+        <div id="coFeeRow" hidden><dt>Recargo tarjeta (3.5%)</dt><dd id="coFee"></dd></div>
+        <div class="co-total"><dt>Total</dt><dd id="coTotal"></dd></div>
+      </dl>
+      <p class="co-saved" id="coSaved" hidden></p>
+      <p class="co-eta co-eta-sum" id="coEtaSum" hidden></p>
+    </aside>
+  </div>
+</main>
+
+<script src="assets/catalog.js"></script>
+<script src="assets/checkout.js"></script>
+</body>
+</html>

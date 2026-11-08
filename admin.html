@@ -42,6 +42,7 @@
       <nav class="shop-tabs" role="tablist" aria-label="Tienda">
         <button role="tab" class="tab" data-shop="maderin" aria-selected="true">Maderin <span class="count" id="countMaderin"></span></button>
         <button role="tab" class="tab" data-shop="cdm" aria-selected="false">Corazón de Madera <span class="count" id="countCdm"></span></button>
+        <button role="tab" class="tab" data-shop="orders" aria-selected="false">Pedidos <span class="count count-alert" id="countOrders" hidden></span></button>
       </nav>
       <div class="topbar-actions">
         <a class="btn btn-ghost" id="viewShopLink" href="maderin.html#productos" target="_blank" rel="noopener">Ver tienda ↗</a>
@@ -58,6 +59,8 @@
         <input type="search" id="searchInput" placeholder="Buscar producto…" aria-label="Buscar producto">
       </div>
       <div class="toolbar-right">
+        <button type="button" class="btn btn-ghost" id="couponBtn">Cupones</button>
+        <button type="button" class="btn btn-ghost" id="shipBtn">Envíos</button>
         <button type="button" class="btn btn-ghost" id="texBtn">Texturas <span class="count" id="countTex"></span></button>
         <button type="button" class="btn btn-primary" id="newBtn">+ Nuevo producto</button>
       </div>
@@ -66,6 +69,19 @@
     <p class="hint" id="reorderHint">Arrastra <span aria-hidden="true">⋮⋮</span> o usa las flechas para cambiar el orden en que aparecen en la tienda. El primero se muestra arriba a la izquierda.</p>
     <ol class="rows" id="rows" aria-label="Productos"></ol>
     <p class="empty" id="emptyMsg" hidden>No hay productos que coincidan.</p>
+
+    <!-- ============ PEDIDOS ============ -->
+    <section class="orders-view" id="ordersView" aria-label="Pedidos">
+      <div class="toolbar">
+        <div class="orders-filters" id="ordersFilters" role="group" aria-label="Filtrar pedidos"></div>
+        <div class="toolbar-right">
+          <button type="button" class="btn btn-ghost" id="ordersRefresh">Actualizar</button>
+        </div>
+      </div>
+      <p class="hint" id="ordersHint"></p>
+      <ol class="orders" id="ordersList"></ol>
+      <p class="empty" id="ordersEmpty" hidden>Aún no hay pedidos.</p>
+    </section>
   </main>
 
   <div class="savebar" id="saveBar">
@@ -234,6 +250,42 @@
       <button type="submit" class="btn btn-primary">Aplicar cambios</button>
     </footer>
   </form>
+</dialog>
+
+<!-- ============ CUPONES DE DESCUENTO ============ -->
+<dialog class="editor coupon-dialog" id="couponDialog" aria-labelledby="couponTitle">
+  <div class="editor-head">
+    <h2 id="couponTitle">Cupones de descuento</h2>
+    <button type="button" class="icon-btn" id="couponClose" aria-label="Cerrar">✕</button>
+  </div>
+  <div class="editor-body">
+    <p class="muted small" style="margin:0">El cliente escribe el código en la página de pago. El descuento se aplica al subtotal de los productos (no al envío). Publica los cambios para activarlos. Los códigos no son públicos.</p>
+    <div class="ship-table-wrap"><table class="ship-table coupon-table" id="couponTable"></table></div>
+    <div><button type="button" class="btn btn-ghost btn-sm" id="couponAdd">+ Agregar cupón</button></div>
+    <p class="muted small" id="couponSummary"></p>
+  </div>
+  <footer class="editor-foot"><button type="button" class="btn btn-primary" id="couponDone">Listo</button></footer>
+</dialog>
+
+<!-- ============ COSTOS DE ENVÍO POR DISTRITO ============ -->
+<dialog class="editor ship-dialog" id="shipDialog" aria-labelledby="shipTitle">
+  <div class="editor-head">
+    <h2 id="shipTitle">Costos de envío por distrito</h2>
+    <button type="button" class="icon-btn" id="shipClose" aria-label="Cerrar">✕</button>
+  </div>
+  <div class="editor-body">
+    <p class="muted small" style="margin:0">Cada tienda tiene sus propios costos. Los distritos con «No» o sin costo no se podrán elegir en la tienda. Edita aquí o importa tu Excel; luego publica los cambios.</p>
+    <div class="ship-tools">
+      <div class="ship-tabs" role="tablist" aria-label="Tienda">
+        <button type="button" class="chip" data-ship="maderin" aria-pressed="true">Maderin</button>
+        <button type="button" class="chip" data-ship="cdm" aria-pressed="false">Corazón de Madera</button>
+      </div>
+      <label class="btn btn-ghost file-btn">Importar Excel<input type="file" id="shipInput" accept=".xlsx,.xls" hidden></label>
+    </div>
+    <p class="muted small" id="shipSummary"></p>
+    <div class="ship-table-wrap"><table class="ship-table" id="shipTable"></table></div>
+  </div>
+  <footer class="editor-foot"><button type="button" class="btn btn-primary" id="shipDone">Listo</button></footer>
 </dialog>
 
 <!-- ============ BIBLIOTECA DE TEXTURAS (compartida) ============ -->

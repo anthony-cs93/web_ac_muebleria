@@ -14,7 +14,9 @@
 
   const state = {
     shop: "maderin",
-    catalog: { maderin: [], cdm: [], textures: [] },
+    catalog: { maderin: [], cdm: [], textures: [], shipping: { maderin: {}, cdm: {} }, coupons: [] },
+    orders: [],
+    ordersFilter: "open",
     saved: "",
     search: "",
     storage: "blob"
@@ -146,6 +148,15 @@
   }
 
   function setShop(shop) {
+    const isOrders = shop === "orders";
+    $(".content").classList.toggle("is-orders", isOrders);
+    $$(".tab[data-shop]").forEach((t) => t.setAttribute("aria-selected", String(t.dataset.shop === shop)));
+    if (isOrders) {
+      document.body.dataset.shop = state.shop === "cdm" ? "cdm" : "maderin";
+      $("#viewShopLink").href = SHOP_PAGES[state.shop];
+      loadOrders();
+      return;
+    }
     state.shop = shop;
     state.search = "";
     $("#searchInput").value = "";
@@ -328,7 +339,7 @@
     const price = f("price").value === "" ? null : Number(f("price").value);
     const old = f("oldPrice").value === "" ? null : Number(f("oldPrice").value);
     const el = $("#discountPreview");
-    if (old !== null && price !== null && old > price) el.textContent = `En la tienda se mostrará: S/ ${price} (antes S/ ${old}) · Ahorra S/ ${old - price}`;
+    if (old !== null && price !== null && old > price) el.textContent = `En la tienda se mostrará: ${C.formatPEN(price)} (antes ${C.formatPEN(old)}) · Ahorra ${C.formatPEN(old - price)}`;
     else if (old !== null) el.textContent = "El precio anterior solo se muestra si es mayor que el precio actual.";
     else if (price === null) el.textContent = "Sin precio, el producto se consulta por WhatsApp y no entra al carrito.";
     else el.textContent = "";
@@ -644,11 +655,13 @@
     btn.disabled = true;
     $("#saveStatus").textContent = "Publicando…";
     try {
-      const res = await api("save", { method: "POST", body: { maderin: state.catalog.maderin, cdm: state.catalog.cdm, textures: state.catalog.textures } });
+      const res = await api("save", { method: "POST", body: { maderin: state.catalog.maderin, cdm: state.catalog.cdm, textures: state.catalog.textures, shipping: state.catalog.shipping, coupons: state.catalog.coupons } });
       state.catalog = {
         maderin: C.normalize(res.catalog.maderin, "maderin"),
         cdm: C.normalize(res.catalog.cdm, "cdm"),
-        textures: res.catalog.textures || []
+        textures: res.catalog.textures || [],
+        shipping: { maderin: {}, cdm: {}, ...(res.catalog.shipping || {}) },
+        coupons: res.catalog.coupons || []
       };
       syncTextures();
       state.saved = snapshot();
@@ -696,6 +709,338 @@
   });
 
   window.addEventListener("beforeunload", (e) => { if (isDirty()) { e.preventDefault(); e.returnValue = ""; } });
+
+  // ---------------------------------------------------------------- Pedidos de los clientes
+  const ORDER_STATUS = {
+    pending: "Esperando pago", review: "Comprobante por revisar", paid: "Pagado", preparing: "En preparación",
+    ready: "Listo", delivered: "Entregado", cancelled: "Cancelado"
+  };
+  const PAY_LABEL = { yape: "Yape", transfer: "Transferencia", card: "Tarjeta (Mercado Pago)" };
+  const SHOP_LABEL = { maderin: "Maderin", cdm: "CDM" };
+  const ORDER_FILTERS = [
+    ["open", "Por atender"], ["review", "Por confirmar pago"], ["paid", "Pagados"], ["delivered", "Entregados"], ["cancelled", "Cancelados"], ["all", "Todos"]
+  ];
+  const orderMatches = (o, f) => ({
+    all: true,
+    open: !["delivered", "cancelled"].includes(o.status),
+    review: ["pending", "review"].includes(o.status),
+    paid: ["paid", "preparing", "ready"].includes(o.status),
+    delivered: o.status === "delivered",
+    cancelled: o.status === "cancelled"
+  }[f]);
+  const soles = (n) => C.formatPEN(n);
+  const fmtDate = (iso) => new Date(iso).toLocaleString("es-PE", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+
+  function waLinkFor(o) {
+    let phone = String(o.customer.phone).replace(/\D/g, "");
+    if (phone.length === 9) phone = `51${phone}`;
+    const shopName = o.shop === "cdm" ? "Corazón de Madera" : "Maderin";
+    const msg = o.payment.method === "card" && ["pending", "review"].includes(o.status)
+      ? `Hola ${o.customer.name}, te escribimos de ${shopName}. Aquí tienes el link de pago con tarjeta de tu pedido ${o.code} por ${soles(o.total)}: `
+      : `Hola ${o.customer.name}, te escribimos de ${shopName} por tu pedido ${o.code}.`;
+    return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+  }
+
+  function orderHtml(o) {
+    const d = o.delivery;
+    const items = o.items.map((i) => `<li>${i.qty} × ${esc(i.name)}${i.color ? ` (${esc(i.color)})` : ""} — ${soles(i.lineTotal)}${i.text ? `<br><small>${esc(i.textLabel)}: “${esc(i.text)}”</small>` : ""}</li>`).join("");
+    const statusOpts = Object.entries(ORDER_STATUS).map(([v, l]) => `<option value="${v}"${o.status === v ? " selected" : ""}>${l}</option>`).join("");
+    const proof = o.payment.proofUrl ? `<div class="order-proof"><h4>Comprobante</h4><a href="${esc(o.payment.proofUrl)}" target="_blank" rel="noopener"><img src="${esc(o.payment.proofUrl)}" alt="Comprobante de pago" loading="lazy"></a></div>` : "";
+    const hist = (o.history || []).map((h) => `<li>${fmtDate(h.at)} — ${esc(h.text)}</li>`).join("");
+    return `<details class="order" data-code="${esc(o.code)}">
+      <summary>
+        <span class="order-code">${esc(o.code)}</span>
+        <span class="order-meta"><b>${esc(o.customer.name)}</b> · ${SHOP_LABEL[o.shop]} · ${PAY_LABEL[o.payment.method]} · ${fmtDate(o.createdAt)}</span>
+        <span class="order-total">${soles(o.total)}</span>
+        <span class="badge badge-${o.status}">${ORDER_STATUS[o.status]}${o.status === "cancelled" && o.cancelledAt ? ` · ${fmtDate(o.cancelledAt)}` : ""}</span>
+      </summary>
+      <div class="order-body">
+        <div><h4>Cliente</h4>${esc(o.customer.name)} · ${esc(o.customer.phone)}${o.customer.email ? ` · ${esc(o.customer.email)}` : ""}</div>
+        <div><h4>Entrega</h4>${d.mode === "pickup" ? "Recojo en tienda" : `Envío a domicilio — ${esc(d.address)}, ${esc(d.district)}`}</div>
+        <div><h4>Productos</h4><ul class="order-items">${items}</ul></div>
+        <div class="order-totals">
+          <div><span>Subtotal</span><span>${soles(o.subtotal)}</span></div>
+          ${o.productDiscount ? `<div><span>Descuentos del producto (incluidos)</span><span>${soles(o.productDiscount)}</span></div>` : ""}
+          ${o.discount ? `<div><span>Cupón ${esc(o.coupon ? o.coupon.code : "")}</span><span>− ${soles(o.discount)}</span></div>` : ""}
+          <div><span>Envío</span><span>${soles(o.shipping)}</span></div>
+          ${o.fee ? `<div><span>Recargo tarjeta</span><span>${soles(o.fee)}</span></div>` : ""}
+          <div><b>Total</b><b>${soles(o.total)}</b></div>
+        </div>
+        ${o.eta ? `<div><h4>Plazo estimado</h4>${esc(o.eta.text)}</div>` : ""}
+        ${o.invoice ? `<div><h4>Boleta</h4>Solicitada · DNI ${esc(o.invoice.dni)}</div>` : ""}
+        ${o.notes ? `<div><h4>Nota del cliente</h4>${esc(o.notes)}</div>` : ""}
+        ${proof}
+        <div class="order-actions">
+          <label>Estado <select data-act="status" data-current="${esc(o.status)}" aria-label="Estado del pedido ${esc(o.code)}">${statusOpts}</select></label>
+          <button type="button" class="btn btn-primary btn-sm" data-act="save-status" disabled>Guardar estado</button>
+          ${["pending", "review"].includes(o.status) ? `<button type="button" class="btn btn-primary btn-sm" data-act="confirm">Confirmar pago</button>` : ""}
+          <a class="btn btn-ghost btn-sm" href="${esc(waLinkFor(o))}" target="_blank" rel="noopener">WhatsApp al cliente</a>
+          <a class="btn btn-ghost btn-sm" href="pedido.html?c=${esc(o.code)}&t=${esc(o.token)}" target="_blank" rel="noopener">Ver página del cliente</a>
+        </div>
+        <div><h4>Historial</h4><ul class="order-history">${hist}</ul></div>
+      </div>
+    </details>`;
+  }
+
+  function renderOrders() {
+    const needs = state.orders.filter((o) => ["pending", "review"].includes(o.status)).length;
+    const badge = $("#countOrders");
+    badge.textContent = needs;
+    badge.hidden = needs === 0;
+    $("#ordersFilters").innerHTML = ORDER_FILTERS.map(([k, l]) => `<button type="button" class="chip" data-filter="${k}" aria-pressed="${state.ordersFilter === k}">${l}</button>`).join("");
+    const open = new Set($$("#ordersList .order[open]").map((el) => el.dataset.code));
+    const list = state.orders.filter((o) => orderMatches(o, state.ordersFilter));
+    $("#ordersList").innerHTML = list.map(orderHtml).join("");
+    $$("#ordersList .order").forEach((el) => { if (open.has(el.dataset.code)) el.open = true; });
+    $("#ordersEmpty").hidden = list.length > 0;
+    $("#ordersEmpty").textContent = state.orders.length ? "No hay pedidos en este filtro." : "Aún no hay pedidos.";
+    $("#ordersHint").textContent = state.ordersFilter === "cancelled"
+      ? "Los pedidos cancelados se muestran durante 30 días desde que se cancelaron."
+      : needs ? `${needs} pedido(s) esperando confirmación de pago.` : "";
+  }
+
+  async function loadOrders() {
+    $("#ordersHint").textContent = "Cargando pedidos…";
+    try {
+      const res = await api("orders");
+      state.orders = res.orders || [];
+      renderOrders();
+    } catch (err) {
+      $("#ordersHint").textContent = "";
+      if (err.status === 401) { toast("Tu sesión venció. Vuelve a entrar.", true); showLogin(true); }
+      else toast(`No se pudieron cargar los pedidos: ${err.message}`, true);
+    }
+  }
+
+  async function updateOrder(code, body) {
+    try {
+      const res = await api("order-update", { method: "POST", body: { code, ...body } });
+      const i = state.orders.findIndex((o) => o.code === code);
+      if (i >= 0) state.orders[i] = res.order;
+      renderOrders();
+      toast("Pedido actualizado.");
+    } catch (err) {
+      toast(`No se pudo actualizar: ${err.message}`, true);
+      renderOrders();
+    }
+  }
+
+  $("#ordersFilters").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-filter]");
+    if (!b) return;
+    state.ordersFilter = b.dataset.filter;
+    renderOrders();
+  });
+  $("#ordersRefresh").addEventListener("click", loadOrders);
+  // Cambiar el estado se aplica con el botón «Guardar estado» (no al elegir en la lista)
+  $("#ordersList").addEventListener("change", (e) => {
+    const sel = e.target.closest('[data-act="status"]');
+    const card = e.target.closest(".order");
+    if (!sel || !card) return;
+    card.querySelector('[data-act="save-status"]').disabled = sel.value === sel.dataset.current;
+  });
+  $("#ordersList").addEventListener("click", (e) => {
+    const card = e.target.closest(".order");
+    if (!card) return;
+    const save = e.target.closest('[data-act="save-status"]');
+    if (save && !save.disabled) {
+      const status = card.querySelector('[data-act="status"]').value;
+      if (status === "cancelled" && !confirm(`¿Cancelar el pedido ${card.dataset.code}? Seguirá visible en «Cancelados» durante 30 días.`)) return;
+      save.disabled = true;
+      save.textContent = "Guardando…";
+      updateOrder(card.dataset.code, { status });
+      return;
+    }
+    const btn = e.target.closest('[data-act="confirm"]');
+    if (btn && confirm("¿Confirmas que ya recibiste este pago?")) updateOrder(card.dataset.code, { status: "paid" });
+  });
+
+  // ---------------------------------------------------------------- Cupones de descuento
+  const couponDialog = $("#couponDialog");
+  const COUPON_MIN = "2025-01-01";
+  const COUPON_MAX = `${new Date().getFullYear()}-12-31`; // máximo: el año actual
+  const coupons = () => state.catalog.coupons;
+  function renderCoupons() {
+    $("#couponTable").innerHTML = `<thead><tr><th>Código</th><th>Descuento</th><th>Tiendas</th><th>Compra mínima (S/)</th><th>Vence</th><th>Activo</th><th></th></tr></thead><tbody>` +
+      (coupons().length ? coupons().map((c, i) => `<tr data-i="${i}" class="${c.active === false ? "is-off" : ""}">
+        <td><input type="text" data-f="code" value="${esc(c.code)}" maxlength="30" placeholder="BIENVENIDA10" aria-label="Código del cupón"></td>
+        <td><select data-f="type" aria-label="Tipo de descuento"><option value="percent"${c.type === "percent" ? " selected" : ""}>%</option><option value="amount"${c.type === "amount" ? " selected" : ""}>S/</option></select>
+            <input type="number" data-f="value" min="1" step="1" value="${c.value ?? ""}" aria-label="Valor del descuento"></td>
+        <td><select data-f="shops" aria-label="Tiendas"><option value="both"${(c.shops || []).length !== 1 ? " selected" : ""}>Ambas</option><option value="maderin"${(c.shops || []).length === 1 && c.shops[0] === "maderin" ? " selected" : ""}>Maderin</option><option value="cdm"${(c.shops || []).length === 1 && c.shops[0] === "cdm" ? " selected" : ""}>CDM</option></select></td>
+        <td><input type="number" data-f="minSubtotal" min="0" step="1" value="${c.minSubtotal || ""}" placeholder="0" aria-label="Compra mínima"></td>
+        <td><input type="date" data-f="expires" value="${esc(c.expires || "")}" min="2025-01-01" max="${COUPON_MAX}" aria-label="Fecha de vencimiento"></td>
+        <td><input type="checkbox" data-f="active"${c.active !== false ? " checked" : ""} aria-label="Cupón activo"></td>
+        <td><button type="button" class="icon-btn" data-act="del" aria-label="Eliminar cupón">✕</button></td>
+      </tr>`).join("") : `<tr><td colspan="7" class="muted">Aún no hay cupones. Agrega el primero.</td></tr>`) + "</tbody>";
+    const active = coupons().filter((c) => c.active !== false).length;
+    $("#couponSummary").textContent = `${coupons().length} cupones · ${active} activos. Un código vence al final del día indicado (hora de Lima); sin fecha, no vence.`;
+    refreshDirty();
+  }
+  function readCouponRow(tr) {
+    const c = coupons()[Number(tr.dataset.i)];
+    if (!c) return;
+    const get = (f) => tr.querySelector(`[data-f="${f}"]`);
+    c.code = get("code").value.toUpperCase().replace(/[^A-Z0-9_-]/g, "");
+    c.type = get("type").value;
+    c.value = Number(get("value").value) || 0;
+    const sh = get("shops").value;
+    c.shops = sh === "both" ? ["maderin", "cdm"] : [sh];
+    c.minSubtotal = Number(get("minSubtotal").value) || 0;
+    c.expires = get("expires").value;
+    c.active = get("active").checked;
+  }
+  const couponSummary = () => {
+    const active = coupons().filter((c) => c.active !== false).length;
+    $("#couponSummary").textContent = `${coupons().length} cupones · ${active} activos. Un código vence al final del día indicado (hora de Lima); sin fecha, no vence.`;
+    refreshDirty();
+  };
+  $("#couponTable").addEventListener("change", (e) => {
+    const tr = e.target.closest("tr[data-i]");
+    if (!tr) return;
+    readCouponRow(tr);
+    tr.classList.toggle("is-off", coupons()[Number(tr.dataset.i)].active === false);
+    couponSummary();
+  });
+  // La fecha se corrige al salir del campo (no mientras se escribe el año): desde 2025 en adelante
+  $("#couponTable").addEventListener("focusout", (e) => {
+    const el = e.target;
+    if (el.dataset.f !== "expires" || !el.value) return;
+    if (el.value < COUPON_MIN) el.value = COUPON_MIN;
+    else if (el.value > COUPON_MAX) el.value = COUPON_MAX;
+    readCouponRow(el.closest("tr[data-i]"));
+    couponSummary();
+  });
+  $("#couponTable").addEventListener("click", (e) => {
+    const btn = e.target.closest('[data-act="del"]');
+    const tr = btn && btn.closest("tr[data-i]");
+    if (!tr) return;
+    const c = coupons()[Number(tr.dataset.i)];
+    if (!confirm(`¿Eliminar el cupón ${c.code || "(sin código)"}?`)) return;
+    coupons().splice(Number(tr.dataset.i), 1);
+    renderCoupons();
+  });
+  $("#couponAdd").addEventListener("click", () => {
+    coupons().push({ code: "", type: "percent", value: 10, shops: ["maderin", "cdm"], minSubtotal: 0, expires: "", active: true });
+    renderCoupons();
+    const last = $$("#couponTable tbody tr").pop();
+    if (last) last.querySelector('[data-f="code"]').focus();
+  });
+  $("#couponBtn").addEventListener("click", () => { renderCoupons(); couponDialog.showModal(); });
+  const closeCoupons = () => {
+    state.catalog.coupons = coupons().filter((c) => c.code && c.value > 0); // se descartan filas vacías
+    couponDialog.close();
+    refreshDirty();
+  };
+  $("#couponClose").addEventListener("click", closeCoupons);
+  $("#couponDone").addEventListener("click", closeCoupons);
+  couponDialog.addEventListener("cancel", () => { state.catalog.coupons = coupons().filter((c) => c.code && c.value > 0); });
+  couponDialog.addEventListener("click", (e) => { if (e.target === couponDialog) closeCoupons(); });
+
+  // ---------------------------------------------------------------- Costos de envío por distrito
+  const DISTRICTS = ["Ancón", "Ate", "Barranco", "Breña", "Carabayllo", "Chaclacayo", "Chorrillos", "Cieneguilla", "Comas", "El Agustino",
+    "Independencia", "Jesús María", "La Molina", "La Victoria", "Lima (Cercado)", "Lince", "Los Olivos", "Lurigancho (Chosica)", "Lurín",
+    "Magdalena del Mar", "Miraflores", "Pachacámac", "Pucusana", "Pueblo Libre", "Puente Piedra", "Punta Hermosa", "Punta Negra", "Rímac",
+    "San Bartolo", "San Borja", "San Isidro", "San Juan de Lurigancho", "San Juan de Miraflores", "San Luis", "San Martín de Porres",
+    "San Miguel", "Santa Anita", "Santa María del Mar", "Santa Rosa", "Santiago de Surco", "Surquillo", "Villa El Salvador",
+    "Villa María del Triunfo", "Bellavista", "Callao", "Carmen de la Legua Reynoso", "La Perla", "La Punta", "Mi Perú", "Ventanilla"];
+  const shipDialog = $("#shipDialog");
+  let shipShop = "maderin";
+  const shipOf = () => (state.catalog.shipping[shipShop] = state.catalog.shipping[shipShop] || {});
+
+  function renderShip() {
+    const map = shipOf();
+    $$("[data-ship]", shipDialog).forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.ship === shipShop)));
+    let ok = 0, no = 0, bad = 0;
+    $("#shipTable").innerHTML = `<thead><tr><th>Distrito</th><th>¿Se envía?</th><th>Costo (S/)</th><th>Observación</th></tr></thead><tbody>` +
+      DISTRICTS.map((d) => {
+        const v = map[d] || {};
+        const val = v.ok === true ? "yes" : v.ok === false ? "no" : "";
+        const missing = val === "yes" && !(Number(v.cost) >= 0 && v.cost !== null && v.cost !== "");
+        if (val === "yes" && !missing) ok++; else if (val === "no") no++; else bad++;
+        return `<tr data-d="${esc(d)}" class="${missing ? "is-bad" : val === "no" ? "is-no" : ""}">
+          <td>${esc(d)}</td>
+          <td><select aria-label="¿Se envía a ${esc(d)}?"><option value=""${val === "" ? " selected" : ""}>—</option><option value="yes"${val === "yes" ? " selected" : ""}>Sí</option><option value="no"${val === "no" ? " selected" : ""}>No</option></select></td>
+          <td><input type="number" min="0" step="0.5" value="${v.cost ?? ""}" aria-label="Costo de envío a ${esc(d)}"${val !== "yes" ? " disabled" : ""}></td>
+          <td><input type="text" maxlength="120" value="${esc(v.note || "")}" aria-label="Observación de ${esc(d)}"></td>
+        </tr>`;
+      }).join("") + "</tbody>";
+    $("#shipSummary").textContent = `${ok} distritos con envío · ${no} sin envío · ${bad} pendientes o sin costo (no se podrán elegir en la tienda).`;
+    refreshDirty();
+  }
+  function readShipRow(tr) {
+    const sel = tr.querySelector("select").value;
+    const costVal = tr.querySelector('input[type="number"]').value;
+    const note = tr.querySelector('input[type="text"]').value.trim();
+    const map = shipOf();
+    if (!sel) { delete map[tr.dataset.d]; return; }
+    map[tr.dataset.d] = { ok: sel === "yes", cost: sel === "yes" && costVal !== "" ? Number(costVal) : null, note };
+  }
+  $("#shipTable").addEventListener("change", (e) => {
+    const tr = e.target.closest("tr[data-d]");
+    if (!tr) return;
+    readShipRow(tr);
+    renderShip();
+  });
+  $$("[data-ship]", shipDialog).forEach((b) => b.addEventListener("click", () => { shipShop = b.dataset.ship; renderShip(); }));
+  $("#shipBtn").addEventListener("click", () => { shipShop = state.shop === "cdm" ? "cdm" : "maderin"; renderShip(); shipDialog.showModal(); });
+  $("#shipClose").addEventListener("click", () => shipDialog.close());
+  $("#shipDone").addEventListener("click", () => shipDialog.close());
+  shipDialog.addEventListener("click", (e) => { if (e.target === shipDialog) shipDialog.close(); });
+
+  // Importar el Excel (hojas «Maderin» y «CDM» con columnas Distrito, ¿Se envía?, Costo de envío, Observación)
+  let xlsxPromise = null;
+  const loadXlsx = () => xlsxPromise || (xlsxPromise = new Promise((resolve, reject) => {
+    if (window.XLSX) return resolve(window.XLSX);
+    const sc = document.createElement("script");
+    sc.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+    sc.onload = () => resolve(window.XLSX);
+    sc.onerror = () => { xlsxPromise = null; reject(new Error("No se pudo cargar el lector de Excel (revisa tu conexión)")); };
+    document.head.appendChild(sc);
+  }));
+  const norm = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+
+  async function importShippingFile(file) {
+    const XLSX = await loadXlsx();
+    const wb = XLSX.read(await file.arrayBuffer(), { type: "array" });
+    const found = {};
+    for (const [key, label] of [["maderin", "maderin"], ["cdm", "cdm"]]) {
+      const name = wb.SheetNames.find((n) => norm(n) === label);
+      if (!name) continue;
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[name], { header: 1, defval: "" });
+      const head = rows.findIndex((r) => r.some((c) => norm(c) === "distrito"));
+      if (head < 0) continue;
+      const col = (needle) => rows[head].findIndex((c) => norm(c).includes(needle));
+      const cD = col("distrito"), cS = col("envia"), cC = col("costo"), cN = col("observ");
+      if (cD < 0 || cS < 0 || cC < 0) continue;
+      const map = {};
+      let ok = 0, no = 0, pending = 0;
+      for (const r of rows.slice(head + 1)) {
+        const dist = DISTRICTS.find((d) => norm(d) === norm(r[cD]));
+        if (!dist) continue;
+        const sel = norm(r[cS]);
+        const cost = r[cC] === "" ? null : Number(r[cC]);
+        if (sel === "si" && cost !== null && Number.isFinite(cost) && cost >= 0) { map[dist] = { ok: true, cost, note: String(r[cN] ?? "").trim() }; ok++; }
+        else if (sel === "no") { map[dist] = { ok: false, cost: null, note: String(r[cN] ?? "").trim() }; no++; }
+        else pending++;
+      }
+      found[key] = { map, ok, no, pending };
+    }
+    if (!Object.keys(found).length) throw new Error("No encontré las hojas «Maderin» o «CDM» con sus columnas.");
+    for (const [key, v] of Object.entries(found)) state.catalog.shipping[key] = v.map;
+    renderShip();
+    return Object.entries(found).map(([k, v]) => `${SHOP_LABEL[k]}: ${v.ok} con envío, ${v.no} sin envío${v.pending ? `, ${v.pending} sin completar` : ""}`).join(" · ");
+  }
+  $("#shipInput").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    e.target.value = "";
+    if (!file) return;
+    try {
+      const summary = await importShippingFile(file);
+      toast(`Excel importado. ${summary}. Publica los cambios para aplicarlos.`);
+    } catch (err) {
+      toast(err.message, true);
+    }
+  });
 
   // ---------------------------------------------------------------- Carga
   function setLoading(text) {
@@ -749,7 +1094,9 @@
       state.catalog = {
         maderin: remote && Array.isArray(remote.maderin) ? C.normalize(remote.maderin, "maderin") : C.defaultsFor("maderin"),
         cdm: remote && Array.isArray(remote.cdm) ? C.normalize(remote.cdm, "cdm") : C.defaultsFor("cdm"),
-        textures: remote && Array.isArray(remote.textures) ? remote.textures : []
+        textures: remote && Array.isArray(remote.textures) ? remote.textures : [],
+        shipping: { maderin: {}, cdm: {}, ...(remote && remote.shipping && typeof remote.shipping === "object" ? remote.shipping : {}) },
+        coupons: remote && Array.isArray(remote.coupons) ? remote.coupons : []
       };
       syncTextures();
       state.saved = snapshot();
@@ -758,6 +1105,8 @@
     $("#appView").hidden = false;
     setShop(state.shop);
     setLoading(false);
+    // Avisa en la pestaña Pedidos si hay pagos por confirmar
+    api("orders").then((r) => { state.orders = r.orders || []; renderOrders(); }).catch(() => {});
   }
 
   $("#loginForm").addEventListener("submit", async (e) => {

@@ -1175,6 +1175,33 @@ footer{ background:var(--espresso-3); color:rgba(242,236,223,.7); padding:60px 0
 .footer-col a:hover{ color:var(--paper); } /* hover crema puro */
 .footer-bottom{ display:flex; justify-content:space-between; padding-top:22px; font-size:12.5px; flex-wrap:wrap; gap:10px; color:rgba(242,236,223,.45); } /* copyright muy suave */
 
+/* =========================== Antes vs Después =========================== */
+.ba-compare{ --ba-pos:8%; position:relative; width:100%; aspect-ratio:1448/1086; border-radius:18px; overflow:hidden; cursor:ew-resize; touch-action:pan-y; user-select:none; -webkit-user-select:none; box-shadow:0 24px 60px rgba(0,0,0,.35); background:#111; }
+.ba-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; }
+.ba-after{ position:absolute; inset:0; clip-path:inset(0 calc(100% - var(--ba-pos)) 0 0); }
+.ba-handle{ position:absolute; top:0; bottom:0; left:var(--ba-pos); width:44px; margin-left:-22px; display:flex; align-items:center; justify-content:center; outline:none; }
+.ba-handle::before{ content:""; position:absolute; top:0; bottom:0; left:50%; width:3px; margin-left:-1.5px; background:#fff; box-shadow:0 0 12px rgba(0,0,0,.45); }
+.ba-grip{ position:relative; width:46px; height:46px; border-radius:50%; background:#fff; color:var(--espresso-3); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(0,0,0,.4); transition:transform .2s; }
+.ba-grip svg{ width:22px; height:22px; }
+.ba-compare.is-dragging .ba-grip, .ba-handle:focus-visible .ba-grip{ transform:scale(1.12); }
+.ba-handle:focus-visible .ba-grip{ outline:3px solid var(--accent-2); outline-offset:3px; }
+.ba-wrap{ position:relative; max-width:720px; margin:34px auto 0; }
+.ba-wrap .ba-compare{ margin-top:0; }
+.ba-labels{ display:flex; justify-content:space-between; margin-bottom:12px; }
+.ba-tag{ padding:6px 14px; border-radius:999px; font-family:var(--font-mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--paper); background:rgba(242,236,223,.12); border:1px solid rgba(242,236,223,.2); }
+@media (min-width: 1000px){
+  .ba-labels{ position:absolute; top:50%; left:-116px; right:-116px; margin:0; transform:translateY(-50%); pointer-events:none; }
+  .ba-tag{ width:96px; text-align:center; padding:8px 0; font-size:13px; }
+}
+.ba-hint{ text-align:center; margin-top:16px; font-size:14px; color:rgba(242,236,223,.72); }
+@media (max-width: 640px){
+  .ba-wrap{ max-width:92%; margin-top:24px; }
+  .ba-compare{ border-radius:12px; }
+  .ba-labels{ position:absolute; top:10px; left:10px; right:10px; margin:0; z-index:3; pointer-events:none; }
+  .ba-tag{ padding:5px 10px; font-size:11px; color:#fff; background:rgba(20,15,10,.62); border:0; backdrop-filter:blur(6px); }
+}
+}
+
 /* Redes sociales del footer */
 .footer-social{ display:flex; flex-direction:column; gap:10px; margin-top:18px; }
 .footer-social a{ display:inline-flex; align-items:center; gap:10px; font-size:14px; color:rgba(242,236,223,.72); width:fit-content; }

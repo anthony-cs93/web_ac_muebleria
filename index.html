@@ -186,6 +186,37 @@
   </div>
 </section>
 
+<!-- ============ ANTES VS DESPUÉS ============ -->
+<!-- Comparador: barra vertical arrastrable que revela la foto final (después) -->
+<section id="antes-despues" class="on-dark reveal">
+  <div class="container">
+    <div class="head-row">
+      <div>
+        <span class="eyebrow">Antes vs Después</span>
+        <h2 class="section-title">Mira cómo cambia un espacio.</h2>
+      </div>
+    </div>
+    <div class="ba-wrap">
+    <div class="ba-labels" aria-hidden="true">
+      <span class="ba-tag ba-tag-before">Antes</span>
+      <span class="ba-tag ba-tag-after">Después</span>
+    </div>
+    <div class="ba-compare" id="baCompare">
+      <img class="ba-img" src="public/ac_muebleria/antes.webp" alt="Oficina antes: estantería metálica con cajas y papeles sueltos" width="1447" height="1087" loading="lazy" draggable="false">
+      <div class="ba-after" id="baAfter">
+        <img class="ba-img" src="public/ac_muebleria/despues.webp" alt="Oficina después: mueble a medida en melamina madera y gris con escritorio integrado" width="1448" height="1086" loading="lazy" draggable="false">
+      </div>
+      <div class="ba-handle" id="baHandle" role="slider" tabindex="0" aria-label="Comparar antes y después" aria-valuemin="0" aria-valuemax="100" aria-valuenow="8">
+        <span class="ba-grip" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5"/><path d="M15 7l5 5-5 5"/></svg>
+        </span>
+      </div>
+    </div>
+    </div>
+    <p class="ba-hint">Arrastra la barra hacia la derecha para ver el resultado final.</p>
+  </div>
+</section>
+
 <!-- ============ TRABAJOS ============ -->
 <!-- SECCIÓN PORTAFOLIO: Carrusel de fotos limpio y responsive + Modal emergente con ficha técnica -->
 <section id="trabajos" class="on-paper2 reveal">

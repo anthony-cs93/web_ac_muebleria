@@ -234,6 +234,60 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initHeroCounters();
 
+  // --- Comparador Antes vs Después (barra arrastrable) ---
+  function initBeforeAfter() {
+    const box = document.getElementById("baCompare");
+    const handle = document.getElementById("baHandle");
+    if (!box || !handle) return;
+
+    let pos = 8;
+    const setPos = (p) => {
+      pos = Math.max(0, Math.min(100, p));
+      box.style.setProperty("--ba-pos", pos + "%");
+      handle.setAttribute("aria-valuenow", Math.round(pos));
+    };
+    const fromEvent = (e) => {
+      const r = box.getBoundingClientRect();
+      setPos(((e.clientX - r.left) / r.width) * 100);
+    };
+
+    box.addEventListener("pointerdown", (e) => {
+      box.setPointerCapture(e.pointerId);
+      box.classList.add("is-dragging");
+      fromEvent(e);
+    });
+    box.addEventListener("pointermove", (e) => {
+      if (box.classList.contains("is-dragging")) fromEvent(e);
+    });
+    const stop = () => box.classList.remove("is-dragging");
+    box.addEventListener("pointerup", stop);
+    box.addEventListener("pointercancel", stop);
+
+    handle.addEventListener("keydown", (e) => {
+      const step = e.shiftKey ? 10 : 3;
+      if (e.key === "ArrowLeft") { setPos(pos - step); e.preventDefault(); }
+      else if (e.key === "ArrowRight") { setPos(pos + step); e.preventDefault(); }
+    });
+
+    // Invitación: la barra oscila suavemente hasta que el usuario la toca
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let nudging = true, visible = false, t0 = performance.now();
+    const stopNudge = () => { nudging = false; };
+    box.addEventListener("pointerdown", stopNudge, { once: true });
+    handle.addEventListener("keydown", stopNudge, { once: true });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver((en) => { visible = en[0].isIntersecting; }).observe(box);
+    } else visible = true;
+    const tick = (now) => {
+      if (!nudging) return;
+      if (visible) setPos(8 + 7 * (1 - Math.cos(((now - t0) / 1800) * Math.PI * 2)) / 2);
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  initBeforeAfter();
+
   // --- Carrusel de Fotos y Modal Emergente de Proyectos (Trabajos Realizados) ---
   function initWorksCarouselAndModal() {
     const carouselWrapper = document.getElementById("worksCarouselWrapper");

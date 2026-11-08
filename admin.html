@@ -252,6 +252,26 @@
   </form>
 </dialog>
 
+<!-- ============ CANCELAR PEDIDO ============ -->
+<dialog class="confirm-dialog" id="cancelDialog" aria-labelledby="cancelTitle" aria-describedby="cancelDesc">
+  <form method="dialog">
+    <div class="confirm-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+    </div>
+    <h2 id="cancelTitle">¿Cancelar el pedido <span id="cancelCode"></span>?</h2>
+    <p class="confirm-summary" id="cancelSummary"></p>
+    <p class="confirm-desc" id="cancelDesc">Seguirá visible en «Cancelados» durante 30 días. El cliente verá su pedido como cancelado.</p>
+    <p class="confirm-warn" id="cancelPaidWarn" hidden><b>Este pedido ya está pagado.</b> Recuerda devolverle su dinero al cliente.</p>
+    <label class="confirm-field">Motivo <span class="muted">(opcional, solo lo ves tú)</span>
+      <textarea id="cancelReason" rows="2" maxlength="200" placeholder="Ej. El cliente pidió cancelar"></textarea>
+    </label>
+    <div class="confirm-actions">
+      <button type="submit" value="back" class="btn btn-ghost" autofocus>Volver</button>
+      <button type="submit" value="confirm" class="btn btn-danger">Sí, cancelar pedido</button>
+    </div>
+  </form>
+</dialog>
+
 <!-- ============ CUPONES DE DESCUENTO ============ -->
 <dialog class="editor coupon-dialog" id="couponDialog" aria-labelledby="couponTitle">
   <div class="editor-head">

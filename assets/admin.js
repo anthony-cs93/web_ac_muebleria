@@ -832,6 +832,23 @@
     renderOrders();
   });
   $("#ordersRefresh").addEventListener("click", loadOrders);
+  // Ventana para cancelar un pedido: devuelve { reason } si se confirma, o null si se vuelve atrás
+  const cancelDialog = $("#cancelDialog");
+  let cancelResolve = null;
+  function askCancel(o) {
+    $("#cancelCode").textContent = o.code;
+    $("#cancelSummary").textContent = `${o.customer.name} · ${soles(o.total)}`;
+    $("#cancelPaidWarn").hidden = !["paid", "preparing", "ready"].includes(o.status);
+    $("#cancelReason").value = "";
+    return new Promise((resolve) => { cancelResolve = resolve; cancelDialog.returnValue = ""; cancelDialog.showModal(); });
+  }
+  cancelDialog.addEventListener("close", () => {
+    const done = cancelResolve;
+    cancelResolve = null;
+    if (done) done(cancelDialog.returnValue === "confirm" ? { reason: $("#cancelReason").value.trim() } : null);
+  });
+  cancelDialog.addEventListener("click", (e) => { if (e.target === cancelDialog) cancelDialog.close(); });
+
   // Cambiar el estado se aplica con el botón «Guardar estado» (no al elegir en la lista)
   $("#ordersList").addEventListener("change", (e) => {
     const sel = e.target.closest('[data-act="status"]');
@@ -845,10 +862,20 @@
     const save = e.target.closest('[data-act="save-status"]');
     if (save && !save.disabled) {
       const status = card.querySelector('[data-act="status"]').value;
-      if (status === "cancelled" && !confirm(`¿Cancelar el pedido ${card.dataset.code}? Seguirá visible en «Cancelados» durante 30 días.`)) return;
+      const code = card.dataset.code;
+      if (status === "cancelled") {
+        // Ventana propia de confirmación (con motivo opcional) en vez del aviso del navegador
+        askCancel(state.orders.find((x) => x.code === code)).then((res) => {
+          if (!res) return;
+          save.disabled = true;
+          save.textContent = "Guardando…";
+          updateOrder(code, { status, ...(res.reason ? { note: `Motivo de la cancelación: ${res.reason}` } : {}) });
+        });
+        return;
+      }
       save.disabled = true;
       save.textContent = "Guardando…";
-      updateOrder(card.dataset.code, { status });
+      updateOrder(code, { status });
       return;
     }
     const btn = e.target.closest('[data-act="confirm"]');

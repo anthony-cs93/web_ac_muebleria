@@ -145,11 +145,13 @@
     $("pdCode").textContent = o.code;
     $("pdItems").innerHTML = o.items.map((i) => {
       const extra = [i.color && esc(i.color), i.text && `${esc(i.textLabel)}: “${esc(i.text)}”`].filter(Boolean).join(" · ");
-      return `<li><span class="co-item-info"><b>${i.qty} × ${esc(i.name)}</b>${extra ? `<small>${extra}</small>` : ""}</span><span class="co-item-price">${soles(i.lineTotal)}</span></li>`;
+      return `<li><span class="co-item-info"><b>${i.qty} × ${esc(i.name)}</b>${extra ? `<small>${extra}</small>` : ""}</span><span class="co-item-price">${i.listPrice && i.listPrice > i.unitPrice ? `<s class="co-old" aria-label="Precio regular">${soles(i.listPrice * i.qty)}</s>` : ""}<span>${soles(i.lineTotal)}</span></span></li>`;
     }).join("");
     $("pdSubtotal").textContent = soles(o.subtotal);
     $("pdProdDiscRow").hidden = !(o.productDiscount > 0);
-    $("pdProdDisc").textContent = `ahorras ${soles(o.productDiscount || 0)}`;
+    $("pdProdDisc").textContent = `− ${soles(o.productDiscount || 0)}`;
+    $("pdRegularRow").hidden = !(o.productDiscount > 0);
+    $("pdRegular").textContent = soles((o.subtotal || 0) + (o.productDiscount || 0));
     $("pdCouponRow").hidden = !(o.discount > 0);
     if (o.discount > 0) { $("pdCouponLabel").textContent = `Cupón ${o.coupon ? o.coupon.code : ""}`; $("pdCouponAmt").textContent = `− ${soles(o.discount)}`; }
     $("pdEta").hidden = !o.eta;

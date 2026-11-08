@@ -55,6 +55,7 @@
 
   // ------------------------------------------------------------ Totales
   const subtotalOf = () => money(lines.reduce((n, l) => n + l.p.price * l.qty, 0));
+  const regularTotal = () => money(lines.reduce((n, l) => n + (l.p.oldPrice && l.p.oldPrice > l.p.price ? l.p.oldPrice : l.p.price) * l.qty, 0));
   const productSavings = () => money(lines.reduce((n, l) => n + (l.p.oldPrice && l.p.oldPrice > l.p.price ? (l.p.oldPrice - l.p.price) * l.qty : 0), 0));
   function shippingOf() {
     if (radio("coDelivery") !== "delivery") return 0;
@@ -149,13 +150,15 @@
             <button type="button" data-act="plus" aria-label="Aumentar cantidad"${l.qty >= MAX_QTY ? " disabled" : ""}>+</button>
             <button type="button" class="co-remove" data-act="remove" aria-label="Quitar ${esc(l.p.name)}">Quitar</button>
           </span></span>
-        <span class="co-item-price">${soles(l.p.price * l.qty)}</span></li>`;
+        <span class="co-item-price">${l.p.oldPrice && l.p.oldPrice > l.p.price ? `<s class="co-old" aria-label="Precio regular">${soles(l.p.oldPrice * l.qty)}</s>` : ""}<span>${soles(l.p.price * l.qty)}</span></span></li>`;
     }).join("");
     const t = totals();
     const savings = productSavings();
     $("coSubtotal").textContent = soles(t.subtotal);
     $("coProdDiscRow").hidden = savings <= 0;
-    $("coProdDisc").textContent = `ahorras ${soles(savings)}`;
+    $("coProdDisc").textContent = `− ${soles(savings)}`;
+    $("coRegularRow").hidden = savings <= 0;
+    $("coRegular").textContent = soles(regularTotal());
     $("coCouponRow").hidden = !coupon;
     if (coupon) { $("coCouponLabel").textContent = `Cupón ${coupon.code}`; $("coCouponAmt").textContent = `− ${soles(t.discount)}`; }
     const delivery = radio("coDelivery") === "delivery";

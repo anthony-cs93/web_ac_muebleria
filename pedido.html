@@ -45,8 +45,9 @@
         <h2>Tu pedido <span class="pd-code" id="pdCode"></span></h2>
         <ul class="co-items" id="pdItems"></ul>
         <dl class="co-totals">
-          <div><dt>Subtotal</dt><dd id="pdSubtotal"></dd></div>
+          <div id="pdRegularRow" hidden><dt>Precio regular</dt><dd id="pdRegular"></dd></div>
           <div class="co-saving-row" id="pdProdDiscRow" hidden><dt>Descuentos del producto</dt><dd id="pdProdDisc"></dd></div>
+          <div><dt>Subtotal</dt><dd id="pdSubtotal"></dd></div>
           <div class="co-saving-row" id="pdCouponRow" hidden><dt id="pdCouponLabel">Cupón</dt><dd id="pdCouponAmt"></dd></div>
           <div><dt>Envío</dt><dd id="pdShipping"></dd></div>
           <div id="pdFeeRow" hidden><dt>Recargo tarjeta (3.5%)</dt><dd id="pdFee"></dd></div>

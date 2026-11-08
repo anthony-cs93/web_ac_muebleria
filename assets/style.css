@@ -5840,3 +5840,8 @@ body.checkout-page { --ok: #2f7d4f; --bad: #b42318; }
   .pd-step::before { top: -18px; right: auto; left: 15px; width: 3px; height: 18px; }
   .pd-step-text { padding-top: 5px; }
 }
+
+/* Precio regular tachado junto al precio con descuento */
+.co-item-price { display: grid; justify-items: end; gap: 1px; }
+.co-old { font-weight: 500; font-size: 12px; color: var(--ink-soft); text-decoration: line-through; }
+.co-totals div[hidden] { display: none; }

@@ -1,4 +1,5 @@
 /* Panel de administración — estilos independientes de la web pública */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=Jost:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&family=Sour+Gummy:wght@400;500;600;700&display=swap');
 :root {
   --bg: #f6f3ee;
   --surface: #ffffff;
@@ -358,7 +359,6 @@ legend { padding: 0 6px; font-weight: 700; font-size: 13px; color: var(--ink-sof
 .badge-sched { background: #dbeafe; color: #1d4ed8; }
 .badge-off { background: #e5e7eb; color: #4b5563; }
 .hero-empty { text-align: center; padding: 28px 0; color: var(--ink-soft); }
-.hero-form-title { margin: 0; font-size: 17px; }
 .hero-shops { display: flex; gap: 18px; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 10px; padding: 8px 14px 10px; }
 .hero-shops legend { font-size: 13px; font-weight: 700; padding: 0 6px; }
 .hero-uploads { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -373,3 +373,39 @@ legend { padding: 0 6px; font-weight: 700; font-size: 13px; color: var(--ink-sof
 .page-view [hidden] { display: none !important; }
 .hero-card-info .badge { white-space: normal; line-height: 1.35; }
 .hero-card-info > span { min-width: 0; }
+
+/* Campañas: encabezado, portada en vivo y vista previa */
+.page-head-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.page-head-row p { margin: 4px 0 0; max-width: 62ch; }
+.page-h3 { margin: 0; font-size: 17px; }
+.page-h3-out { margin: 22px 0 2px; }
+.page-sub { margin: 0 0 12px; font-size: 13.5px; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.hero-dialog { width: min(760px, calc(100vw - 24px)); }
+.hero-preview-wrap { display: grid; gap: 6px; }
+.hero-preview-bar { display: flex; justify-content: space-between; }
+.hp { position: relative; aspect-ratio: 21 / 8; min-height: 150px; border-radius: 12px; overflow: hidden; background: var(--accent-soft) center / cover no-repeat; color: #fff; display: flex; align-items: center; isolation: isolate; }
+.hp-overlay { position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(25, 25, 28, .82) 0%, rgba(25, 25, 28, .45) 55%, rgba(25, 25, 28, 0) 100%); }
+.hp-maderin .hp-overlay { background: linear-gradient(90deg, rgba(34, 64, 140, .88) 0%, rgba(34, 64, 140, .5) 55%, rgba(34, 64, 140, 0) 100%); }
+.hp-cdm .hp-overlay { background: linear-gradient(90deg, rgba(52, 60, 24, .9) 0%, rgba(52, 60, 24, .5) 55%, rgba(52, 60, 24, 0) 100%); }
+.hp-full .hp-overlay { display: none; }
+.hp-copy { max-width: 58%; padding: 18px 22px; display: grid; gap: 8px; justify-items: start; }
+.hp-copy h3 { margin: 0; font-size: clamp(16px, 2.6vw, 26px); line-height: 1.15; }
+.hp-copy p { margin: 0; font-size: clamp(11px, 1.3vw, 13.5px); line-height: 1.4; opacity: .92; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.hp-btn { padding: 6px 14px; border-radius: 999px; background: #fff; color: #221b14; font-size: 12px; font-weight: 700; }
+.hp-full .hp-copy { position: absolute; right: 12px; bottom: 8px; max-width: none; padding: 0; }
+.hp-noimg { background: #e5e7eb; color: var(--ink-soft); }
+.hp-noimg .hp-overlay { background: none; }
+.hp-noimg .hp-copy h3, .hp-noimg .hp-copy p { color: var(--ink); }
+.hp-empty { position: absolute; right: 14%; top: 50%; transform: translateY(-50%); font-size: 13px; }
+@media (max-width: 560px) { .hp { aspect-ratio: auto; min-height: 190px; } .hp-copy { max-width: 80%; } .hp-overlay { background: rgba(25, 25, 28, .55) !important; } }
+
+@media (max-width: 1200px) { .topbar .tab { padding: 9px 9px; } .topbar-inner { gap: 10px; } .tabs-sep { margin: 0 2px; } }
+
+/* La vista previa usa las mismas fuentes que cada página */
+.hp-ac { --hp-display: 'Fraunces', serif; --hp-body: 'Work Sans', sans-serif; }
+.hp-maderin { --hp-display: 'Sour Gummy', sans-serif; --hp-body: 'Nunito', sans-serif; }
+.hp-cdm { --hp-display: 'Playfair Display', Georgia, serif; --hp-body: 'Jost', 'Work Sans', sans-serif; }
+.hp-copy h3 { font-family: var(--hp-display); font-weight: 600; letter-spacing: -.01em; color: inherit; }
+.hp-copy p, .hp-empty { font-family: var(--hp-body); }
+.hp-btn { font-family: var(--hp-display); }

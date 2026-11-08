@@ -160,7 +160,7 @@
       $("#viewShopLink").href = SHOP_PAGES[state.shop];
       window.scrollTo(0, 0);
       if (shop === "orders") loadOrders();
-      else if (shop === "campaigns") { heroDraft = null; showHeroView(false); renderHeroList(); }
+      else if (shop === "campaigns") { heroDraft = null; renderHeroList(); }
       else if (shop === "coupons") renderCoupons();
       else { shipShop = state.shop === "cdm" ? "cdm" : "maderin"; renderShip(); }
       return;
@@ -893,6 +893,7 @@
 
   // ---------------------------------------------------------------- Heros: campañas por temporada
   const heroForm = $("#heroForm");
+  const heroDialog = $("#heroDialog");
   const HERO_SHOP_LABEL = { maderin: "Maderin", cdm: "Corazón de Madera", ac: "AC Mueblería" };
   const heroes = () => state.catalog.heroes;
   const limaToday = () => new Date(Date.now() - 5 * 3600 * 1000).toISOString().slice(0, 10);
@@ -919,8 +920,53 @@
     return showing.length ? ["live", `Mostrándose ahora en ${showing.map((s) => HERO_SHOP_LABEL[s]).join(", ")}`] : ["off", "Vigente, pero otra campaña tiene prioridad"];
   }
 
+  // Portada por defecto de cada página (lo que se ve cuando no hay campaña vigente)
+  const HERO_DEFAULT = {
+    maderin: { image: "public/maderin/hero.png", title: "Mobiliario infantil para fomentar su autonomía.", text: "Mobiliario diseñado para que los niños mejoren su independencia y crezcan a su propio ritmo", cta: "Ver catálogo infantil" },
+    cdm: { image: "public/cdm/hero.png", title: "Regalos que dicen\nlo que las palabras\nno alcanzan.", text: "Corazón de Madera crea detalles personalizados en madera y melamina — cuadros, organizadores y recuerdos — para cumpleaños, aniversarios y toda ocasión especial.", cta: "Ver productos" },
+    ac: { image: "public/ac_muebleria/hero-img.png", title: "Muebles que transforman tu espacio", text: "Cocinas, closets, muebles de TV y proyectos completos, fabricados en nuestro taller de principio a fin.", cta: "Cotiza tu proyecto" }
+  };
+  // Plantillas de temporada: nombre, textos y fechas sugeridas (mes-día)
+  const HERO_TEMPLATES = [
+    { id: "navidad", label: "Navidad", name: "Navidad", title: "Esta Navidad,\nregala algo especial", text: "Ofertas de temporada hasta el 25 de diciembre.", cta: "Ver ofertas", from: "12-01", to: "12-26" },
+    { id: "madre", label: "Día de la Madre", name: "Día de la Madre", title: "Para mamá,\ncon todo el cariño", text: "Detalles y regalos para celebrar a mamá.", cta: "Ver regalos", from: "05-01", to: "05-12" },
+    { id: "padre", label: "Día del Padre", name: "Día del Padre", title: "Un regalo para papá", text: "Sorprende a papá con algo hecho para él.", cta: "Ver regalos", from: "06-01", to: "06-21" },
+    { id: "nino", label: "Día del Niño", name: "Día del Niño", title: "Feliz Día del Niño", text: "Celebra a los peques con descuentos especiales.", cta: "Ver ofertas", from: "04-01", to: "04-14" },
+    { id: "patrias", label: "Fiestas Patrias", name: "Fiestas Patrias", title: "Celebra con lo nuestro", text: "Ofertas por Fiestas Patrias.", cta: "Ver ofertas", from: "07-20", to: "07-29" },
+    { id: "cyber", label: "Cyber Days", name: "Cyber Days", title: "Cyber Days", text: "Descuentos por tiempo limitado en toda la tienda.", cta: "Aprovechar ofertas", from: "10-27", to: "11-02" },
+    { id: "black", label: "Black Friday", name: "Black Friday", title: "Black Friday", text: "Los mejores precios del año, solo por pocos días.", cta: "Ver ofertas", from: "11-24", to: "11-30" }
+  ];
+  const nl2br = (t) => esc(t).replace(/\n/g, "<br>");
+
+  // Vista previa de una portada: lo que verá el cliente (aproximado)
+  function heroPreviewHtml(shop, v) {
+    const full = v.mode === "full";
+    const img = v.image ? ` style="background-image:url(&quot;${esc(v.image)}&quot;)"` : "";
+    const copy = full
+      ? (v.cta && v.ctaUrl ? `<span class="hp-btn">${esc(v.cta)}</span>` : "")
+      : `<h3>${nl2br(v.title)}</h3><p>${esc(v.text)}</p>${v.cta ? `<span class="hp-btn">${esc(v.cta)}</span>` : ""}`;
+    return `<div class="hp hp-${shop}${full ? " hp-full" : ""}${v.image ? "" : " hp-noimg"}"${img}>${v.image ? "" : `<span class="hp-empty">Sin imagen</span>`}<div class="hp-overlay"></div><div class="hp-copy">${copy}</div></div>`;
+  }
+
+  let heroNowShop = "maderin";
+  function renderHeroNow() {
+    $$("[data-now]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.now === heroNowShop)));
+    const id = heroWinners()[heroNowShop];
+    const c = id && heroes().find((x) => x.id === id);
+    const d = HERO_DEFAULT[heroNowShop];
+    if (c) {
+      $("#heroNow").innerHTML = heroPreviewHtml(heroNowShop, { mode: c.mode, image: c.image, title: c.title || d.title, text: c.text || d.text, cta: c.ctaLabel || (c.mode === "full" ? "" : d.cta), ctaUrl: c.ctaUrl });
+      $("#heroNowCaption").textContent = `Campaña en vivo: «${c.name}»${c.end ? `, hasta el ${fmtD(c.end)}` : ""}.`;
+    } else {
+      $("#heroNow").innerHTML = heroPreviewHtml(heroNowShop, { mode: "text", image: d.image, title: d.title, text: d.text, cta: d.cta });
+      $("#heroNowCaption").textContent = "Portada por defecto (no hay campañas en vivo hoy).";
+    }
+  }
+  $$("[data-now]").forEach((b) => b.addEventListener("click", () => { heroNowShop = b.dataset.now; renderHeroNow(); }));
+
   function renderHeroList() {
     const w = heroWinners();
+    renderHeroNow();
     $("#heroCards").innerHTML = heroes().length ? heroes().map((c, i) => {
       const [kind, label] = heroStatus(c, w);
       const dates = c.start || c.end ? `${c.start ? fmtD(c.start) : "—"} → ${c.end ? fmtD(c.end) : "sin fecha final"}` : "Sin fechas (siempre que esté activa)";
@@ -938,15 +984,28 @@
           <button type="button" class="btn btn-ghost btn-sm btn-danger-text" data-act="del">Eliminar</button>
         </div>
       </li>`;
-    }).join("") : `<li class="hero-empty">Aún no hay campañas. Crea la primera con «+ Nueva campaña».</li>`;
+    }).join("") : `<li class="hero-empty">Aún no hay campañas. Crea una desde una plantilla (Navidad, Día de la Madre, Cyber…) con «+ Nueva campaña».</li>`;
     refreshDirty();
   }
 
-  const showHeroView = (form) => {
-    $("#heroListView").hidden = form;
-    heroForm.hidden = !form;
-    $("#heroTitle").textContent = form ? (heroDraft && heroDraft.isNew ? "Nueva campaña" : "Editar campaña") : "Campañas";
-  };
+  // Vista previa dentro del modal: se actualiza con lo que se escribe
+  function renderHeroPreview() {
+    if (!heroDraft) return;
+    const f = heroForm.elements;
+    const shops = $$('input[name="shop"]:checked', heroForm).map((el) => el.value);
+    const shop = shops[0] || "maderin";
+    const d = HERO_DEFAULT[shop];
+    const full = f.mode.value === "full";
+    $("#heroPreviewShop").textContent = HERO_SHOP_LABEL[shop];
+    $("#heroPreview").innerHTML = heroPreviewHtml(shop, {
+      mode: full ? "full" : "text",
+      image: heroDraft.c.image,
+      title: f.title.value.trim() || d.title,
+      text: f.text.value.trim() || d.text,
+      cta: f.ctaLabel.value.trim() || (full ? "" : d.cta),
+      ctaUrl: f.ctaUrl.value.trim()
+    });
+  }
 
   function paintHeroImages() {
     const c = heroDraft.c;
@@ -957,10 +1016,12 @@
     $("#heroMobPrev").textContent = c.imageMobile ? "" : "Usa la de escritorio";
     $("#heroMobBtn").textContent = c.imageMobile ? "Cambiar imagen" : "Subir imagen";
     $("#heroMobRemove").hidden = !c.imageMobile;
+    renderHeroPreview();
   }
   function syncHeroMode() {
     const full = heroForm.elements.mode.value === "full";
     $$(".hero-text-only", heroForm).forEach((el) => { el.hidden = full; });
+    renderHeroPreview();
   }
 
   function openHeroForm(index) {
@@ -985,11 +1046,39 @@
     f.start.max = f.end.max = `${new Date().getFullYear() + 1}-12-31`;
     $("#heroImgError").hidden = true;
     $("#heroFormError").hidden = true;
+    $("#heroFormTitle").textContent = isNew ? "Nueva campaña" : "Editar campaña";
+    $("#heroSubmit").textContent = isNew ? "Crear campaña" : "Guardar cambios";
+    $("#heroTemplate").value = "";
+    $("#heroTemplate").closest("label").hidden = !isNew;
     paintHeroImages();
     syncHeroMode();
-    showHeroView(true);
-    f.name.focus();
+    heroDialog.showModal();
+    $("#heroDialog .editor-body").scrollTop = 0;
   }
+
+  // Plantillas de temporada
+  $("#heroTemplate").innerHTML = `<option value="">En blanco</option>` + HERO_TEMPLATES.map((t) => `<option value="${t.id}">${esc(t.label)}</option>`).join("");
+  $("#heroTemplate").addEventListener("change", (e) => {
+    const t = HERO_TEMPLATES.find((x) => x.id === e.target.value);
+    if (!t) return;
+    const f = heroForm.elements;
+    const now = new Date();
+    const today = limaToday();
+    let y = now.getFullYear();
+    if (`${y}-${t.to}` < today) y += 1; // si ya pasó este año, la próxima edición
+    f.name.value = `${t.name} ${y}`;
+    f.title.value = t.title;
+    f.text.value = t.text;
+    f.ctaLabel.value = t.cta;
+    f.ctaUrl.value = "#productos";
+    f.start.value = `${y}-${t.from}`;
+    f.end.value = `${y}-${t.to}`;
+    f.mode.value = "text";
+    syncHeroMode();
+    renderHeroPreview();
+  });
+  heroForm.addEventListener("input", renderHeroPreview);
+  heroForm.addEventListener("change", renderHeroPreview);
 
   async function uploadHeroImage(file, maxSide, key) {
     const msg = $("#heroImgError");
@@ -1006,7 +1095,7 @@
       btn.textContent = label;
       msg.textContent = err.status === 401 ? "Tu sesión venció. Vuelve a entrar." : `No se pudo subir la imagen: ${err.message}`;
       msg.hidden = false;
-      if (err.status === 401) showLogin(true);
+      if (err.status === 401) { heroDialog.close(); showLogin(true); }
     }
   }
   $("#heroImgInput").addEventListener("change", (e) => { const f = e.target.files[0]; e.target.value = ""; if (f) uploadHeroImage(f, 1920, "image"); });
@@ -1049,11 +1138,14 @@
       heroes()[heroDraft.index] = c;
     }
     heroDraft = null;
-    showHeroView(false);
+    heroDialog.close();
     renderHeroList();
     toast("Campaña guardada. Publica los cambios para que se vea en la web.");
   });
-  $("#heroCancel").addEventListener("click", () => { heroDraft = null; showHeroView(false); });
+  const closeHero = () => { heroDraft = null; heroDialog.close(); };
+  $("#heroCancel").addEventListener("click", closeHero);
+  $("#heroClose").addEventListener("click", closeHero);
+  heroDialog.addEventListener("cancel", () => { heroDraft = null; });
 
   $("#heroCards").addEventListener("click", (e) => {
     const btn = e.target.closest("[data-act]");

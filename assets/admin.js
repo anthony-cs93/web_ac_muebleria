@@ -147,21 +147,28 @@
     if (btn && !btn.disabled) btn.focus();
   }
 
+  // Secciones con página propia (el resto de pestañas son las tiendas)
+  const PAGES = ["orders", "campaigns", "coupons", "shipping"];
   function setShop(shop) {
-    const isOrders = shop === "orders";
-    $(".content").classList.toggle("is-orders", isOrders);
+    const isPage = PAGES.includes(shop);
+    if (state.view === "coupons" && shop !== "coupons") cleanCoupons();
+    state.view = shop;
+    $(".content").dataset.view = isPage ? shop : "shop";
     $$(".tab[data-shop]").forEach((t) => t.setAttribute("aria-selected", String(t.dataset.shop === shop)));
-    if (isOrders) {
+    if (isPage) {
       document.body.dataset.shop = state.shop === "cdm" ? "cdm" : "maderin";
       $("#viewShopLink").href = SHOP_PAGES[state.shop];
-      loadOrders();
+      window.scrollTo(0, 0);
+      if (shop === "orders") loadOrders();
+      else if (shop === "campaigns") { heroDraft = null; showHeroView(false); renderHeroList(); }
+      else if (shop === "coupons") renderCoupons();
+      else { shipShop = state.shop === "cdm" ? "cdm" : "maderin"; renderShip(); }
       return;
     }
     state.shop = shop;
     state.search = "";
     $("#searchInput").value = "";
     document.body.dataset.shop = shop;
-    $$(".tab").forEach((t) => t.setAttribute("aria-selected", String(t.dataset.shop === shop)));
     $("#viewShopLink").href = SHOP_PAGES[shop];
     renderRows();
   }
@@ -647,11 +654,12 @@
     if (!confirm("¿Descartar todos los cambios sin publicar?")) return;
     state.catalog = JSON.parse(state.saved);
     syncTextures();
-    renderRows();
+    setShop(state.view || state.shop);
   });
 
   $("#publishBtn").addEventListener("click", async () => {
     const btn = $("#publishBtn");
+    cleanCoupons();
     btn.disabled = true;
     $("#saveStatus").textContent = "Publicando…";
     try {
@@ -884,7 +892,6 @@
   });
 
   // ---------------------------------------------------------------- Heros: campañas por temporada
-  const heroDialog = $("#heroDialog");
   const heroForm = $("#heroForm");
   const HERO_SHOP_LABEL = { maderin: "Maderin", cdm: "Corazón de Madera", ac: "AC Mueblería" };
   const heroes = () => state.catalog.heroes;
@@ -938,8 +945,7 @@
   const showHeroView = (form) => {
     $("#heroListView").hidden = form;
     heroForm.hidden = !form;
-    $("#heroFoot").hidden = form;
-    $("#heroTitle").textContent = form ? (heroDraft && heroDraft.isNew ? "Nueva campaña" : "Editar campaña") : "Heros y promociones";
+    $("#heroTitle").textContent = form ? (heroDraft && heroDraft.isNew ? "Nueva campaña" : "Editar campaña") : "Campañas";
   };
 
   function paintHeroImages() {
@@ -1000,7 +1006,7 @@
       btn.textContent = label;
       msg.textContent = err.status === 401 ? "Tu sesión venció. Vuelve a entrar." : `No se pudo subir la imagen: ${err.message}`;
       msg.hidden = false;
-      if (err.status === 401) { heroDialog.close(); showLogin(true); }
+      if (err.status === 401) showLogin(true);
     }
   }
   $("#heroImgInput").addEventListener("change", (e) => { const f = e.target.files[0]; e.target.value = ""; if (f) uploadHeroImage(f, 1920, "image"); });
@@ -1060,14 +1066,8 @@
     if (btn.dataset.act === "del" && confirm(`¿Eliminar la campaña «${c.name}»? Esta acción no se puede deshacer (hasta que descartes los cambios sin publicar).`)) { heroes().splice(i, 1); renderHeroList(); }
   });
   $("#heroAdd").addEventListener("click", () => openHeroForm(null));
-  $("#heroBtn").addEventListener("click", () => { heroDraft = null; showHeroView(false); renderHeroList(); heroDialog.showModal(); });
-  const closeHero = () => { heroDraft = null; heroDialog.close(); };
-  $("#heroClose").addEventListener("click", closeHero);
-  $("#heroDone").addEventListener("click", closeHero);
-  heroDialog.addEventListener("cancel", () => { heroDraft = null; });
 
   // ---------------------------------------------------------------- Cupones de descuento
-  const couponDialog = $("#couponDialog");
   const COUPON_MIN = "2025-01-01";
   const COUPON_MAX = `${new Date().getFullYear()}-12-31`; // máximo: el año actual
   const coupons = () => state.catalog.coupons;
@@ -1136,16 +1136,8 @@
     const last = $$("#couponTable tbody tr").pop();
     if (last) last.querySelector('[data-f="code"]').focus();
   });
-  $("#couponBtn").addEventListener("click", () => { renderCoupons(); couponDialog.showModal(); });
-  const closeCoupons = () => {
-    state.catalog.coupons = coupons().filter((c) => c.code && c.value > 0); // se descartan filas vacías
-    couponDialog.close();
-    refreshDirty();
-  };
-  $("#couponClose").addEventListener("click", closeCoupons);
-  $("#couponDone").addEventListener("click", closeCoupons);
-  couponDialog.addEventListener("cancel", () => { state.catalog.coupons = coupons().filter((c) => c.code && c.value > 0); });
-  couponDialog.addEventListener("click", (e) => { if (e.target === couponDialog) closeCoupons(); });
+  // Se descartan las filas vacías al salir de la página o al publicar
+  function cleanCoupons() { state.catalog.coupons = coupons().filter((c) => c.code && c.value > 0); refreshDirty(); }
 
   // ---------------------------------------------------------------- Costos de envío por distrito
   const DISTRICTS = ["Ancón", "Ate", "Barranco", "Breña", "Carabayllo", "Chaclacayo", "Chorrillos", "Cieneguilla", "Comas", "El Agustino",
@@ -1154,13 +1146,13 @@
     "San Bartolo", "San Borja", "San Isidro", "San Juan de Lurigancho", "San Juan de Miraflores", "San Luis", "San Martín de Porres",
     "San Miguel", "Santa Anita", "Santa María del Mar", "Santa Rosa", "Santiago de Surco", "Surquillo", "Villa El Salvador",
     "Villa María del Triunfo", "Bellavista", "Callao", "Carmen de la Legua Reynoso", "La Perla", "La Punta", "Mi Perú", "Ventanilla"];
-  const shipDialog = $("#shipDialog");
+  const shipView = $("#shipView");
   let shipShop = "maderin";
   const shipOf = () => (state.catalog.shipping[shipShop] = state.catalog.shipping[shipShop] || {});
 
   function renderShip() {
     const map = shipOf();
-    $$("[data-ship]", shipDialog).forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.ship === shipShop)));
+    $$("[data-ship]", shipView).forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.ship === shipShop)));
     let ok = 0, no = 0, bad = 0;
     $("#shipTable").innerHTML = `<thead><tr><th>Distrito</th><th>¿Se envía?</th><th>Costo (S/)</th><th>Observación</th></tr></thead><tbody>` +
       DISTRICTS.map((d) => {
@@ -1192,11 +1184,7 @@
     readShipRow(tr);
     renderShip();
   });
-  $$("[data-ship]", shipDialog).forEach((b) => b.addEventListener("click", () => { shipShop = b.dataset.ship; renderShip(); }));
-  $("#shipBtn").addEventListener("click", () => { shipShop = state.shop === "cdm" ? "cdm" : "maderin"; renderShip(); shipDialog.showModal(); });
-  $("#shipClose").addEventListener("click", () => shipDialog.close());
-  $("#shipDone").addEventListener("click", () => shipDialog.close());
-  shipDialog.addEventListener("click", (e) => { if (e.target === shipDialog) shipDialog.close(); });
+  $$("[data-ship]", shipView).forEach((b) => b.addEventListener("click", () => { shipShop = b.dataset.ship; renderShip(); }));
 
   // Importar el Excel (hojas «Maderin» y «CDM» con columnas Distrito, ¿Se envía?, Costo de envío, Observación)
   let xlsxPromise = null;

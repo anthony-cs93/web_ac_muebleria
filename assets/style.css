@@ -5845,3 +5845,20 @@ body.checkout-page { --ok: #2f7d4f; --bad: #b42318; }
 .co-item-price { display: grid; justify-items: end; gap: 1px; }
 .co-old { font-weight: 500; font-size: 12px; color: var(--ink-soft); text-decoration: line-through; }
 .co-totals div[hidden] { display: none; }
+
+/* Campañas del hero (assets/hero.js) */
+.hero--campaign .hero-bg-img { object-position: center center !important; }
+.hero--banner .hero-overlay, .hero--banner .hero-img-badges { display: none !important; }
+/* Banner completo: el texto de la página queda solo para lectores de pantalla y buscadores (el título sigue en el HTML) */
+.hero--banner > .container { position: absolute; width: 1px; height: 1px; padding: 0 !important; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.hero-campaign-cta { position: absolute; left: 50%; bottom: 96px; transform: translateX(-50%); z-index: 3; white-space: nowrap; text-decoration: none; }
+.hero--swap .hero-bg-img { animation: hero-fade-in .7s ease both; }
+@keyframes hero-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .hero--swap .hero-bg-img { animation: none; } }
+@media (max-width: 640px) { .hero-campaign-cta { bottom: 84px; } }
+/* Celular (Maderin y CDM): el banner es solo la imagen; con imagen vertical se muestra en 4:5 */
+@media (max-width: 860px) {
+  .hero--banner .hero-campaign-cta { bottom: 22px; }
+  body.theme-cdm .hero--banner.hero--has-mobile .hero-bg,
+  body.theme-maderin .hero--banner.hero--has-mobile .hero-bg { aspect-ratio: 4 / 5; }
+}

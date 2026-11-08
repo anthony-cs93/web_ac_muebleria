@@ -3,13 +3,13 @@
 //   POST op=login     { password }  -> cookie de sesión
 //   POST op=logout
 //   GET  op=catalog   catálogo guardado (sin caché)
-//   POST op=save      { maderin?: [...], cdm?: [...], textures?: [...], shipping?: {...}, coupons?: [...] }  -> publica los cambios
+//   POST op=save      { maderin?: [...], cdm?: [...], textures?: [...], shipping?: {...}, coupons?: [...], heroes?: [...] }  -> publica los cambios
 //   GET  op=orders    pedidos de los clientes (más recientes primero)
 //   POST op=order-update { code, status?, note? }  -> cambia el estado de un pedido
 //   POST op=upload    { id, img480, img900 } (data URLs webp/jpeg/png)  -> URLs de las fotos
 //   POST op=upload    { kind: 'texture', id, img, thumb }  -> { img, thumb } (textura de la biblioteca compartida)
 import {
-  adminConfigured, createToken, isAuthed, passwordMatches, readCatalog, readJsonBody, sanitizeCoupons, sanitizeShipping, sanitizeShop, sanitizeTextures,
+  adminConfigured, createToken, isAuthed, passwordMatches, readCatalog, readJsonBody, sanitizeCoupons, sanitizeHeroes, sanitizeShipping, sanitizeShop, sanitizeTextures,
   sendJson, sessionCookie, slugify, storageMode, storePhoto, writeCatalog
 } from './_lib.js';
 import { STATUSES, addHistory, findOrderByCode, listOrders, mpSyncOrder, saveOrder, validCode } from './_orders.js';
@@ -62,6 +62,7 @@ export default async function handler(req, res) {
       if (body.textures !== undefined) next.textures = sanitizeTextures(body.textures);
       if (body.shipping !== undefined) next.shipping = sanitizeShipping(body.shipping);
       if (body.coupons !== undefined) next.coupons = sanitizeCoupons(body.coupons);
+      if (body.heroes !== undefined) next.heroes = sanitizeHeroes(body.heroes);
       next.updatedAt = new Date().toISOString();
       await writeCatalog(next);
       return sendJson(res, 200, { ok: true, updatedAt: next.updatedAt, catalog: next }, noStore);
@@ -98,6 +99,10 @@ export default async function handler(req, res) {
     if (req.method === 'POST' && op === 'upload') {
       const body = await readJsonBody(req);
       const base = slugify(body.id || 'producto') || 'producto';
+      if (body.kind === 'hero') {
+        const { buffer, contentType, ext } = decodeImage(body.img);
+        return sendJson(res, 200, { img: await storePhoto(`hero-${base}.${ext}`, buffer, contentType) }, noStore);
+      }
       if (body.kind === 'texture') {
         const big = decodeImage(body.img);
         const out = { img: await storePhoto(`textura-${base}.${big.ext}`, big.buffer, big.contentType) };

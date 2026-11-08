@@ -59,6 +59,7 @@
         <input type="search" id="searchInput" placeholder="Buscar producto…" aria-label="Buscar producto">
       </div>
       <div class="toolbar-right">
+        <button type="button" class="btn btn-ghost" id="heroBtn">Heros</button>
         <button type="button" class="btn btn-ghost" id="couponBtn">Cupones</button>
         <button type="button" class="btn btn-ghost" id="shipBtn">Envíos</button>
         <button type="button" class="btn btn-ghost" id="texBtn">Texturas <span class="count" id="countTex"></span></button>
@@ -250,6 +251,89 @@
       <button type="submit" class="btn btn-primary">Aplicar cambios</button>
     </footer>
   </form>
+</dialog>
+
+<!-- ============ HEROS: CAMPAÑAS Y PROMOCIONES POR TEMPORADA ============ -->
+<dialog class="editor hero-dialog" id="heroDialog" aria-labelledby="heroTitle">
+  <div class="editor-head">
+    <h2 id="heroTitle">Heros y promociones</h2>
+    <button type="button" class="icon-btn" id="heroClose" aria-label="Cerrar">✕</button>
+  </div>
+
+  <!-- Lista de campañas -->
+  <div class="editor-body" id="heroListView">
+    <p class="muted small" style="margin:0">Cambia la imagen principal (hero) de cada página en fechas especiales: Navidad, Día del Niño, Cyber, etc. Programa las fechas y se activa y desactiva sola. Sin campaña vigente, se ve el hero de siempre. Publica los cambios para que se vean.</p>
+    <ul class="hero-cards" id="heroCards"></ul>
+    <div><button type="button" class="btn btn-primary btn-sm" id="heroAdd">+ Nueva campaña</button></div>
+  </div>
+
+  <!-- Formulario de una campaña -->
+  <form class="editor-body" id="heroForm" hidden novalidate>
+    <h3 class="hero-form-title" id="heroFormTitle">Nueva campaña</h3>
+    <div class="grid-2">
+      <label class="span-2">Nombre de la campaña <span class="muted">(solo lo ves tú)</span>
+        <input name="name" maxlength="60" placeholder="Ej. Navidad 2026">
+      </label>
+      <fieldset class="span-2 hero-shops">
+        <legend>¿En qué páginas se muestra?</legend>
+        <label class="check"><input type="checkbox" name="shop" value="maderin"> Maderin</label>
+        <label class="check"><input type="checkbox" name="shop" value="cdm"> Corazón de Madera</label>
+        <label class="check"><input type="checkbox" name="shop" value="ac"> AC Mueblería</label>
+      </fieldset>
+      <label>Desde <span class="muted">(opcional)</span><input type="date" name="start"></label>
+      <label>Hasta <span class="muted">(opcional)</span><input type="date" name="end"></label>
+      <label class="check span-2"><input type="checkbox" name="active" checked> Campaña activa (si la desactivas, no se muestra aunque esté en fechas)</label>
+    </div>
+
+    <fieldset>
+      <legend>Imágenes</legend>
+      <div class="hero-uploads">
+        <div class="hero-upload">
+          <strong>Escritorio y tablet *</strong>
+          <div class="hero-thumb" id="heroImgPrev"></div>
+          <label class="btn btn-ghost btn-sm file-btn"><span id="heroImgBtn">Subir imagen</span><input type="file" id="heroImgInput" accept="image/jpeg,image/png,image/webp" hidden></label>
+          <p class="muted small">Horizontal, ideal 1920 × 1080 px. Deja lo importante al centro, porque los bordes se recortan según la pantalla.</p>
+        </div>
+        <div class="hero-upload">
+          <strong>Celular <span class="muted">(opcional)</span></strong>
+          <div class="hero-thumb hero-thumb-m" id="heroMobPrev"></div>
+          <div class="hero-upload-actions">
+            <label class="btn btn-ghost btn-sm file-btn"><span id="heroMobBtn">Subir imagen</span><input type="file" id="heroMobInput" accept="image/jpeg,image/png,image/webp" hidden></label>
+            <button type="button" class="btn btn-ghost btn-sm" id="heroMobRemove" hidden>Quitar</button>
+          </div>
+          <p class="muted small">Vertical, ideal 1080 × 1350 px. Si no subes una, el celular usa la de escritorio.</p>
+        </div>
+      </div>
+      <p class="form-error" id="heroImgError" role="alert" hidden></p>
+      <label style="margin-top:10px">Texto alternativo <span class="muted">(describe la imagen, ayuda al buscador y a la accesibilidad)</span>
+        <input name="alt" maxlength="140" placeholder="Ej. Muebles infantiles Maderin con decoración navideña">
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>¿Cómo se muestra?</legend>
+      <label class="check"><input type="radio" name="mode" value="text" checked> <span><b>Imagen con textos de la página</b> <span class="muted small">— cambia la imagen de fondo y puedes cambiar los textos abajo.</span></span></label>
+      <label class="check"><input type="radio" name="mode" value="full"> <span><b>Banner completo</b> <span class="muted small">— la imagen ya trae su propio diseño y textos (hecho en Canva, por ejemplo); no se muestran los textos de la página.</span></span></label>
+      <div class="grid-2" style="margin-top:12px">
+        <label class="span-2 hero-text-only">Título <span class="muted">(vacío = el de siempre; Enter = nueva línea)</span>
+          <textarea name="title" rows="2" maxlength="90" placeholder="Ej. Esta Navidad,&#10;regala autonomía"></textarea>
+        </label>
+        <label class="span-2 hero-text-only">Subtítulo <span class="muted">(vacío = el de siempre)</span>
+          <textarea name="text" rows="2" maxlength="220" placeholder="Ej. Hasta 20% de descuento en toda la tienda hasta el 25 de diciembre."></textarea>
+        </label>
+        <label>Texto del botón <span class="muted">(opcional)</span><input name="ctaLabel" maxlength="30" placeholder="Ej. Ver ofertas"></label>
+        <label>Enlace del botón <span class="muted">(opcional)</span><input name="ctaUrl" maxlength="300" placeholder="#productos o https://…"></label>
+      </div>
+      <p class="muted small" id="heroCtaHelp" style="margin:6px 0 0">En «Imagen con textos», el botón reemplaza al principal del hero. En «Banner completo», se agrega un botón sobre la imagen.</p>
+    </fieldset>
+
+    <p class="form-error" id="heroFormError" role="alert" hidden></p>
+    <div class="hero-form-actions">
+      <button type="button" class="btn btn-ghost" id="heroCancel">Cancelar</button>
+      <button type="submit" class="btn btn-primary">Guardar campaña</button>
+    </div>
+  </form>
+  <footer class="editor-foot" id="heroFoot"><button type="button" class="btn btn-primary" id="heroDone">Listo</button></footer>
 </dialog>
 
 <!-- ============ CANCELAR PEDIDO ============ -->

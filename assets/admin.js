@@ -14,7 +14,7 @@
 
   const state = {
     shop: "maderin",
-    catalog: { maderin: [], cdm: [], textures: [], shipping: { maderin: {}, cdm: {} }, coupons: [] },
+    catalog: { maderin: [], cdm: [], textures: [], shipping: { maderin: {}, cdm: {} }, coupons: [], heroes: [] },
     orders: [],
     ordersFilter: "open",
     saved: "",
@@ -655,13 +655,14 @@
     btn.disabled = true;
     $("#saveStatus").textContent = "Publicando…";
     try {
-      const res = await api("save", { method: "POST", body: { maderin: state.catalog.maderin, cdm: state.catalog.cdm, textures: state.catalog.textures, shipping: state.catalog.shipping, coupons: state.catalog.coupons } });
+      const res = await api("save", { method: "POST", body: { maderin: state.catalog.maderin, cdm: state.catalog.cdm, textures: state.catalog.textures, shipping: state.catalog.shipping, coupons: state.catalog.coupons, heroes: state.catalog.heroes } });
       state.catalog = {
         maderin: C.normalize(res.catalog.maderin, "maderin"),
         cdm: C.normalize(res.catalog.cdm, "cdm"),
         textures: res.catalog.textures || [],
         shipping: { maderin: {}, cdm: {}, ...(res.catalog.shipping || {}) },
-        coupons: res.catalog.coupons || []
+        coupons: res.catalog.coupons || [],
+        heroes: res.catalog.heroes || []
       };
       syncTextures();
       state.saved = snapshot();
@@ -881,6 +882,189 @@
     const btn = e.target.closest('[data-act="confirm"]');
     if (btn && confirm("¿Confirmas que ya recibiste este pago?")) updateOrder(card.dataset.code, { status: "paid" });
   });
+
+  // ---------------------------------------------------------------- Heros: campañas por temporada
+  const heroDialog = $("#heroDialog");
+  const heroForm = $("#heroForm");
+  const HERO_SHOP_LABEL = { maderin: "Maderin", cdm: "Corazón de Madera", ac: "AC Mueblería" };
+  const heroes = () => state.catalog.heroes;
+  const limaToday = () => new Date(Date.now() - 5 * 3600 * 1000).toISOString().slice(0, 10);
+  let heroDraft = null; // { isNew, original, c }
+
+  // Misma regla que el servidor: por tienda gana la campaña vigente con inicio más reciente
+  function heroWinners() {
+    const t = limaToday();
+    const out = {};
+    for (const shop of Object.keys(HERO_SHOP_LABEL)) {
+      const live = heroes().filter((c) => c.active !== false && c.shops.includes(shop) && (!c.start || c.start <= t) && (!c.end || c.end >= t));
+      live.sort((a, b) => String(b.start || "").localeCompare(String(a.start || "")));
+      out[shop] = live[0] ? live[0].id : null;
+    }
+    return out;
+  }
+  const fmtD = (d) => new Date(`${d}T12:00:00`).toLocaleDateString("es-PE", { day: "2-digit", month: "short", year: "numeric" });
+  function heroStatus(c, winners) {
+    const t = limaToday();
+    if (c.active === false) return ["off", "Desactivada"];
+    if (c.end && c.end < t) return ["off", "Terminada"];
+    if (c.start && c.start > t) return ["sched", `Programada · empieza el ${fmtD(c.start)}`];
+    const showing = c.shops.filter((s) => winners[s] === c.id);
+    return showing.length ? ["live", `Mostrándose ahora en ${showing.map((s) => HERO_SHOP_LABEL[s]).join(", ")}`] : ["off", "Vigente, pero otra campaña tiene prioridad"];
+  }
+
+  function renderHeroList() {
+    const w = heroWinners();
+    $("#heroCards").innerHTML = heroes().length ? heroes().map((c, i) => {
+      const [kind, label] = heroStatus(c, w);
+      const dates = c.start || c.end ? `${c.start ? fmtD(c.start) : "—"} → ${c.end ? fmtD(c.end) : "sin fecha final"}` : "Sin fechas (siempre que esté activa)";
+      return `<li class="hero-card" data-i="${i}">
+        <div class="hero-card-img" style="background-image:url(&quot;${esc(c.image)}&quot;)" role="img" aria-label="${esc(c.alt || c.name)}"></div>
+        <div class="hero-card-info">
+          <strong>${esc(c.name)}</strong>
+          <span><span class="badge badge-${kind === "live" ? "live" : kind === "sched" ? "sched" : "off"}">${esc(label)}</span></span>
+          <span class="muted">${dates} · ${c.mode === "full" ? "Banner completo" : "Imagen con textos"}</span>
+          <span class="hero-tags">${c.shops.map((s) => `<span class="hero-tag">${HERO_SHOP_LABEL[s]}</span>`).join("")}</span>
+        </div>
+        <div class="hero-card-actions">
+          <button type="button" class="btn btn-ghost btn-sm" data-act="edit">Editar</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-act="toggle">${c.active === false ? "Activar" : "Desactivar"}</button>
+          <button type="button" class="btn btn-ghost btn-sm btn-danger-text" data-act="del">Eliminar</button>
+        </div>
+      </li>`;
+    }).join("") : `<li class="hero-empty">Aún no hay campañas. Crea la primera con «+ Nueva campaña».</li>`;
+    refreshDirty();
+  }
+
+  const showHeroView = (form) => {
+    $("#heroListView").hidden = form;
+    heroForm.hidden = !form;
+    $("#heroFoot").hidden = form;
+    $("#heroTitle").textContent = form ? (heroDraft && heroDraft.isNew ? "Nueva campaña" : "Editar campaña") : "Heros y promociones";
+  };
+
+  function paintHeroImages() {
+    const c = heroDraft.c;
+    $("#heroImgPrev").style.backgroundImage = c.image ? `url("${c.image}")` : "";
+    $("#heroImgPrev").textContent = c.image ? "" : "Sin imagen";
+    $("#heroImgBtn").textContent = c.image ? "Cambiar imagen" : "Subir imagen";
+    $("#heroMobPrev").style.backgroundImage = c.imageMobile ? `url("${c.imageMobile}")` : "";
+    $("#heroMobPrev").textContent = c.imageMobile ? "" : "Usa la de escritorio";
+    $("#heroMobBtn").textContent = c.imageMobile ? "Cambiar imagen" : "Subir imagen";
+    $("#heroMobRemove").hidden = !c.imageMobile;
+  }
+  function syncHeroMode() {
+    const full = heroForm.elements.mode.value === "full";
+    $$(".hero-text-only", heroForm).forEach((el) => { el.hidden = full; });
+  }
+
+  function openHeroForm(index) {
+    const isNew = index === null;
+    const c = isNew
+      ? { id: "", name: "", shops: ["maderin", "cdm"], start: "", end: "", active: true, mode: "text", image: "", alt: "", title: "", text: "", ctaLabel: "", ctaUrl: "" }
+      : clone(heroes()[index]);
+    heroDraft = { isNew, index, c };
+    const f = heroForm.elements;
+    f.name.value = c.name;
+    $$('input[name="shop"]', heroForm).forEach((el) => { el.checked = c.shops.includes(el.value); });
+    f.start.value = c.start || "";
+    f.end.value = c.end || "";
+    f.active.checked = c.active !== false;
+    f.alt.value = c.alt || "";
+    f.mode.value = c.mode || "text";
+    f.title.value = c.title || "";
+    f.text.value = c.text || "";
+    f.ctaLabel.value = c.ctaLabel || "";
+    f.ctaUrl.value = c.ctaUrl || "";
+    f.start.min = f.end.min = "2025-01-01";
+    f.start.max = f.end.max = `${new Date().getFullYear() + 1}-12-31`;
+    $("#heroImgError").hidden = true;
+    $("#heroFormError").hidden = true;
+    paintHeroImages();
+    syncHeroMode();
+    showHeroView(true);
+    f.name.focus();
+  }
+
+  async function uploadHeroImage(file, maxSide, key) {
+    const msg = $("#heroImgError");
+    msg.hidden = true;
+    const btn = key === "image" ? $("#heroImgBtn") : $("#heroMobBtn");
+    const label = btn.textContent;
+    btn.textContent = "Subiendo…";
+    try {
+      const img = await loadImage(file);
+      const res = await api("upload", { method: "POST", body: { kind: "hero", id: `${slugify(heroForm.elements.name.value) || "hero"}-${key === "image" ? "pc" : "movil"}`, img: resizeToDataUrl(img, maxSide) } });
+      heroDraft.c[key] = res.img;
+      paintHeroImages();
+    } catch (err) {
+      btn.textContent = label;
+      msg.textContent = err.status === 401 ? "Tu sesión venció. Vuelve a entrar." : `No se pudo subir la imagen: ${err.message}`;
+      msg.hidden = false;
+      if (err.status === 401) { heroDialog.close(); showLogin(true); }
+    }
+  }
+  $("#heroImgInput").addEventListener("change", (e) => { const f = e.target.files[0]; e.target.value = ""; if (f) uploadHeroImage(f, 1920, "image"); });
+  $("#heroMobInput").addEventListener("change", (e) => { const f = e.target.files[0]; e.target.value = ""; if (f) uploadHeroImage(f, 1350, "imageMobile"); });
+  $("#heroMobRemove").addEventListener("click", () => { delete heroDraft.c.imageMobile; paintHeroImages(); });
+  $$('input[name="mode"]', heroForm).forEach((el) => el.addEventListener("change", syncHeroMode));
+
+  heroForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const f = heroForm.elements;
+    const c = heroDraft.c;
+    const err = $("#heroFormError");
+    const fail = (m, el) => { err.textContent = m; err.hidden = false; if (el) el.focus(); };
+    c.name = f.name.value.trim();
+    c.shops = $$('input[name="shop"]:checked', heroForm).map((el) => el.value);
+    c.start = f.start.value;
+    c.end = f.end.value;
+    c.active = f.active.checked;
+    c.alt = f.alt.value.trim();
+    c.mode = f.mode.value;
+    c.title = f.title.value.trim();
+    c.text = f.text.value.trim();
+    c.ctaLabel = f.ctaLabel.value.trim();
+    c.ctaUrl = f.ctaUrl.value.trim();
+    if (!c.name) return fail("Ponle un nombre a la campaña (por ejemplo «Navidad 2026»).", f.name);
+    if (!c.shops.length) return fail("Elige al menos una página donde se mostrará.");
+    if (!c.image) return fail("Sube la imagen de escritorio.");
+    if (c.start && c.end && c.end < c.start) return fail("La fecha «Hasta» no puede ser anterior a «Desde».", f.end);
+    if (c.ctaUrl && !/^(#[\w-]+|\/[\w\-./?=&#%]*|https:\/\/\S+)$/.test(c.ctaUrl)) return fail("El enlace debe empezar con https://, con / o con # (por ejemplo #productos).", f.ctaUrl);
+    if (c.mode === "text") { /* título y subtítulo vacíos conservan los de siempre */ } else { c.title = ""; c.text = ""; }
+    if (!c.imageMobile) delete c.imageMobile;
+    if (heroDraft.isNew) {
+      const base = slugify(c.name) || "campana";
+      const taken = new Set(heroes().map((x) => x.id));
+      let id = base;
+      for (let n = 2; taken.has(id); n++) id = `${base}-${n}`;
+      c.id = id;
+      heroes().unshift(c);
+    } else {
+      heroes()[heroDraft.index] = c;
+    }
+    heroDraft = null;
+    showHeroView(false);
+    renderHeroList();
+    toast("Campaña guardada. Publica los cambios para que se vea en la web.");
+  });
+  $("#heroCancel").addEventListener("click", () => { heroDraft = null; showHeroView(false); });
+
+  $("#heroCards").addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-act]");
+    const li = e.target.closest(".hero-card");
+    if (!btn || !li) return;
+    const i = Number(li.dataset.i);
+    const c = heroes()[i];
+    if (btn.dataset.act === "edit") openHeroForm(i);
+    if (btn.dataset.act === "toggle") { c.active = c.active === false; renderHeroList(); }
+    if (btn.dataset.act === "del" && confirm(`¿Eliminar la campaña «${c.name}»? Esta acción no se puede deshacer (hasta que descartes los cambios sin publicar).`)) { heroes().splice(i, 1); renderHeroList(); }
+  });
+  $("#heroAdd").addEventListener("click", () => openHeroForm(null));
+  $("#heroBtn").addEventListener("click", () => { heroDraft = null; showHeroView(false); renderHeroList(); heroDialog.showModal(); });
+  const closeHero = () => { heroDraft = null; heroDialog.close(); };
+  $("#heroClose").addEventListener("click", closeHero);
+  $("#heroDone").addEventListener("click", closeHero);
+  heroDialog.addEventListener("cancel", () => { heroDraft = null; });
 
   // ---------------------------------------------------------------- Cupones de descuento
   const couponDialog = $("#couponDialog");
@@ -1123,7 +1307,8 @@
         cdm: remote && Array.isArray(remote.cdm) ? C.normalize(remote.cdm, "cdm") : C.defaultsFor("cdm"),
         textures: remote && Array.isArray(remote.textures) ? remote.textures : [],
         shipping: { maderin: {}, cdm: {}, ...(remote && remote.shipping && typeof remote.shipping === "object" ? remote.shipping : {}) },
-        coupons: remote && Array.isArray(remote.coupons) ? remote.coupons : []
+        coupons: remote && Array.isArray(remote.coupons) ? remote.coupons : [],
+        heroes: remote && Array.isArray(remote.heroes) ? remote.heroes : []
       };
       syncTextures();
       state.saved = snapshot();

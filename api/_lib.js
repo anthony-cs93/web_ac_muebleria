@@ -276,6 +276,58 @@ export function sanitizeShipping(raw) {
   return out;
 }
 
+// Campañas del hero (promociones por temporada): imagen + textos opcionales + fechas, por tienda
+export const HERO_SHOPS = ['ac', 'maderin', 'cdm'];
+const safeLink = (v) => (typeof v === 'string' && /^(#[\w-]+|\/[\w\-./?=&#%]*|https:\/\/[^\s"'<>]+)$/.test(v) ? v : '');
+const isDate = (v) => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v);
+// Fecha de hoy en Lima (UTC-5), formato AAAA-MM-DD
+export const limaToday = () => new Date(Date.now() - 5 * 3600 * 1000).toISOString().slice(0, 10);
+
+export function sanitizeHeroes(list) {
+  if (!Array.isArray(list)) return [];
+  const seen = new Set();
+  const out = [];
+  for (const raw of list.slice(0, 20)) {
+    if (!raw || typeof raw !== 'object') continue;
+    const id = safeSlug(raw.id);
+    const image = safeUrl(raw.image);
+    const name = text(raw.name, 60);
+    const shops = HERO_SHOPS.filter((s) => Array.isArray(raw.shops) && raw.shops.includes(s));
+    if (!id || seen.has(id) || !image || !name || !shops.length) continue;
+    seen.add(id);
+    const start = isDate(raw.start) ? raw.start : '';
+    let end = isDate(raw.end) ? raw.end : '';
+    if (start && end && end < start) end = '';
+    const c = {
+      id, name, shops, start, end,
+      active: raw.active !== false,
+      mode: raw.mode === 'full' ? 'full' : 'text',
+      image,
+      imageMobile: safeUrl(raw.imageMobile),
+      alt: text(raw.alt, 140) || name,
+      title: text(raw.title, 90),
+      text: text(raw.text, 220),
+      ctaLabel: text(raw.ctaLabel, 30),
+      ctaUrl: safeLink(raw.ctaUrl)
+    };
+    if (!c.imageMobile) delete c.imageMobile;
+    out.push(c);
+  }
+  return out;
+}
+
+/** Campaña que se muestra hoy en cada tienda (la de inicio más reciente); el resto del catálogo no se expone. */
+export function pickActiveHeroes(list, today = limaToday()) {
+  const out = {};
+  for (const shop of HERO_SHOPS) {
+    const live = (Array.isArray(list) ? list : []).filter((c) => c.active !== false && c.shops.includes(shop) && (!c.start || c.start <= today) && (!c.end || c.end >= today));
+    live.sort((a, b) => String(b.start || '').localeCompare(String(a.start || '')));
+    const c = live[0];
+    out[shop] = c ? { id: c.id, mode: c.mode, image: c.image, imageMobile: c.imageMobile || null, alt: c.alt, title: c.title, text: c.text, ctaLabel: c.ctaLabel, ctaUrl: c.ctaUrl, start: c.start, end: c.end } : null;
+  }
+  return out;
+}
+
 // Cupones de descuento (solo los ve el admin; la tienda los valida en el servidor)
 export function sanitizeCoupons(list) {
   if (!Array.isArray(list)) return [];

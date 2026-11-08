@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<link rel="icon" type="image/png" sizes="32x32" href="public/favicon/cdm-32.png" id="coFavicon">
+<link rel="icon" type="image/png" sizes="32x32" href="data:," id="coFavicon">
 <title>Finalizar compra | AC Mueblería</title>
 <link rel="stylesheet" href="assets/style.css">
 </head>
@@ -20,10 +20,19 @@
 
 <header class="co-head">
   <div class="co-head-inner">
-    <a href="cdm.html" class="co-brand" id="coBrand"><img src="public/cdm/logo.png" alt="Corazón de Madera" id="coLogo"></a>
+    <a href="cdm.html" class="co-brand" id="coBrand"><img alt="" id="coLogo"></a>
     <a href="cdm.html" class="co-back" id="coBack">← Volver a la tienda</a>
   </div>
 </header>
+<script>
+  (function () {
+    var m = document.body.dataset.shop === "maderin";
+    document.getElementById("coLogo").src = m ? "public/maderin/logo-maderin.png" : "public/cdm/logo.png";
+    document.getElementById("coLogo").alt = m ? "Maderin" : "Corazón de Madera";
+    document.getElementById("coBrand").href = document.getElementById("coBack").href = m ? "maderin.html" : "cdm.html";
+    document.getElementById("coFavicon").href = m ? "public/favicon/maderin-32.png" : "public/favicon/cdm-32.png";
+  })();
+</script>
 
 <main class="co-main">
   <h1 class="co-title">Finalizar compra</h1>

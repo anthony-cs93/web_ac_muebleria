@@ -1002,7 +1002,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cartToastText.textContent = text;
       cartToast.classList.add("show");
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => cartToast.classList.remove("show"), 3200);
+      toastTimer = setTimeout(() => cartToast.classList.remove("show"), 2600);
     }
 
     function addToCart(id, color, qty, text = "") {
@@ -1019,7 +1019,7 @@ document.addEventListener("DOMContentLoaded", () => {
         void navCartBtn.offsetWidth; // reinicia la animación
         navCartBtn.classList.add("bump");
       }
-      showToast(`${product.name} agregado al carrito`);
+      showToast("✓ Agregado al carrito");
     }
 
     function renderCart() {

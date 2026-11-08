@@ -4,18 +4,36 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<link rel="icon" type="image/png" sizes="32x32" href="public/favicon/cdm-32.png" id="pdFavicon">
+<link rel="icon" type="image/png" sizes="32x32" href="data:," id="pdFavicon">
 <title>Tu pedido | AC Mueblería</title>
 <link rel="stylesheet" href="assets/style.css">
 </head>
-<body class="theme-cdm checkout-page">
+<body class="checkout-page">
+<script>
+  // La tienda sale del código del pedido (MAD-… = Maderin, CDM-… = Corazón de Madera): evita el parpadeo de otra marca
+  (function () {
+    var c = new URLSearchParams(location.search).get("c") || "";
+    var shop = c.indexOf("MAD-") === 0 ? "maderin" : "cdm";
+    document.body.className = "theme-" + shop + " checkout-page";
+    document.body.dataset.shop = shop;
+  })();
+</script>
 
 <header class="co-head">
   <div class="co-head-inner">
-    <a href="cdm.html" class="co-brand" id="pdBrand"><img src="public/cdm/logo.png" alt="Corazón de Madera" id="pdLogo"></a>
+    <a href="cdm.html" class="co-brand" id="pdBrand"><img alt="" id="pdLogo"></a>
     <a href="cdm.html" class="co-back" id="pdBack">← Volver a la tienda</a>
   </div>
 </header>
+<script>
+  (function () {
+    var m = document.body.dataset.shop === "maderin";
+    document.getElementById("pdLogo").src = m ? "public/maderin/logo-maderin.png" : "public/cdm/logo.png";
+    document.getElementById("pdLogo").alt = m ? "Maderin" : "Corazón de Madera";
+    document.getElementById("pdBrand").href = document.getElementById("pdBack").href = m ? "maderin.html" : "cdm.html";
+    document.getElementById("pdFavicon").href = m ? "public/favicon/maderin-32.png" : "public/favicon/cdm-32.png";
+  })();
+</script>
 
 <main class="co-main pd-main">
   <p class="pd-loading" id="pdLoading">Cargando tu pedido…</p>

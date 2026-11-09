@@ -148,7 +148,7 @@
   }
 
   // Secciones con página propia (el resto de pestañas son las tiendas)
-  const PAGES = ["orders", "campaigns", "coupons", "shipping"];
+  const PAGES = ["orders", "campaigns", "coupons", "shipping", "payments"];
   function setShop(shop) {
     const isPage = PAGES.includes(shop);
     if (state.view === "coupons" && shop !== "coupons") cleanCoupons();
@@ -162,6 +162,7 @@
       if (shop === "orders") loadOrders();
       else if (shop === "campaigns") { heroDraft = null; renderHeroList(); }
       else if (shop === "coupons") renderCoupons();
+      else if (shop === "payments") renderPayments();
       else { shipShop = state.shop === "cdm" ? "cdm" : "maderin"; renderShip(); }
       return;
     }
@@ -663,14 +664,15 @@
     btn.disabled = true;
     $("#saveStatus").textContent = "Publicando…";
     try {
-      const res = await api("save", { method: "POST", body: { maderin: state.catalog.maderin, cdm: state.catalog.cdm, textures: state.catalog.textures, shipping: state.catalog.shipping, coupons: state.catalog.coupons, heroes: state.catalog.heroes } });
+      const res = await api("save", { method: "POST", body: { maderin: state.catalog.maderin, cdm: state.catalog.cdm, textures: state.catalog.textures, shipping: state.catalog.shipping, coupons: state.catalog.coupons, heroes: state.catalog.heroes, payments: state.catalog.payments } });
       state.catalog = {
         maderin: C.normalize(res.catalog.maderin, "maderin"),
         cdm: C.normalize(res.catalog.cdm, "cdm"),
         textures: res.catalog.textures || [],
         shipping: { maderin: {}, cdm: {}, ...(res.catalog.shipping || {}) },
         coupons: res.catalog.coupons || [],
-        heroes: res.catalog.heroes || []
+        heroes: res.catalog.heroes || [],
+        payments: res.catalog.payments || state.catalog.payments
       };
       syncTextures();
       state.saved = snapshot();
@@ -1236,6 +1238,65 @@
   // Se descartan las filas vacías al salir de la página o al publicar
   function cleanCoupons() { state.catalog.coupons = coupons().filter((c) => c.code && c.value > 0); refreshDirty(); }
 
+  // ---------------------------------------------------------------- Medios de pago
+  const payGet = (path) => path.split(".").reduce((o, k) => (o ? o[k] : undefined), state.catalog.payments);
+  const paySet = (path, v) => { const [a, b] = path.split("."); state.catalog.payments[a][b] = v; };
+  function paintPayQr() {
+    const url = state.catalog.payments.yape.qr;
+    $("#payQrPrev").hidden = !url;
+    $("#payQrPrev").innerHTML = url ? `<img src="${esc(url)}" alt="Vista previa del QR de Yape">` : "";
+    $("#payQrBtnText").textContent = url ? "Cambiar QR" : "Subir QR";
+  }
+  function renderPayments() {
+    $$("#payView [data-p]").forEach((el) => {
+      const v = payGet(el.dataset.p);
+      if (el.type === "checkbox") el.checked = v !== false;
+      else el.value = v ?? "";
+    });
+    $$("#payView .pay-card").forEach((card) => {
+      const on = card.querySelector('input[type="checkbox"]').checked;
+      card.classList.toggle("is-off", !on);
+    });
+    paintPayQr();
+    refreshDirty();
+  }
+  $("#payView").addEventListener("input", (e) => {
+    const el = e.target.closest("[data-p]");
+    if (!el) return;
+    if (el.type === "checkbox") {
+      paySet(el.dataset.p, el.checked);
+      el.closest(".pay-card").classList.toggle("is-off", !el.checked);
+    } else if (el.type === "number") {
+      const n = Number(el.value);
+      paySet(el.dataset.p, Number.isFinite(n) ? Math.min(15, Math.max(0, n)) : 0);
+    } else {
+      paySet(el.dataset.p, el.value);
+      if (el.dataset.p === "yape.qr") paintPayQr();
+    }
+    refreshDirty();
+  });
+  $("#payQrInput").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    e.target.value = "";
+    if (!file) return;
+    const msg = $("#payQrError");
+    msg.hidden = true;
+    $("#payQrBtnText").textContent = "Subiendo…";
+    try {
+      const img = await loadImage(file);
+      const res = await api("upload", { method: "POST", body: { kind: "payment-qr", id: "yape-qr", img: resizeToDataUrl(img, 900) } });
+      state.catalog.payments.yape.qr = res.img;
+      $('#payView [data-p="yape.qr"]').value = res.img;
+      paintPayQr();
+      refreshDirty();
+    } catch (err) {
+      paintPayQr();
+      msg.textContent = err.status === 401 ? "Tu sesión venció. Vuelve a entrar." : `No se pudo subir el QR: ${err.message}`;
+      msg.hidden = false;
+      if (err.status === 401) showLogin(true);
+    }
+  });
+
   // ---------------------------------------------------------------- Costos de envío por distrito
   const DISTRICTS = ["Ancón", "Ate", "Barranco", "Breña", "Carabayllo", "Chaclacayo", "Chorrillos", "Cieneguilla", "Comas", "El Agustino",
     "Independencia", "Jesús María", "La Molina", "La Victoria", "Lima (Cercado)", "Lince", "Los Olivos", "Lurigancho (Chosica)", "Lurín",
@@ -1393,7 +1454,8 @@
         textures: remote && Array.isArray(remote.textures) ? remote.textures : [],
         shipping: { maderin: {}, cdm: {}, ...(remote && remote.shipping && typeof remote.shipping === "object" ? remote.shipping : {}) },
         coupons: remote && Array.isArray(remote.coupons) ? remote.coupons : [],
-        heroes: remote && Array.isArray(remote.heroes) ? remote.heroes : []
+        heroes: remote && Array.isArray(remote.heroes) ? remote.heroes : [],
+        payments: remote && remote.payments ? remote.payments : clone(C.DEFAULT_PAYMENTS)
       };
       syncTextures();
       state.saved = snapshot();

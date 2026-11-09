@@ -64,30 +64,33 @@
     if (o.payment.method === "card") {
       el.innerHTML = `<h2>Pago con tarjeta</h2>${amount}${o.payment.payUrl
         ? `<a class="btn btn-buy pd-pay-btn" href="${esc(o.payment.payUrl)}">Pagar con tarjeta</a><p class="co-note">Te llevamos a Mercado Pago. Tus datos de tarjeta no pasan por esta página.</p>`
-        : `<a class="btn btn-buy pd-wa-btn" href="${esc(o.whatsappUrl || "#")}" target="_blank" rel="noopener">Solicitar link de pago por WhatsApp</a><p class="co-note">Se abre WhatsApp con el resumen de tu pedido y el monto a pagar (incluye el recargo de 3.5% por tarjeta).</p>`}`;
+        : `<a class="btn btn-buy pd-wa-btn" href="${esc(o.whatsappUrl || "#")}" target="_blank" rel="noopener">Solicitar link de pago por WhatsApp</a><p class="co-note">Se abre WhatsApp con el resumen de tu pedido y el monto a pagar ${o.feeRate ? `(incluye el recargo de ${o.feeRate}% por tarjeta)` : ""}.</p>`}`;
       return;
     }
     const info = o.payInfo;
+    const askWa = (what) => `<p>Escríbenos por WhatsApp y te pasamos los datos para pagar.</p><a class="btn btn-buy pd-wa-btn" href="https://wa.me/${WHATSAPP}?text=${encodeURIComponent(`Hola, quiero pagar el pedido ${o.code} (${soles(o.total)}) por ${what}. ¿Me pasan los datos?`)}" target="_blank" rel="noopener">Pedir los datos por WhatsApp</a>`;
     if (o.payment.method === "yape") {
-      el.innerHTML = `<h2>Paga con Yape</h2>${amount}
+      const y = info.yape;
+      el.innerHTML = `<h2>Paga con Yape</h2>${amount}` + (!y.number && !y.qr ? askWa("Yape") : `
         <div class="pd-yape">
-          <img src="${esc(info.yape.qr)}" alt="Código QR de Yape de ${esc(info.yape.holder)}" width="220">
+          ${y.qr ? `<img src="${esc(y.qr)}" alt="Código QR de Yape${y.holder ? ` de ${esc(y.holder)}` : ""}" width="220">` : ""}
           <div class="pd-lines">
-            <p>Escanea el QR o yapea al número:</p>
-            <p class="pd-big">${esc(info.yape.number)} ${copyBtn(info.yape.number, "número de Yape")}</p>
-            <p>a nombre de <b>${esc(info.yape.holder)}</b></p>
+            <p>${y.qr ? "Escanea el QR" : "Yapea"}${y.number ? (y.qr ? " o yapea al número:" : " al número:") : ":"}</p>
+            ${y.number ? `<p class="pd-big">${esc(y.number)} ${copyBtn(y.number, "número de Yape")}</p>` : ""}
+            ${y.holder ? `<p>a nombre de <b>${esc(y.holder)}</b></p>` : ""}
             <p class="co-note">Yapea exactamente ${soles(o.total)}. Después sube la captura de tu pago aquí abajo.</p>
           </div>
-        </div>`;
+        </div>`);
     } else {
-      el.innerHTML = `<h2>Paga por transferencia (${esc(info.bank.name)})</h2>${amount}
+      const b = info.bank;
+      el.innerHTML = `<h2>Paga por transferencia${b.name ? ` (${esc(b.name)})` : ""}</h2>${amount}` + (!b.account && !b.cci ? askWa("transferencia") : `
         <dl class="pd-bank">
-          <div><dt>Banco</dt><dd>${esc(info.bank.name)} — cuenta en ${esc(info.bank.currency)}</dd></div>
-          <div><dt>Nº de cuenta</dt><dd>${esc(info.bank.account)} ${copyBtn(info.bank.account, "número de cuenta")}</dd></div>
-          <div><dt>CCI (interbancaria)</dt><dd>${esc(info.bank.cci)} ${copyBtn(info.bank.cci, "CCI")}</dd></div>
-          <div><dt>Titular</dt><dd>${esc(info.bank.holder)}</dd></div>
+          ${b.name ? `<div><dt>Banco</dt><dd>${esc(b.name)} — cuenta en ${esc(b.currency)}</dd></div>` : ""}
+          ${b.account ? `<div><dt>Nº de cuenta</dt><dd>${esc(b.account)} ${copyBtn(b.account, "número de cuenta")}</dd></div>` : ""}
+          ${b.cci ? `<div><dt>CCI (interbancaria)</dt><dd>${esc(b.cci)} ${copyBtn(b.cci, "CCI")}</dd></div>` : ""}
+          ${b.holder ? `<div><dt>Titular</dt><dd>${esc(b.holder)}</dd></div>` : ""}
         </dl>
-        <p class="co-note">Transfiere exactamente ${soles(o.total)}. Después sube la captura de tu pago aquí abajo.</p>`;
+        <p class="co-note">Transfiere exactamente ${soles(o.total)}. Después sube la captura de tu pago aquí abajo.</p>`);
     }
   }
 
@@ -159,6 +162,7 @@
     $("pdBoleta").hidden = !o.boleta;
     $("pdShipping").textContent = o.delivery.mode === "pickup" ? "Recojo en tienda · S/0" : soles(o.shipping);
     $("pdFeeRow").hidden = !o.fee;
+    $("pdFeeRow").querySelector("dt").textContent = `Recargo tarjeta (${o.feeRate}%)`;
     $("pdFee").textContent = soles(o.fee);
     $("pdTotal").textContent = soles(o.total);
     $("pdDelivery").innerHTML = o.delivery.mode === "pickup"

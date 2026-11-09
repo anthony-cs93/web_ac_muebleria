@@ -355,6 +355,30 @@ export function sanitizeCoupons(list) {
   return out;
 }
 
+// Medios de pago configurables desde el admin (se muestran al cliente al pagar)
+export const DEFAULT_PAYMENTS = {
+  yape: { enabled: true, number: '924486717', holder: 'Anthony Renzo Calderon Salazar', qr: '/public/pagos/yape-qr.jpg' },
+  transfer: { enabled: true, bank: 'BCP', holder: 'Anthony Renzo Calderon Salazar', account: '1919214821098', cci: '00219100921482109859' },
+  card: { enabled: true, fee: 3.5 }
+};
+const safeImg = (v) => (typeof v === 'string' && /^(https:\/\/[^\s"'<>]+|\/uploads\/[\w.\-]+|\/public\/[\w./\-]+)$/.test(v) ? v : '');
+export function sanitizePayments(raw) {
+  const r = raw && typeof raw === 'object' ? raw : {};
+  const y = r.yape && typeof r.yape === 'object' ? r.yape : {};
+  const t = r.transfer && typeof r.transfer === 'object' ? r.transfer : {};
+  const c = r.card && typeof r.card === 'object' ? r.card : {};
+  const fee = Math.round(Number(c.fee) * 10) / 10;
+  return {
+    yape: { enabled: y.enabled !== false, number: text(y.number, 20).replace(/[^\d+ ]/g, ''), holder: text(y.holder, 80), qr: safeImg(y.qr) },
+    transfer: { enabled: t.enabled !== false, bank: text(t.bank, 40), holder: text(t.holder, 80), account: text(t.account, 30).replace(/[^\d -]/g, ''), cci: text(t.cci, 30).replace(/[^\d -]/g, '') },
+    card: { enabled: c.enabled !== false, fee: Number.isFinite(fee) ? Math.min(15, Math.max(0, fee)) : 0 }
+  };
+}
+/** Medios de pago vigentes; si todavía no se configuró nada, los de siempre. */
+export const getPayments = (catalog) => (catalog && catalog.payments ? sanitizePayments(catalog.payments) : sanitizePayments(DEFAULT_PAYMENTS));
+/** Lo que ve cualquier visitante (carrito y checkout): solo qué medios hay y el recargo. */
+export const publicPayments = (p) => ({ yape: { enabled: p.yape.enabled }, transfer: { enabled: p.transfer.enabled }, card: { enabled: p.card.enabled, fee: p.card.fee } });
+
 export function sanitizeShop(list, shop) {
   if (!Array.isArray(list) || list.length > MAX_PRODUCTS) throw Object.assign(new Error('Lista de productos inválida'), { status: 400 });
   const seen = new Set();

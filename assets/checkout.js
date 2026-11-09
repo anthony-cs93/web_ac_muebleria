@@ -15,7 +15,7 @@
   const LAST_KEY = `${shop}LastOrder`;
   const STORE = { address: "Ca. Argentina #201 - Comas", map: "https://maps.app.goo.gl/jKDX4kuzcDRxq7tb6", coords: [-11.960141, -77.058542] };
   const WHATSAPP = "51943613883";
-  const CARD_FEE = 0.035;
+  let CARD_RATE = 3.5; // % de recargo con tarjeta (lo configura el admin)
   const MAX_QTY = 10;
   const money = (n) => Math.round(n * 100) / 100;
   const soles = (n) => A.formatPEN(n);
@@ -66,7 +66,7 @@
     const subtotal = subtotalOf();
     const discount = coupon ? Math.min(coupon.amount, subtotal) : 0;
     const shipping = shippingOf();
-    const fee = radio("coMethod") === "card" ? money((subtotal - discount + shipping) * CARD_FEE) : 0;
+    const fee = radio("coMethod") === "card" ? money((subtotal - discount + shipping) * CARD_RATE / 100) : 0;
     return { subtotal, discount, shipping, fee, total: money(subtotal - discount + shipping + fee) };
   }
 
@@ -191,10 +191,25 @@
     paintAll();
     render();
   }
+  // Medios de pago disponibles y recargo, según lo configurado en el admin
+  function applyPayments() {
+    const pm = A.getPayments();
+    CARD_RATE = pm.card.fee || 0;
+    for (const k of ["yape", "transfer", "card"]) {
+      const input = document.querySelector(`input[name="coMethod"][value="${k}"]`);
+      const label = input.closest("label");
+      label.hidden = !pm[k].enabled;
+      if (!pm[k].enabled) input.checked = false;
+    }
+    document.querySelector('input[name="coMethod"][value="card"]').closest("label").querySelector("small").textContent =
+      `${CARD_RATE > 0 ? `Recargo de ${CARD_RATE}%` : "Sin recargo"} · te enviamos el link de pago por WhatsApp`;
+    $("coFeeRow").querySelector("dt").textContent = `Recargo tarjeta (${CARD_RATE}%)`;
+    if (!pm.yape.enabled && !pm.transfer.enabled && !pm.card.enabled) $("coMethodErr").textContent = "Por ahora no hay medios de pago disponibles. Escríbenos por WhatsApp.";
+  }
   function syncMethod() {
     const m = radio("coMethod");
     $("coMethodNote").textContent = m === "card"
-      ? "Te escribimos por WhatsApp con tu link de pago. El recargo del 3.5% se suma al total."
+      ? `Te escribimos por WhatsApp con tu link de pago.${CARD_RATE > 0 ? ` El recargo del ${CARD_RATE}% se suma al total.` : ""}`
       : m ? "Al confirmar te mostramos los datos para pagar y podrás subir tu comprobante." : "";
     $("coMethodErr").textContent = "";
     render();
@@ -423,6 +438,7 @@
     if (!lines.length) { $("coEmpty").hidden = false; return; }
     fillDistricts();
     restoreFields();
+    applyPayments();
     $("coGrid").hidden = false;
     showExisting();
     syncDelivery();

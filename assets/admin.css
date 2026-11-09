@@ -267,7 +267,8 @@ legend { padding: 0 6px; font-weight: 700; font-size: 13px; color: var(--ink-sof
 .content[data-view="orders"] > .orders-view,
 .content[data-view="campaigns"] > #heroView,
 .content[data-view="coupons"] > #couponView,
-.content[data-view="shipping"] > #shipView { display: block; }
+.content[data-view="shipping"] > #shipView,
+.content[data-view="payments"] > #payView { display: block; }
 
 /* Páginas propias (Campañas, Cupones, Envíos) */
 .page-head { margin: 4px 0 14px; }
@@ -419,3 +420,20 @@ legend { padding: 0 6px; font-weight: 700; font-size: 13px; color: var(--ink-sof
 .hp-maderin .hl { color: #FFD966; font-style: italic; }
 .hp-cdm em { font-style: italic; color: #E1CBA2; }
 .hp-ac .hp-badges b { color: #af8f1a; }
+
+/* Medios de pago */
+.pay-card { margin: 0; border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px 16px; display: grid; gap: 12px; }
+.pay-card.is-off > :not(.pay-toggle) { opacity: .5; }
+.pay-toggle { font-size: 15px; }
+.pay-qr-row { display: flex; gap: 10px; align-items: center; }
+.pay-qr-row input { flex: 1; min-width: 0; }
+.pay-fee { max-width: 260px; }
+.pay-qr-prev img { width: 120px; height: 120px; object-fit: contain; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+
+/* Formularios dentro de las páginas del panel (Medios de pago) */
+.pay-card label { display: grid; gap: 4px; font-size: 13px; font-weight: 600; }
+.pay-card input:not([type="checkbox"]) { width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; background: #fff; font-weight: 400; font-size: 14.5px; }
+.pay-card input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+.pay-qr-row { display: flex; }
+.pay-qr-row .file-btn { display: inline-flex; flex: none; white-space: nowrap; }
+@media (max-width: 560px) { .pay-card .grid-2 { grid-template-columns: 1fr; } }

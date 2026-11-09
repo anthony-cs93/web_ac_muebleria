@@ -47,6 +47,7 @@
         <button role="tab" class="tab" data-shop="campaigns" aria-selected="false">Campañas</button>
         <button role="tab" class="tab" data-shop="coupons" aria-selected="false">Cupones</button>
         <button role="tab" class="tab" data-shop="shipping" aria-selected="false">Envíos</button>
+        <button role="tab" class="tab" data-shop="payments" aria-selected="false">Pagos</button>
       </nav>
       <div class="topbar-actions">
         <a class="btn btn-ghost" id="viewShopLink" href="maderin.html#productos" target="_blank" rel="noopener">Ver tienda ↗</a>
@@ -109,6 +110,46 @@
       <h3 class="page-h3 page-h3-out">Campañas</h3>
       <p class="muted page-sub">Si coinciden varias en fechas, se muestra la que empieza más tarde. Publica los cambios para que se vean en la web.</p>
       <ul class="hero-cards" id="heroCards"></ul>
+    </section>
+
+    <!-- ============ MEDIOS DE PAGO ============ -->
+    <section class="page-view" id="payView" aria-labelledby="payTitle">
+      <header class="page-head"><h2 id="payTitle">Medios de pago</h2></header>
+      <div class="page-body">
+        <p class="muted" style="margin:0">Se muestran al cliente en la página de su pedido. Si dejas Yape o la transferencia sin datos, se le ofrece pedirlos por WhatsApp. Publica los cambios para que se apliquen.</p>
+
+        <fieldset class="pay-card" data-pay="yape">
+          <label class="check pay-toggle"><input type="checkbox" data-p="yape.enabled"> <b>Yape / Plin</b></label>
+          <div class="grid-2">
+            <label>Número<input data-p="yape.number" inputmode="tel" maxlength="20" placeholder="9XX XXX XXX"></label>
+            <label>Titular<input data-p="yape.holder" maxlength="80"></label>
+            <label class="span-2">Imagen del QR <span class="muted">(opcional)</span>
+              <span class="pay-qr-row">
+                <input data-p="yape.qr" maxlength="300" placeholder="https://…">
+                <label class="btn btn-ghost file-btn" id="payQrBtn"><span id="payQrBtnText">Subir QR</span><input type="file" id="payQrInput" accept="image/jpeg,image/png,image/webp" hidden></label>
+              </span>
+            </label>
+          </div>
+          <p class="form-error" id="payQrError" role="alert" hidden></p>
+          <div class="pay-qr-prev" id="payQrPrev" hidden></div>
+        </fieldset>
+
+        <fieldset class="pay-card" data-pay="transfer">
+          <label class="check pay-toggle"><input type="checkbox" data-p="transfer.enabled"> <b>Transferencia bancaria</b></label>
+          <div class="grid-2">
+            <label>Banco<input data-p="transfer.bank" maxlength="40" placeholder="BCP"></label>
+            <label>Titular<input data-p="transfer.holder" maxlength="80"></label>
+            <label>Número de cuenta<input data-p="transfer.account" inputmode="numeric" maxlength="30"></label>
+            <label>CCI<input data-p="transfer.cci" inputmode="numeric" maxlength="30"></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="pay-card" data-pay="card">
+          <label class="check pay-toggle"><input type="checkbox" data-p="card.enabled"> <b>Tarjeta (link de pago por WhatsApp)</b></label>
+          <label class="pay-fee">Recargo por pagar con tarjeta (%)<input type="number" data-p="card.fee" min="0" max="15" step="0.1"></label>
+          <p class="muted small" style="margin:0">El cliente confirma su pedido y tú le envías el link de pago (Izipay, Mercado Pago, etc.) por WhatsApp. Con 0 no se cobra recargo.</p>
+        </fieldset>
+      </div>
     </section>
 
     <!-- ============ CUPONES DE DESCUENTO ============ -->

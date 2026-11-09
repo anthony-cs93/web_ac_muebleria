@@ -96,6 +96,24 @@
   const setTextures = (list) => { textures = Array.isArray(list) ? list.filter((t) => t && t.id && t.img) : []; };
   const getTextures = () => textures;
   // Costos de envío por distrito (se cargan con el catálogo): { maderin: { Distrito: { ok, cost, note } }, cdm: {...} }
+  // Medios de pago (los configura el admin): el sitio público solo necesita qué medios hay y el recargo
+  const DEFAULT_PAYMENTS = {
+    yape: { enabled: true, number: "924486717", holder: "Anthony Renzo Calderon Salazar", qr: "/public/pagos/yape-qr.jpg" },
+    transfer: { enabled: true, bank: "BCP", holder: "Anthony Renzo Calderon Salazar", account: "1919214821098", cci: "00219100921482109859" },
+    card: { enabled: true, fee: 3.5 }
+  };
+  let payments = { yape: { enabled: true }, transfer: { enabled: true }, card: { enabled: true, fee: 3.5 } };
+  const setPayments = (p) => {
+    if (!p || typeof p !== "object") return;
+    const fee = Number(p.card && p.card.fee);
+    payments = {
+      yape: { enabled: !(p.yape && p.yape.enabled === false) },
+      transfer: { enabled: !(p.transfer && p.transfer.enabled === false) },
+      card: { enabled: !(p.card && p.card.enabled === false), fee: Number.isFinite(fee) ? fee : 3.5 }
+    };
+  };
+  const getPayments = () => payments;
+
   let shipping = {};
   const setShipping = (s) => { shipping = s && typeof s === "object" ? s : {}; };
   // Distritos a los que se envía, con su costo, ordenados por nombre
@@ -195,10 +213,10 @@
 
   async function load(shop) {
     const remote = await fetchRemote();
-    if (remote) { setTextures(remote.textures); setShipping(remote.shipping); }
+    if (remote) { setTextures(remote.textures); setShipping(remote.shipping); setPayments(remote.payments); }
     if (remote && Array.isArray(remote[shop])) return normalize(remote[shop], shop);
     return defaultsFor(shop);
   }
 
-  window.ACCatalog = { DEFAULTS, SHOPS, BADGES, ICONS, load, defaultsFor, normalize, iconSvg, hasPhoto, photoUrl, stockInfo, isPromo, setTextures, getTextures, textureOf, swatchBg, setShipping, shippingFor, formatPEN };
+  window.ACCatalog = { DEFAULTS, SHOPS, BADGES, ICONS, load, defaultsFor, normalize, iconSvg, hasPhoto, photoUrl, stockInfo, isPromo, setTextures, getTextures, textureOf, swatchBg, setShipping, shippingFor, formatPEN, DEFAULT_PAYMENTS, getPayments };
 })();

@@ -970,6 +970,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const cartItemsEl = document.getElementById("cartItems");
     const cartEmptyEl = document.getElementById("cartEmpty");
     const cartFootEl = document.getElementById("cartFoot");
+    // Medios de pago que se aceptan (configurables en el admin)
+    const payNote = cartFootEl && cartFootEl.querySelector(".cart-note");
+    if (payNote) {
+      const pm = ACCatalog.getPayments();
+      const names = [pm.yape.enabled && "Yape", pm.transfer.enabled && "Transferencia bancaria", pm.card.enabled && "link de pago"].filter(Boolean);
+      payNote.textContent = names.length ? `Medios de pago: ${names.length > 1 ? `${names.slice(0, -1).join(", ")} o ${names[names.length - 1]}` : names[0]}.` : "";
+    }
     const cartSubtotalEl = document.getElementById("cartSubtotal");
     const cartHeadCount = document.getElementById("cartHeadCount");
     const navCartBtn = document.getElementById("navCartBtn");

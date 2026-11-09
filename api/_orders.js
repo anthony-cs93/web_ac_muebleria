@@ -14,19 +14,18 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { DISTRICTS, LOCAL_DATA_DIR, readCatalog, storageMode } from './_lib.js';
+import { DISTRICTS, LOCAL_DATA_DIR, getPayments, readCatalog, storageMode } from './_lib.js';
 
-export const CARD_FEE = 0.035; // recargo por pago con tarjeta (opción B)
 export const STORE = { address: 'Ca. Argentina #201 - Comas', map: 'https://maps.app.goo.gl/jKDX4kuzcDRxq7tb6' };
 export const SHOP_INFO = {
   maderin: { name: 'Maderin', prefix: 'MAD' },
   cdm: { name: 'Corazón de Madera', prefix: 'CDM' }
 };
-// Datos para pagar por Yape o transferencia (opción A); son los mismos para las dos tiendas
-export const PAY_INFO = {
-  yape: { number: '924486717', holder: 'Anthony Renzo Calderon Salazar', qr: '/public/pagos/yape-qr.jpg' },
-  bank: { name: 'BCP', account: '1919214821098', cci: '00219100921482109859', holder: 'Anthony Renzo Calderon Salazar', currency: 'Soles' }
-};
+// Datos para pagar por Yape o transferencia: se configuran en el admin (Pagos); aquí se arman para la página del pedido
+export const payInfoOf = (p) => ({
+  yape: { number: p.yape.number, holder: p.yape.holder, qr: p.yape.qr, enabled: p.yape.enabled },
+  bank: { name: p.transfer.bank, account: p.transfer.account, cci: p.transfer.cci, holder: p.transfer.holder, currency: 'Soles', enabled: p.transfer.enabled }
+});
 export const WHATSAPP = '51943613883';
 export const STATUSES = ['pending', 'review', 'paid', 'preparing', 'ready', 'delivered', 'cancelled'];
 const PREFIX = 'pedidos/';
@@ -235,8 +234,11 @@ export async function buildOrder(body) {
   }
 
   const method = body.method;
+  const pays = getPayments(catalog);
   if (!['yape', 'transfer', 'card'].includes(method)) throw err(400, 'Elige cómo vas a pagar.');
-  const fee = method === 'card' ? money((subtotal - discount + delivery.cost) * CARD_FEE) : 0;
+  if (!pays[method].enabled) throw err(400, 'Ese medio de pago no está disponible por ahora. Elige otro.');
+  const feeRate = method === 'card' ? pays.card.fee : 0;
+  const fee = money((subtotal - discount + delivery.cost) * feeRate / 100);
   const total = money(subtotal - discount + delivery.cost + fee);
 
   let invoice = null;
@@ -261,6 +263,7 @@ export async function buildOrder(body) {
     discount,
     shipping: delivery.cost,
     fee,
+    feeRate,
     total,
     eta: estimateEta(products, items.map((i) => i.id)),
     invoice,
@@ -284,13 +287,13 @@ function statusTimes(o) {
   return times;
 }
 
-export function publicOrder(o) {
+export function publicOrder(o, payments = getPayments(null)) {
   return {
     code: o.code, shop: o.shop, status: o.status, createdAt: o.createdAt, customer: { name: o.customer.name },
     delivery: o.delivery, items: o.items, subtotal: o.subtotal, productDiscount: o.productDiscount || 0, coupon: o.coupon || null, discount: o.discount || 0,
-    shipping: o.shipping, fee: o.fee, total: o.total, notes: o.notes, eta: o.eta || null, boleta: !!o.invoice,
+    shipping: o.shipping, fee: o.fee, feeRate: o.feeRate ?? (o.fee ? 3.5 : 0), total: o.total, notes: o.notes, eta: o.eta || null, boleta: !!o.invoice,
     payment: { method: o.payment.method, proofUrl: o.payment.proofUrl || null, payUrl: o.status === 'pending' ? o.payment.payUrl || null : null },
-    payInfo: o.payment.method === 'card' ? null : PAY_INFO,
+    payInfo: o.payment.method === 'card' ? null : payInfoOf(payments),
     whatsappUrl: o.payment.method === 'card' ? cardWhatsAppUrl(o) : null,
     times: statusTimes(o),
     store: STORE, shopName: SHOP_INFO[o.shop].name
@@ -311,7 +314,7 @@ export function cardWhatsAppUrl(o) {
     `Subtotal: ${money2(o.subtotal)}`,
     ...(o.discount ? [`Cupón ${o.coupon ? o.coupon.code : ''}: -${money2(o.discount)}`] : []),
     d.mode === 'pickup' ? 'Entrega: Recojo en tienda' : `Envío (${d.district}): ${money2(o.shipping)}`,
-    `Recargo por tarjeta (3.5%): ${money2(o.fee)}`,
+    `Recargo por tarjeta (${o.feeRate ?? 3.5}%): ${money2(o.fee)}`,
     `TOTAL A PAGAR: ${money2(o.total)}`,
     '',
     `Nombre: ${o.customer.name} · Cel: ${o.customer.phone}`,

@@ -7,13 +7,14 @@
 import {
   readJsonBody, sendJson, storePhoto, storageMode
 } from './_lib.js';
-import { readCatalog } from './_lib.js';
+import { getPayments, readCatalog } from './_lib.js';
 import {
   addHistory, buildOrder, evaluateCoupon, mpConfigured, mpCreatePreference, mpSyncOrder, notifyOwner, orderEmailHtml, publicOrder,
   readOrder, saveOrder, siteUrl
 } from './_orders.js';
 
 const noStore = { 'Cache-Control': 'no-store' };
+const pub = async (order) => publicOrder(order, getPayments(await readCatalog()));
 
 function decodeImage(dataUrl) {
   const m = /^data:(image\/(?:webp|jpeg|png));base64,([A-Za-z0-9+/=]+)$/.exec(dataUrl || '');
@@ -33,7 +34,7 @@ export default async function handler(req, res) {
       let order = await readOrder(url.searchParams.get('c'), url.searchParams.get('t'));
       if (!order) return sendJson(res, 404, { error: 'No encontramos ese pedido.' }, noStore);
       try { order = await mpSyncOrder(order); } catch (e) { console.error('mp sync', e); }
-      return sendJson(res, 200, publicOrder(order), noStore);
+      return sendJson(res, 200, await pub(order), noStore);
     }
 
     if (req.method === 'POST' && op === 'coupon') {
@@ -60,7 +61,7 @@ export default async function handler(req, res) {
       addHistory(order, 'El cliente subió su comprobante de pago');
       await saveOrder(order);
       await notifyOwner(`Comprobante recibido · ${order.code}`, orderEmailHtml(order, 'Comprobante recibido'));
-      return sendJson(res, 200, publicOrder(order), noStore);
+      return sendJson(res, 200, await pub(order), noStore);
     }
 
     if (req.method === 'POST') {
@@ -75,7 +76,7 @@ export default async function handler(req, res) {
       }
       await saveOrder(order);
       await notifyOwner(`Nuevo pedido · ${order.code}`, orderEmailHtml(order, 'Nuevo pedido'));
-      return sendJson(res, 200, { code: order.code, token: order.token, payUrl, whatsappUrl: order.payment.method === 'card' && !payUrl ? publicOrder(order).whatsappUrl : null }, noStore);
+      return sendJson(res, 200, { code: order.code, token: order.token, payUrl, whatsappUrl: order.payment.method === 'card' && !payUrl ? (await pub(order)).whatsappUrl : null }, noStore);
     }
 
     return sendJson(res, 405, { error: 'Método no permitido' }, noStore);

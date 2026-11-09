@@ -5865,3 +5865,22 @@ body.checkout-page { --ok: #2f7d4f; --bad: #b42318; }
 
 /* Medios de pago que el admin desactiva */
 .co-opt[hidden] { display: none; }
+
+/* Encabezado del pedido: agradecimiento personalizado y botón para actualizar */
+.pd-hero { margin-bottom: 22px; text-align: center; display: grid; justify-items: center; gap: 6px; padding-top: 6px; }
+.pd-hero-icon { width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; background: #c9f5cf; color: #1f6b3a; }
+.pd-hero-icon svg { width: 34px; height: 34px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.pd-hero-icon.is-cancelled { background: #fee2e2; color: #b91c1c; }
+.pd-hero h1 { font-family: var(--font-display, inherit); font-size: clamp(28px, 5.4vw, 46px); line-height: 1.12; margin: 12px 0 2px; max-width: 22ch; text-wrap: balance; }
+.pd-hero-meta { font-size: 14.5px; }
+.pd-hero-meta b { color: var(--ink); letter-spacing: .02em; }
+.pd-hero-text { max-width: 54ch; font-size: 15.5px; line-height: 1.5; margin-top: 4px !important; }
+.pd-status-row { display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+.pd-refresh { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border: 1px solid var(--line-strong); border-radius: 999px; background: #fff; color: var(--ink); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: border-color .15s, color .15s; }
+.pd-refresh:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.pd-refresh:disabled { cursor: progress; opacity: .8; }
+.pd-refresh svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.pd-refresh.is-loading svg { animation: pd-spin .9s linear infinite; }
+.pd-updated { min-height: 18px; font-size: 12.5px; margin: 2px 0 0 !important; }
+@keyframes pd-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .pd-refresh.is-loading svg { animation: none; } }

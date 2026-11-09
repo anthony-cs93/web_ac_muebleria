@@ -35,24 +35,43 @@
     return `<button type="button" class="pd-copy" data-copy="${esc(value)}" aria-label="Copiar ${esc(label)}">Copiar</button>`;
   }
 
+  // Encabezado personalizado: agradece por el nombre y muestra el estado, con botón para actualizarlo
+  let lastUpdated = null;
+  const clock = (d) => d.toLocaleTimeString("es-PE", { hour: "2-digit", minute: "2-digit" });
+  const ICON_OK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  const ICON_X = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  const ICON_REFRESH = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.5-4M4 5v4h4"/><path d="M4 13a8 8 0 0 0 14.5 4M20 19v-4h-4"/></svg>';
+
   function hero(o) {
     const m = o.payment.method;
     const mp = params.get("mp");
+    const first = String(o.customer.name || "").trim().split(/\s+/)[0];
+    const who = first ? `, ${esc(first)}` : "";
+    const pendingText = m === "card"
+      ? (o.payment.payUrl || mp
+        ? (mp === "fail" ? "El pago no se completó. Puedes intentarlo de nuevo cuando quieras." : mp === "pending" ? "Tu pago está en proceso. Apenas se acredite, lo verás aquí." : "Tu pedido está reservado. Completa el pago con tarjeta para continuar.")
+        : `Falta un paso: escríbenos por WhatsApp con el resumen de tu pedido y te enviamos el link para pagar ${soles(o.total)} con tarjeta.`)
+      : `Falta un paso: paga ${soles(o.total)} por ${m === "yape" ? "Yape" : "transferencia"} y sube tu comprobante.`;
     const map = {
-      pending: m === "card"
-        ? (o.payment.payUrl || mp
-          ? ["Falta completar tu pago", mp === "fail" ? "El pago no se completó. Puedes intentarlo de nuevo cuando quieras." : mp === "pending" ? "Tu pago está en proceso. Apenas se acredite, lo verás aquí." : "Tu pedido está reservado. Completa el pago con tarjeta para continuar."]
-          : ["Solicita tu link de pago", `Escríbenos por WhatsApp con el resumen de tu pedido y te enviamos el link para pagar ${soles(o.total)} con tarjeta.`])
-        : ["Falta un paso: realiza tu pago", `Paga ${soles(o.total)} por ${m === "yape" ? "Yape" : "transferencia"} y sube tu comprobante.`],
-      review: ["Recibimos tu comprobante", "Estamos revisando tu pago. Te escribiremos apenas lo confirmemos."],
-      paid: ["¡Pago confirmado!", "Gracias por tu compra. Empezaremos a preparar tu pedido y te escribiremos para coordinar los detalles."],
-      preparing: ["Estamos preparando tu pedido", "Te avisaremos apenas esté listo."],
-      ready: [o.delivery.mode === "pickup" ? "Tu pedido está listo para recoger" : "Tu pedido está listo para el envío", o.delivery.mode === "pickup" ? `Te esperamos en ${o.store.address}.` : "Coordinaremos contigo la entrega."],
-      delivered: ["Pedido entregado", "¡Gracias por tu compra! Esperamos que lo disfrutes."],
+      pending: [`¡Gracias por tu pedido${who}!`, pendingText],
+      review: [`¡Recibimos tu comprobante${who}!`, "Estamos revisando tu pago. Te escribiremos apenas lo confirmemos."],
+      paid: [`¡Pago confirmado${who}!`, "Gracias por tu compra. Empezaremos a preparar tu pedido y te escribiremos para coordinar los detalles."],
+      preparing: [`Estamos preparando tu pedido${who}`, "Te avisaremos apenas esté listo."],
+      ready: [`¡Tu pedido está listo${who}!`, o.delivery.mode === "pickup" ? `Te esperamos en ${o.store.address}.` : "Coordinaremos contigo la entrega."],
+      delivered: [`¡Disfruta tu pedido${who}!`, `Gracias por confiar en ${o.shopName}. Esperamos que te encante.`],
       cancelled: ["Pedido cancelado", "Si crees que es un error, escríbenos por WhatsApp."]
     };
     const [title, text] = map[o.status] || map.pending;
-    return `<div class="pd-badge pd-badge-${o.status}">${esc(statusLabel(o.status))}</div><h1>${esc(title)}</h1><p>${esc(text)}</p>`;
+    const when = new Date(o.createdAt).toLocaleString("es-PE", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+    return `<div class="pd-hero-icon is-${o.status}">${o.status === "cancelled" ? ICON_X : ICON_OK}</div>
+      <h1>${title}</h1>
+      <p class="pd-hero-meta">Pedido <b>${esc(o.code)}</b> · ${esc(when)}</p>
+      <p class="pd-hero-text">${esc(text)}</p>
+      <div class="pd-status-row">
+        <span class="pd-badge pd-badge-${o.status}">${esc(statusLabel(o.status))}</span>
+        <button type="button" class="pd-refresh" data-refresh>${ICON_REFRESH}<span>Actualizar estado</span></button>
+      </div>
+      <p class="pd-updated" id="pdUpdated" role="status" aria-live="polite">${lastUpdated ? `Actualizado a las ${clock(lastUpdated)}` : ""}</p>`;
   }
   const statusLabel = (s) => ({ pending: "Esperando pago", review: "Comprobante en revisión", paid: "Pagado", preparing: "En preparación", ready: "Listo", delivered: "Entregado", cancelled: "Cancelado" }[s] || s);
 
@@ -192,8 +211,30 @@
   }
 
   async function refresh() {
-    try { render(await load()); } catch (e) { /* se reintenta */ }
+    try { const data = await load(); lastUpdated = new Date(); render(data); } catch (e) { /* se reintenta */ }
   }
+
+  // Botón «Actualizar estado»: vuelve a consultar el pedido
+  document.addEventListener("click", async (e) => {
+    const b = e.target.closest("[data-refresh]");
+    if (!b || b.disabled) return;
+    const label = b.querySelector("span");
+    b.disabled = true;
+    b.classList.add("is-loading");
+    label.textContent = "Actualizando…";
+    try {
+      const [data] = await Promise.all([load(), new Promise((ok) => setTimeout(ok, 700))]);
+      const changed = order && data.status !== order.status;
+      lastUpdated = new Date();
+      render(data);
+      if (changed) $("pdUpdated").textContent = `¡Tu pedido cambió de estado! Actualizado a las ${clock(lastUpdated)}`;
+    } catch (ex) {
+      b.disabled = false;
+      b.classList.remove("is-loading");
+      label.textContent = "Actualizar estado";
+      $("pdUpdated").textContent = "No pudimos actualizar. Revisa tu conexión e inténtalo otra vez.";
+    }
+  });
 
   document.addEventListener("click", (e) => {
     const b = e.target.closest("[data-copy]");

@@ -40,18 +40,18 @@
     <div class="topbar-inner">
       <a class="brand" href="admin.html" aria-label="AC Mueblería — Panel"><img src="public/ac_muebleria/logo-h.png" alt="AC Mueblería" class="brand-logo"><span class="brand-badge">Panel</span></a>
       <nav class="shop-tabs" role="tablist" aria-label="Secciones">
-        <button role="tab" class="tab" data-shop="maderin" aria-selected="true">Maderin <span class="count" id="countMaderin"></span></button>
-        <button role="tab" class="tab" data-shop="cdm" aria-selected="false">Corazón de Madera <span class="count" id="countCdm"></span></button>
-        <button role="tab" class="tab" data-shop="orders" aria-selected="false">Pedidos <span class="count count-alert" id="countOrders" hidden></span></button>
+        <button role="tab" class="tab" data-shop="maderin" aria-selected="true"><span class="ico-slot" data-ico="store"></span>Maderin <span class="count" id="countMaderin"></span></button>
+        <button role="tab" class="tab" data-shop="cdm" aria-selected="false"><span class="ico-slot" data-ico="store"></span>Corazón de Madera <span class="count" id="countCdm"></span></button>
+        <button role="tab" class="tab" data-shop="orders" aria-selected="false"><span class="ico-slot" data-ico="package"></span>Pedidos <span class="count count-alert" id="countOrders" hidden></span></button>
         <span class="tabs-sep" aria-hidden="true"></span>
-        <button role="tab" class="tab" data-shop="campaigns" aria-selected="false">Campañas</button>
-        <button role="tab" class="tab" data-shop="coupons" aria-selected="false">Cupones</button>
-        <button role="tab" class="tab" data-shop="shipping" aria-selected="false">Envíos</button>
-        <button role="tab" class="tab" data-shop="payments" aria-selected="false">Pagos</button>
+        <button role="tab" class="tab" data-shop="campaigns" aria-selected="false"><span class="ico-slot" data-ico="megaphone"></span>Campañas</button>
+        <button role="tab" class="tab" data-shop="coupons" aria-selected="false"><span class="ico-slot" data-ico="percent"></span>Cupones</button>
+        <button role="tab" class="tab" data-shop="shipping" aria-selected="false"><span class="ico-slot" data-ico="truck"></span>Envíos</button>
+        <button role="tab" class="tab" data-shop="payments" aria-selected="false"><span class="ico-slot" data-ico="card"></span>Pagos</button>
       </nav>
       <div class="topbar-actions">
-        <a class="btn btn-ghost" id="viewShopLink" href="maderin.html#productos" target="_blank" rel="noopener">Ver tienda ↗</a>
-        <button type="button" class="btn btn-ghost" id="logoutBtn">Salir</button>
+        <a class="btn btn-ghost" id="viewShopLink" href="maderin.html#productos" target="_blank" rel="noopener">Ver tienda <span class="ico-slot" data-ico="external"></span></a>
+        <button type="button" class="btn btn-ghost" id="logoutBtn"><span class="ico-slot" data-ico="logout"></span>Salir</button>
       </div>
     </div>
   </header>
@@ -64,12 +64,12 @@
         <input type="search" id="searchInput" placeholder="Buscar producto…" aria-label="Buscar producto">
       </div>
       <div class="toolbar-right">
-        <button type="button" class="btn btn-ghost" id="texBtn">Texturas <span class="count" id="countTex"></span></button>
-        <button type="button" class="btn btn-primary" id="newBtn">+ Nuevo producto</button>
+        <button type="button" class="btn btn-ghost" id="texBtn"><span class="ico-slot" data-ico="palette"></span>Texturas <span class="count" id="countTex"></span></button>
+        <button type="button" class="btn btn-primary" id="newBtn"><span class="ico-slot" data-ico="plus"></span>Nuevo producto</button>
       </div>
     </div>
 
-    <p class="hint" id="reorderHint">Arrastra <span aria-hidden="true">⋮⋮</span> o usa las flechas para cambiar el orden en que aparecen en la tienda. El primero se muestra arriba a la izquierda.</p>
+    <p class="hint" id="reorderHint">Arrastra el asa <span class="ico-slot hint-ico" data-ico="grip"></span> o usa las flechas para cambiar el orden en que aparecen en la tienda. El primero se muestra arriba a la izquierda.</p>
     <ol class="rows" id="rows" aria-label="Productos"></ol>
     <p class="empty" id="emptyMsg" hidden>No hay productos que coincidan.</p>
 
@@ -93,7 +93,7 @@
           <h2 id="heroTitle">Campañas</h2>
           <p class="muted">La imagen y el mensaje principal de cada página. Crea campañas de temporada con fechas: se activan y se desactivan solas.</p>
         </div>
-        <button type="button" class="btn btn-primary" id="heroAdd">+ Nueva campaña</button>
+        <button type="button" class="btn btn-primary" id="heroAdd"><span class="ico-slot" data-ico="plus"></span>Nueva campaña</button>
       </header>
 
       <div class="page-body">
@@ -158,7 +158,7 @@
   <div class="page-body">
       <p class="muted" style="margin:0">El cliente escribe el código en la página de pago. El descuento se aplica al subtotal de los productos (no al envío). Publica los cambios para activarlos. Los códigos no son públicos.</p>
       <div class="ship-table-wrap"><table class="ship-table coupon-table" id="couponTable"></table></div>
-      <div><button type="button" class="btn btn-ghost btn-sm" id="couponAdd">+ Agregar cupón</button></div>
+      <div><button type="button" class="btn btn-ghost btn-sm" id="couponAdd"><span class="ico-slot" data-ico="plus"></span>Agregar cupón</button></div>
       <p class="muted small" id="couponSummary"></p>
     </div>
     </section>
@@ -197,7 +197,7 @@
   <form id="editorForm" method="dialog" novalidate>
     <header class="editor-head">
       <h2 id="editorTitle">Editar producto</h2>
-      <button type="button" class="icon-btn" id="editorClose" aria-label="Cerrar">✕</button>
+      <button type="button" class="icon-btn" id="editorClose" aria-label="Cerrar"><span class="ico-slot" data-ico="x"></span></button>
     </header>
 
     <div class="editor-body">
@@ -207,6 +207,17 @@
           <label class="span-2">Nombre
             <input name="name" required maxlength="120">
           </label>
+          <div class="span-2 photo-field">
+            <span class="field-title">Foto</span>
+          <div class="photo-row">
+            <div class="photo-preview" id="photoPreview"></div>
+            <div class="photo-actions">
+              <label class="btn btn-ghost file-btn">Subir foto<input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp" hidden></label>
+              <button type="button" class="btn btn-ghost" id="photoRemove">Quitar foto</button>
+              <p class="muted small" id="photoMsg">JPG, PNG o WebP. Se optimiza sola para la web.</p>
+            </div>
+          </div>
+          </div>
           <label>Categoría
             <select name="category"></select>
           </label>
@@ -219,18 +230,6 @@
           <label class="span-2"><span class="lbl-desc">Descripción</span>
             <textarea name="desc" rows="4" maxlength="1200"></textarea>
           </label>
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Foto</legend>
-        <div class="photo-row">
-          <div class="photo-preview" id="photoPreview"></div>
-          <div class="photo-actions">
-            <label class="btn btn-ghost file-btn">Subir foto<input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp" hidden></label>
-            <button type="button" class="btn btn-ghost" id="photoRemove">Quitar foto</button>
-            <p class="muted small" id="photoMsg">JPG, PNG o WebP. Se optimiza sola para la web.</p>
-          </div>
         </div>
       </fieldset>
 
@@ -355,7 +354,7 @@
   <form id="heroForm" method="dialog" novalidate>
     <header class="editor-head">
       <h2 id="heroFormTitle">Nueva campaña</h2>
-      <button type="button" class="icon-btn" id="heroClose" aria-label="Cerrar">✕</button>
+      <button type="button" class="icon-btn" id="heroClose" aria-label="Cerrar"><span class="ico-slot" data-ico="x"></span></button>
     </header>
     <div class="editor-body">
       <div class="hero-preview-wrap">
@@ -435,6 +434,20 @@
   </form>
 </dialog>
 
+<!-- ============ DETALLE DE UN PEDIDO ============ -->
+<dialog class="editor order-dialog" id="orderDialog" aria-labelledby="orderDlgCode">
+  <div class="editor-head">
+    <div class="order-dlg-title">
+      <h2 id="orderDlgCode"></h2>
+      <span class="badge" id="orderDlgBadge"></span>
+    </div>
+    <button type="button" class="icon-btn" id="orderDlgClose" aria-label="Cerrar"><span class="ico-slot" data-ico="x"></span></button>
+  </div>
+  <p class="order-dlg-sub muted" id="orderDlgSub"></p>
+  <div class="editor-body" id="orderDlgBody"></div>
+  <footer class="editor-foot order-foot" id="orderDlgFoot"></footer>
+</dialog>
+
 <!-- ============ CANCELAR PEDIDO ============ -->
 <dialog class="confirm-dialog" id="cancelDialog" aria-labelledby="cancelTitle" aria-describedby="cancelDesc">
   <form method="dialog">
@@ -461,7 +474,7 @@
 <dialog class="editor tex-dialog" id="texDialog" aria-labelledby="texTitle">
   <div class="editor-head">
     <h2 id="texTitle">Biblioteca de texturas</h2>
-    <button type="button" class="icon-btn" id="texClose" aria-label="Cerrar">✕</button>
+    <button type="button" class="icon-btn" id="texClose" aria-label="Cerrar"><span class="ico-slot" data-ico="x"></span></button>
   </div>
   <div class="editor-body">
     <p class="muted small" style="margin:0">Las mismas texturas sirven para Maderin y Corazón de Madera. Máximo 10. Recuerda publicar los cambios para que se vean en la tienda.</p>

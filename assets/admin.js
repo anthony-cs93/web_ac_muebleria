@@ -74,6 +74,35 @@
   }
   const slugify = (s) => String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60);
 
+
+  // ---------------------------------------------------------------- Íconos (trazo de 2 px, estilo Lucide)
+  const ICONS = {
+    grip: '<g fill="currentColor" stroke="none"><circle cx="9" cy="6" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="18" r="1.4"/></g>',
+    eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>',
+    eyeOff: '<path d="M17.9 17.9A10.9 10.9 0 0 1 12 19c-6.5 0-10-7-10-7a18.5 18.5 0 0 1 4.1-5.1M9.9 5.2A10 10 0 0 1 12 5c6.5 0 10 7 10 7a18.6 18.6 0 0 1-2.2 3.2"/><path d="M14.1 14.1a3 3 0 1 1-4.2-4.2"/><path d="M2 2l20 20"/>',
+    up: '<path d="m18 15-6-6-6 6"/>',
+    down: '<path d="m6 9 6 6 6-6"/>',
+    right: '<path d="m9 18 6-6-6-6"/>',
+    x: '<path d="M18 6 6 18M6 6l12 12"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    external: '<path d="M7 17 17 7M8 7h9v9"/>',
+    pencil: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+    copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V6a2 2 0 0 1 2-2h10"/>',
+    trash: '<path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/>',
+    check: '<path d="M20 6 9 17l-5-5"/>',
+    whatsapp: '<path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l1.7-5.4A8.4 8.4 0 1 1 21 11.5Z"/><path d="M9 9.5c.3 2 2.5 4.2 5 5l1.2-1.3-1.7-1-.9.6c-.7-.3-1.4-1-1.7-1.7l.6-.9-1-1.7Z"/>',
+    store: '<path d="M4 9l1.5-5h13L20 9"/><path d="M4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0A2.7 2.7 0 0 0 20 9"/><path d="M5 12v8h14v-8"/><path d="M10 20v-4h4v4"/>',
+    package: '<path d="m21 8-9-5-9 5 9 5 9-5Z"/><path d="M3 8v8l9 5 9-5V8M12 13v8"/>',
+    megaphone: '<path d="m3 11 14-6v14L3 13Z"/><path d="M7 13.5V18a2 2 0 0 0 4 0v-2.5M20 9v6"/>',
+    percent: '<path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>',
+    truck: '<path d="M2 6h11v10H2z"/><path d="M13 9h4l3 3v4h-7"/><circle cx="6.5" cy="17.5" r="2"/><circle cx="16.5" cy="17.5" r="2"/>',
+    card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h3"/>',
+    logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>',
+    palette: '<path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-1 2-2 0-1.6-1.4-1.7-1.4-3 0-1 .9-2 2-2H17a4 4 0 0 0 4-4c0-4-4-7-9-7Z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7" r="1"/>'
+  };
+  const icon = (name, cls = "") => `<svg class="ico${cls ? ` ${cls}` : ""}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`;
+  $$("[data-ico]").forEach((el) => { el.innerHTML = icon(el.dataset.ico); });
+
   // ---------------------------------------------------------------- Lista de productos
   function badgeOptions(current) {
     const opts = ['<option value="">Sin etiqueta</option>'];
@@ -89,7 +118,7 @@
     const photo = C.hasPhoto(p) ? `<img src="${esc(C.photoUrl(p, 480, state.shop))}" alt="" loading="lazy">` : p.svg;
     const meta = [cat ? cat.label : "", p.sku || ""].filter(Boolean).join(" · ");
     return `<li class="row${p.hidden ? " is-hidden" : ""}" data-id="${esc(p.id)}">
-      <button type="button" class="grip" aria-label="Arrastrar para reordenar ${esc(p.name)}"${canReorder ? "" : " disabled"}>⋮⋮</button>
+      <button type="button" class="grip" aria-label="Arrastrar para reordenar ${esc(p.name)}"${canReorder ? "" : " disabled"}>${icon("grip")}</button>
       <div class="row-thumb">${photo}</div>
       <div class="row-meta">
         <strong title="${esc(p.name)}">${esc(p.name)}</strong>
@@ -107,12 +136,14 @@
         <select data-field="badge" aria-label="Etiqueta de ${esc(p.name)}">${badgeOptions(p.badge)}</select>
       </label>
       <div class="row-actions">
-        <button type="button" class="icon-btn eye" data-act="toggle-hidden" aria-pressed="${p.hidden}" title="${p.hidden ? "Oculto en la tienda. Clic para mostrar" : "Visible en la tienda. Clic para ocultar"}" aria-label="${p.hidden ? "Mostrar" : "Ocultar"} ${esc(p.name)}">${p.hidden ? "🚫" : "👁"}</button>
-        <button type="button" class="btn btn-ghost btn-sm" data-act="edit">Editar</button>
+        <button type="button" class="icon-btn eye" data-act="toggle-hidden" aria-pressed="${p.hidden}" title="${p.hidden ? "Oculto en la tienda. Clic para mostrar" : "Visible en la tienda. Clic para ocultar"}" aria-label="${p.hidden ? "Mostrar" : "Ocultar"} ${esc(p.name)}">${icon(p.hidden ? "eyeOff" : "eye")}</button>
+        <button type="button" class="icon-btn" data-act="edit" title="Editar" aria-label="Editar ${esc(p.name)}">${icon("pencil")}</button>
+        <button type="button" class="icon-btn" data-act="duplicate" title="Duplicar" aria-label="Duplicar ${esc(p.name)}">${icon("copy")}</button>
+        <button type="button" class="icon-btn icon-btn-danger" data-act="delete" title="Eliminar" aria-label="Eliminar ${esc(p.name)}">${icon("trash")}</button>
       </div>
       <div class="row-moves">
-        <button type="button" class="icon-btn" data-act="up" aria-label="Subir ${esc(p.name)}"${canReorder && index > 0 ? "" : " disabled"}>▲</button>
-        <button type="button" class="icon-btn" data-act="down" aria-label="Bajar ${esc(p.name)}"${canReorder && index < total - 1 ? "" : " disabled"}>▼</button>
+        <button type="button" class="icon-btn" data-act="up" aria-label="Subir ${esc(p.name)}"${canReorder && index > 0 ? "" : " disabled"}>${icon("up")}</button>
+        <button type="button" class="icon-btn" data-act="down" aria-label="Bajar ${esc(p.name)}"${canReorder && index < total - 1 ? "" : " disabled"}>${icon("down")}</button>
       </div>
     </li>`;
   }
@@ -128,7 +159,7 @@
     $("#rows").innerHTML = html;
     $("#emptyMsg").hidden = !!html;
     $("#reorderHint").textContent = canReorder
-      ? "Arrastra ⋮⋮ o usa las flechas para cambiar el orden en que aparecen en la tienda. El primero se muestra arriba a la izquierda."
+      ? "Arrastra el asa o usa las flechas para cambiar el orden en que aparecen en la tienda. El primero se muestra arriba a la izquierda."
       : "Borra la búsqueda para poder reordenar.";
     $("#countMaderin").textContent = state.catalog.maderin.length;
     $("#countCdm").textContent = state.catalog.cdm.length;
@@ -203,6 +234,8 @@
     if (act === "up") move(id, -1);
     if (act === "down") move(id, 1);
     if (act === "edit") openEditor(id);
+    if (act === "duplicate") duplicateProduct(id);
+    if (act === "delete") deleteProduct(id);
     if (act === "toggle-hidden") {
       const p = list().find((x) => x.id === id);
       p.hidden = !p.hidden;
@@ -292,7 +325,7 @@
     row.innerHTML = `<span class="tex-dot" aria-hidden="true"></span>
       <select aria-label="Textura">${texOptions(c.tex)}</select>
       <input type="text" value="${esc(c.name)}" maxlength="40" placeholder="Nombre" aria-label="Nombre de la textura">
-      <button type="button" class="icon-btn" aria-label="Quitar textura">✕</button>`;
+      <button type="button" class="icon-btn" aria-label="Quitar textura">${icon("x")}</button>`;
     const sel = row.querySelector("select");
     const nameInput = row.querySelector('input[type="text"]');
     row.dataset.auto = (state.catalog.textures.find((t) => t.id === c.tex) || {}).name === c.name ? c.name : "";
@@ -685,39 +718,41 @@
     }
   });
 
-  // Delete / duplicate viven en el editor para evitar acciones accidentales desde la lista
-  const foot = $(".editor-foot");
-  const dupBtn = document.createElement("button");
-  dupBtn.type = "button"; dupBtn.className = "btn btn-ghost"; dupBtn.textContent = "Duplicar";
-  const delBtn = document.createElement("button");
-  delBtn.type = "button"; delBtn.className = "btn btn-ghost"; delBtn.textContent = "Eliminar"; delBtn.style.color = "var(--danger)";
-  foot.insertBefore(delBtn, $("#editorCancel"));
-  foot.insertBefore(dupBtn, $("#editorCancel"));
-  const syncExtraButtons = new MutationObserver(() => { dupBtn.hidden = delBtn.hidden = !editing || editing.isNew; });
-  syncExtraButtons.observe(editor, { attributes: true, attributeFilter: ["open"] });
-
-  delBtn.addEventListener("click", () => {
-    if (!editing || editing.isNew) return;
-    if (!confirm(`¿Eliminar "${editing.product.name}" de la tienda? Si solo quieres quitarlo por ahora, mejor márcalo como oculto.`)) return;
+  // Duplicar y eliminar: botones rápidos en cada fila y también dentro del editor
+  function deleteProduct(id) {
     const items = list();
-    items.splice(items.findIndex((p) => p.id === editing.original), 1);
-    closeEditor();
+    const i = items.findIndex((p) => p.id === id);
+    if (i < 0) return;
+    if (!confirm(`¿Eliminar "${items[i].name}" de la tienda? Si solo quieres quitarlo por ahora, mejor márcalo como oculto.`)) return;
+    items.splice(i, 1);
+    if (editor.open) closeEditor();
     renderRows();
-  });
-  dupBtn.addEventListener("click", () => {
-    if (!editing || editing.isNew) return;
+  }
+  function duplicateProduct(id) {
     const items = list();
-    const i = items.findIndex((p) => p.id === editing.original);
+    const i = items.findIndex((p) => p.id === id);
+    if (i < 0) return;
     const copy = clone(items[i]);
     copy.id = uniqueId(`${copy.id}-copia`);
     copy.name = `${copy.name} (copia)`;
     copy.sku = null;
     copy.hidden = true;
     items.splice(i + 1, 0, copy);
-    closeEditor();
+    if (editor.open) closeEditor();
     renderRows();
     toast("Copia creada y oculta. Edítala y muéstrala cuando esté lista.");
-  });
+  }
+  const foot = $(".editor-foot");
+  const dupBtn = document.createElement("button");
+  dupBtn.type = "button"; dupBtn.className = "btn btn-ghost"; dupBtn.innerHTML = `${icon("copy")}Duplicar`;
+  const delBtn = document.createElement("button");
+  delBtn.type = "button"; delBtn.className = "btn btn-ghost"; delBtn.innerHTML = `${icon("trash")}Eliminar`; delBtn.style.color = "var(--danger)";
+  foot.insertBefore(delBtn, $("#editorCancel"));
+  foot.insertBefore(dupBtn, $("#editorCancel"));
+  const syncExtraButtons = new MutationObserver(() => { dupBtn.hidden = delBtn.hidden = !editing || editing.isNew; });
+  syncExtraButtons.observe(editor, { attributes: true, attributeFilter: ["open"] });
+  delBtn.addEventListener("click", () => { if (editing && !editing.isNew) deleteProduct(editing.original); });
+  dupBtn.addEventListener("click", () => { if (editing && !editing.isNew) duplicateProduct(editing.original); });
 
   window.addEventListener("beforeunload", (e) => { if (isDirty()) { e.preventDefault(); e.returnValue = ""; } });
 
@@ -752,46 +787,102 @@
     return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
   }
 
-  function orderHtml(o) {
-    const d = o.delivery;
-    const items = o.items.map((i) => `<li>${i.qty} × ${esc(i.name)}${i.color ? ` (${esc(i.color)})` : ""} — ${soles(i.lineTotal)}${i.text ? `<br><small>${esc(i.textLabel)}: “${esc(i.text)}”</small>` : ""}</li>`).join("");
-    const statusOpts = Object.entries(ORDER_STATUS).map(([v, l]) => `<option value="${v}"${o.status === v ? " selected" : ""}>${l}</option>`).join("");
-    const proof = o.payment.proofUrl ? `<div class="order-proof"><h4>Comprobante</h4><a href="${esc(o.payment.proofUrl)}" target="_blank" rel="noopener"><img src="${esc(o.payment.proofUrl)}" alt="Comprobante de pago" loading="lazy"></a></div>` : "";
-    const hist = (o.history || []).map((h) => `<li>${fmtDate(h.at)} — ${esc(h.text)}</li>`).join("");
-    return `<details class="order" data-code="${esc(o.code)}">
-      <summary>
-        <span class="order-code">${esc(o.code)}</span>
-        <span class="order-meta"><b>${esc(o.customer.name)}</b> · ${SHOP_LABEL[o.shop]} · ${PAY_LABEL[o.payment.method]} · ${fmtDate(o.createdAt)}</span>
-        <span class="order-total">${soles(o.total)}</span>
-        <span class="badge badge-${o.status}">${ORDER_STATUS[o.status]}${o.status === "cancelled" && o.cancelledAt ? ` · ${fmtDate(o.cancelledAt)}` : ""}</span>
-      </summary>
-      <div class="order-body">
-        <div><h4>Cliente</h4>${esc(o.customer.name)} · ${esc(o.customer.phone)}${o.customer.email ? ` · ${esc(o.customer.email)}` : ""}</div>
-        <div><h4>Entrega</h4>${d.mode === "pickup" ? "Recojo en tienda" : `Envío a domicilio — ${esc(d.address)}, ${esc(d.district)}`}</div>
-        <div><h4>Productos</h4><ul class="order-items">${items}</ul></div>
-        <div class="order-totals">
-          <div><span>Subtotal</span><span>${soles(o.subtotal)}</span></div>
-          ${o.productDiscount ? `<div><span>Descuentos del producto (incluidos)</span><span>${soles(o.productDiscount)}</span></div>` : ""}
-          ${o.discount ? `<div><span>Cupón ${esc(o.coupon ? o.coupon.code : "")}</span><span>− ${soles(o.discount)}</span></div>` : ""}
-          <div><span>Envío</span><span>${soles(o.shipping)}</span></div>
-          ${o.fee ? `<div><span>Recargo tarjeta</span><span>${soles(o.fee)}</span></div>` : ""}
-          <div><b>Total</b><b>${soles(o.total)}</b></div>
-        </div>
-        ${o.eta ? `<div><h4>Plazo estimado</h4>${esc(o.eta.text)}</div>` : ""}
-        ${o.invoice ? `<div><h4>Boleta</h4>Solicitada · DNI ${esc(o.invoice.dni)}</div>` : ""}
-        ${o.notes ? `<div><h4>Nota del cliente</h4>${esc(o.notes)}</div>` : ""}
-        ${proof}
-        <div class="order-actions">
-          <label>Estado <select data-act="status" data-current="${esc(o.status)}" aria-label="Estado del pedido ${esc(o.code)}">${statusOpts}</select></label>
-          <button type="button" class="btn btn-primary btn-sm" data-act="save-status" disabled>Guardar estado</button>
-          ${["pending", "review"].includes(o.status) ? `<button type="button" class="btn btn-primary btn-sm" data-act="confirm">Confirmar pago</button>` : ""}
-          <a class="btn btn-ghost btn-sm" href="${esc(waLinkFor(o))}" target="_blank" rel="noopener">WhatsApp al cliente</a>
-          <a class="btn btn-ghost btn-sm" href="pedido.html?c=${esc(o.code)}&t=${esc(o.token)}" target="_blank" rel="noopener">Ver página del cliente</a>
-        </div>
-        <div><h4>Historial</h4><ul class="order-history">${hist}</ul></div>
-      </div>
-    </details>`;
+  // Fila de la lista: al tocarla se abre el detalle del pedido en una ventana
+  function orderRowHtml(o) {
+    return `<li><button type="button" class="order-row" data-code="${esc(o.code)}" aria-haspopup="dialog">
+      <span class="order-code">${esc(o.code)}</span>
+      <span class="order-meta"><b>${esc(o.customer.name)}</b> · ${SHOP_LABEL[o.shop]} · ${PAY_LABEL[o.payment.method]} · ${fmtDate(o.createdAt)}</span>
+      <span class="order-total">${soles(o.total)}</span>
+      <span class="badge badge-${o.status}">${ORDER_STATUS[o.status]}${o.status === "cancelled" && o.cancelledAt ? ` · ${fmtDate(o.cancelledAt)}` : ""}</span>
+      ${icon("right", "order-go")}
+    </button></li>`;
   }
+
+  const kv = (label, value, cls = "") => `<div class="od-kv${cls ? ` ${cls}` : ""}"><span>${label}</span><b>${value}</b></div>`;
+
+  function orderDetailHtml(o) {
+    const d = o.delivery;
+    const canConfirm = ["pending", "review"].includes(o.status);
+    const statusOpts = Object.entries(ORDER_STATUS).map(([v, l]) => `<option value="${v}"${o.status === v ? " selected" : ""}>${l}</option>`).join("");
+    const items = o.items.map((i) => `<div class="od-item">
+        <div><span>${esc(i.name)}${i.color ? ` · ${esc(i.color)}` : ""} × ${i.qty}</span>${i.text ? `<small>${esc(i.textLabel)}: “${esc(i.text)}”</small>` : ""}</div>
+        <b>${soles(i.lineTotal)}</b>
+      </div>`).join("");
+    const hist = (o.history || []).slice().reverse().map((h) => {
+      const text = String(h.text || "").replace(/«(\w+)»/g, (m, k) => (ORDER_STATUS[k] ? `«${ORDER_STATUS[k]}»` : m));
+      return `<li><span>${esc(text)}</span><small>${fmtDate(h.at)}</small></li>`;
+    }).join("");
+    return `
+      <section class="od-sec">
+        <h4>Cliente</h4>
+        ${kv("Nombre", esc(o.customer.name))}
+        ${kv("Celular", esc(o.customer.phone))}
+        ${o.customer.email ? kv("Email", esc(o.customer.email)) : ""}
+        ${o.invoice ? kv("Boleta", `Sí · DNI ${esc(o.invoice.dni)}`) : ""}
+      </section>
+      <section class="od-sec">
+        <h4>Entrega</h4>
+        ${kv("Modalidad", d.mode === "pickup" ? "Recojo en tienda" : "Envío a domicilio")}
+        ${kv("Dirección", d.mode === "pickup" ? esc(d.address) : `${esc(d.address)}, ${esc(d.district)}`)}
+        ${o.eta ? kv("Plazo estimado", esc(o.eta.text)) : ""}
+        ${o.notes ? kv("Nota del cliente", esc(o.notes)) : ""}
+      </section>
+      <section class="od-sec">
+        <h4>Productos</h4>
+        ${items}
+        <div class="od-totals">
+          ${kv("Subtotal", soles(o.subtotal))}
+          ${o.productDiscount ? kv("Descuentos del producto (incluidos)", soles(o.productDiscount), "od-saving") : ""}
+          ${o.discount ? kv(`Cupón ${esc(o.coupon ? o.coupon.code : "")}`, `− ${soles(o.discount)}`, "od-saving") : ""}
+          ${kv("Envío", soles(o.shipping))}
+          ${o.fee ? kv(`Recargo tarjeta${o.feeRate ? ` (${o.feeRate}%)` : ""}`, soles(o.fee)) : ""}
+          ${kv(`Total · ${PAY_LABEL[o.payment.method]}`, soles(o.total), "od-total")}
+        </div>
+      </section>
+      ${o.payment.proofUrl ? `<section class="od-sec"><h4>Comprobante de pago</h4><a class="od-proof" href="${esc(o.payment.proofUrl)}" target="_blank" rel="noopener"><img src="${esc(o.payment.proofUrl)}" alt="Comprobante de pago"><span>${icon("external")}Ver en grande</span></a></section>` : ""}
+      <section class="od-sec">
+        <h4>Cambiar estado</h4>
+        <select class="od-select" data-act="status" data-current="${esc(o.status)}" aria-label="Estado del pedido ${esc(o.code)}">${statusOpts}</select>
+        <div class="od-actions">
+          <button type="button" class="btn btn-primary" data-act="save-status" disabled>Guardar estado</button>
+          ${canConfirm ? `<button type="button" class="btn btn-ghost" data-act="confirm">${icon("check")}Confirmar pago</button>` : ""}
+        </div>
+      </section>
+      <section class="od-sec">
+        <h4>Historial</h4>
+        <ol class="od-hist">${hist}</ol>
+      </section>`;
+  }
+
+  // Ventana con el detalle y las acciones de un pedido
+  const orderDialog = $("#orderDialog");
+  let openOrderCode = null;
+  function renderOrderDialog() {
+    const o = state.orders.find((x) => x.code === openOrderCode);
+    if (!o) { if (orderDialog.open) orderDialog.close(); return; }
+    orderDialog.dataset.code = o.code;
+    $("#orderDlgCode").textContent = o.code;
+    $("#orderDlgBadge").className = `badge badge-${o.status}`;
+    $("#orderDlgBadge").textContent = ORDER_STATUS[o.status];
+    $("#orderDlgSub").textContent = `${SHOP_LABEL[o.shop]} · ${fmtDate(o.createdAt)}`;
+    $("#orderDlgBody").innerHTML = orderDetailHtml(o);
+    const canCancel = !["cancelled", "delivered"].includes(o.status);
+    $("#orderDlgFoot").innerHTML = `${canCancel ? `<button type="button" class="link-danger" data-act="cancel">Cancelar pedido</button>` : "<span></span>"}
+      <div class="od-foot-actions">
+        <a class="btn btn-ghost" href="${esc(waLinkFor(o))}" target="_blank" rel="noopener">${icon("whatsapp")}WhatsApp al cliente</a>
+        <a class="btn btn-ghost" href="pedido.html?c=${esc(o.code)}&t=${esc(o.token)}" target="_blank" rel="noopener">Ver página del cliente${icon("external")}</a>
+      </div>`;
+  }
+  function openOrder(code) {
+    openOrderCode = code;
+    renderOrderDialog();
+    if (!orderDialog.open) orderDialog.showModal();
+    $("#orderDlgBody").scrollTop = 0;
+  }
+  const closeOrderDialog = () => orderDialog.close();
+  orderDialog.addEventListener("close", () => { if (!orderDialog.open) openOrderCode = null; });
+  orderDialog.addEventListener("click", (e) => { if (e.target === orderDialog) closeOrderDialog(); });
+  $("#orderDlgClose").addEventListener("click", closeOrderDialog);
 
   function renderOrders() {
     const needs = state.orders.filter((o) => ["pending", "review"].includes(o.status)).length;
@@ -799,10 +890,9 @@
     badge.textContent = needs;
     badge.hidden = needs === 0;
     $("#ordersFilters").innerHTML = ORDER_FILTERS.map(([k, l]) => `<button type="button" class="chip" data-filter="${k}" aria-pressed="${state.ordersFilter === k}">${l}</button>`).join("");
-    const open = new Set($$("#ordersList .order[open]").map((el) => el.dataset.code));
     const list = state.orders.filter((o) => orderMatches(o, state.ordersFilter));
-    $("#ordersList").innerHTML = list.map(orderHtml).join("");
-    $$("#ordersList .order").forEach((el) => { if (open.has(el.dataset.code)) el.open = true; });
+    $("#ordersList").innerHTML = list.map(orderRowHtml).join("");
+    if (openOrderCode) renderOrderDialog();
     $("#ordersEmpty").hidden = list.length > 0;
     $("#ordersEmpty").textContent = state.orders.length ? "No hay pedidos en este filtro." : "Aún no hay pedidos.";
     $("#ordersHint").textContent = state.ordersFilter === "cancelled"
@@ -861,14 +951,18 @@
   cancelDialog.addEventListener("click", (e) => { if (e.target === cancelDialog) cancelDialog.close(); });
 
   // Cambiar el estado se aplica con el botón «Guardar estado» (no al elegir en la lista)
-  $("#ordersList").addEventListener("change", (e) => {
+  $("#ordersList").addEventListener("click", (e) => {
+    const row = e.target.closest(".order-row");
+    if (row) openOrder(row.dataset.code);
+  });
+  orderDialog.addEventListener("change", (e) => {
     const sel = e.target.closest('[data-act="status"]');
-    const card = e.target.closest(".order");
+    const card = e.target.closest("[data-code]");
     if (!sel || !card) return;
     card.querySelector('[data-act="save-status"]').disabled = sel.value === sel.dataset.current;
   });
-  $("#ordersList").addEventListener("click", (e) => {
-    const card = e.target.closest(".order");
+  orderDialog.addEventListener("click", (e) => {
+    const card = e.target.closest("[data-code]");
     if (!card) return;
     const save = e.target.closest('[data-act="save-status"]');
     if (save && !save.disabled) {
@@ -887,6 +981,13 @@
       save.disabled = true;
       save.textContent = "Guardando…";
       updateOrder(code, { status });
+      return;
+    }
+    const cancel = e.target.closest('[data-act="cancel"]');
+    if (cancel) {
+      askCancel(state.orders.find((x) => x.code === card.dataset.code)).then((res) => {
+        if (res) updateOrder(card.dataset.code, { status: "cancelled", ...(res.reason ? { note: `Motivo de la cancelación: ${res.reason}` } : {}) });
+      });
       return;
     }
     const btn = e.target.closest('[data-act="confirm"]');
@@ -986,9 +1087,9 @@
           <span class="hero-tags">${c.shops.map((s) => `<span class="hero-tag">${HERO_SHOP_LABEL[s]}</span>`).join("")}</span>
         </div>
         <div class="hero-card-actions">
-          <button type="button" class="btn btn-ghost btn-sm" data-act="edit">Editar</button>
-          <button type="button" class="btn btn-ghost btn-sm" data-act="toggle">${c.active === false ? "Activar" : "Desactivar"}</button>
-          <button type="button" class="btn btn-ghost btn-sm btn-danger-text" data-act="del">Eliminar</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-act="edit">${icon("pencil")}Editar</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-act="toggle">${icon(c.active === false ? "eye" : "eyeOff")}${c.active === false ? "Activar" : "Desactivar"}</button>
+          <button type="button" class="btn btn-ghost btn-sm btn-danger-text" data-act="del">${icon("trash")}Eliminar</button>
         </div>
       </li>`;
     }).join("") : `<li class="hero-empty">Aún no hay campañas. Crea una desde una plantilla (Navidad, Día de la Madre, Cyber…) con «+ Nueva campaña».</li>`;
@@ -1180,7 +1281,7 @@
         <td><input type="number" data-f="minSubtotal" min="0" step="1" value="${c.minSubtotal || ""}" placeholder="0" aria-label="Compra mínima"></td>
         <td><input type="date" data-f="expires" value="${esc(c.expires || "")}" min="2025-01-01" max="${COUPON_MAX}" aria-label="Fecha de vencimiento"></td>
         <td><input type="checkbox" data-f="active"${c.active !== false ? " checked" : ""} aria-label="Cupón activo"></td>
-        <td><button type="button" class="icon-btn" data-act="del" aria-label="Eliminar cupón">✕</button></td>
+        <td><button type="button" class="icon-btn" data-act="del" aria-label="Eliminar cupón">${icon("trash")}</button></td>
       </tr>`).join("") : `<tr><td colspan="7" class="muted">Aún no hay cupones. Agrega el primero.</td></tr>`) + "</tbody>";
     const active = coupons().filter((c) => c.active !== false).length;
     $("#couponSummary").textContent = `${coupons().length} cupones · ${active} activos. Un código vence al final del día indicado (hora de Lima); sin fecha, no vence.`;

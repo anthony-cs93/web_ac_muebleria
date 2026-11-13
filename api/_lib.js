@@ -161,6 +161,7 @@ const CATEGORIES = {
 };
 const STOCKS = ['order', 'ready', 'out'];
 const MAX_PRODUCTS = 150;
+const MAX_GALLERY = 8;
 
 const text = (v, max = 600) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 const optText = (v, max) => text(v, max) || null;
@@ -193,6 +194,11 @@ export function sanitizeProduct(raw, shop) {
     photo: safeSlug(raw.photo),
     img480: safeUrl(raw.img480),
     img900: safeUrl(raw.img900),
+    // Fotos adicionales (después de la principal) que se recorren con Anterior / Siguiente en la ficha
+    gallery: (Array.isArray(raw.gallery) ? raw.gallery : []).slice(0, MAX_GALLERY).map((g) => ({
+      img480: safeUrl(g && g.img480),
+      img900: safeUrl(g && g.img900)
+    })).filter((g) => g.img480 || g.img900),
     svg: safeSvg(raw.svg),
     rating: raw.rating === null || raw.rating === undefined || raw.rating === '' ? null : Math.min(5, Math.max(0, Number(raw.rating) || 0)),
     reviewsCount: Math.max(0, Math.round(Number(raw.reviewsCount) || 0))

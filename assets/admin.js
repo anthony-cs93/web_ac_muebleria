@@ -313,6 +313,50 @@
     $("#photoRemove").hidden = !C.hasPhoto(p);
   }
 
+  // ---------------------------------------------------------------- Fotos adicionales (galería)
+  const MAX_GALLERY = 8;
+  function renderGallery(p) {
+    $("#galleryList").innerHTML = (p.gallery || []).map((g, i) =>
+      `<div class="gallery-item"><img src="${esc(g.img480 || g.img900)}" alt="Foto ${i + 2}" loading="lazy"><button type="button" data-i="${i}" aria-label="Quitar foto ${i + 2}" title="Quitar">×</button></div>`).join("");
+  }
+  $("#galleryList").addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-i]");
+    if (!btn || !editing) return;
+    editing.product.gallery.splice(Number(btn.dataset.i), 1);
+    renderGallery(editing.product);
+    $("#galleryMsg").textContent = "Foto quitada. Aplica los cambios y publica para verlo en la tienda.";
+  });
+  $("#galleryInput").addEventListener("change", async (e) => {
+    const files = Array.from(e.target.files);
+    e.target.value = "";
+    if (!files.length || !editing) return;
+    const product = editing.product;
+    product.gallery = product.gallery || [];
+    const msg = $("#galleryMsg");
+    const room = MAX_GALLERY - product.gallery.length;
+    if (room <= 0) { msg.textContent = `Máximo ${MAX_GALLERY} fotos adicionales. Quita alguna para subir otra.`; return; }
+    const slug = slugify(f("name").value) || product.id;
+    let done = 0;
+    try {
+      for (const file of files.slice(0, room)) {
+        msg.textContent = `Subiendo foto ${done + 1} de ${Math.min(files.length, room)}…`;
+        const img = await loadImage(file);
+        const res = await api("upload", {
+          method: "POST",
+          body: { id: `${slug}-extra`, img480: resizeToDataUrl(img, 480), img900: resizeToDataUrl(img, 900) }
+        });
+        if (editing && editing.product === product) { product.gallery.push({ img480: res.img480, img900: res.img900 }); renderGallery(product); }
+        done++;
+      }
+      msg.textContent = files.length > room
+        ? `Se subieron ${done} (máximo ${MAX_GALLERY}). Aplica los cambios y publica para verlas en la tienda.`
+        : `${done === 1 ? "Foto lista" : `${done} fotos listas`}. Aplica los cambios y publica para verlas en la tienda.`;
+    } catch (err) {
+      msg.textContent = err.status === 401 ? "Tu sesión venció. Vuelve a entrar." : `No se pudo subir: ${err.message}`;
+      if (err.status === 401) showLogin();
+    }
+  });
+
   // ---------------------------------------------------------------- Texturas de un producto
   const texBg = (id) => { const t = C.textureOf({ tex: id }); return t ? `url("${t.thumb || t.img}")` : ""; };
   const texOptions = (current) => ['<option value="">Elegir textura…</option>']
@@ -438,8 +482,10 @@
     base.colors.filter((c) => c.name !== "Por definir").forEach((c) => colorList.appendChild(colorRow(c)));
     previewIdx = 0;
     renderPhotoPreview(base);
+    renderGallery(base);
     renderTexPreview();
     $("#photoMsg").textContent = "JPG, PNG o WebP. Se optimiza sola para la web.";
+    $("#galleryMsg").textContent = `Hasta ${MAX_GALLERY} fotos adicionales. La foto de arriba es la primera que se ve.`;
     updateDiscountPreview();
     editor.showModal();
     f("name").focus();
@@ -579,10 +625,13 @@
   $("#photoRemove").addEventListener("click", () => {
     if (!editing) return;
     for (const k of ["img480", "img900", "photo"]) delete editing.product[k];
-    editing.product.svg = C.iconSvg(f("category").value);
+    const next = (editing.product.gallery || []).shift();
+    if (next) Object.assign(editing.product, { img480: next.img480, img900: next.img900 });
+    else editing.product.svg = C.iconSvg(f("category").value);
     renderPhotoPreview(editing.product);
+    renderGallery(editing.product);
     renderTexPreview();
-    $("#photoMsg").textContent = "Foto quitada. Se mostrará el icono de la categoría.";
+    $("#photoMsg").textContent = next ? "Foto quitada. La primera de las fotos adicionales pasó a ser la principal." : "Foto quitada. Se mostrará el icono de la categoría.";
   });
 
   // ---------------------------------------------------------------- Biblioteca de texturas (compartida)

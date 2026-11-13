@@ -174,6 +174,11 @@ legend { padding: 0 6px; font-weight: 700; font-size: 13px; color: var(--ink-sof
 .photo-preview svg { width: 55%; height: 55%; }
 .photo-actions { display: grid; gap: 8px; justify-items: start; flex: 1; min-width: 200px; }
 .photo-actions p { margin: 0; }
+.gallery-list { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.gallery-list:empty { display: none; }
+.gallery-item { position: relative; width: 84px; height: 84px; border-radius: 10px; overflow: hidden; background: var(--accent-soft); }
+.gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gallery-item button { position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; border: 0; border-radius: 50%; background: rgba(0, 0, 0, .65); color: #fff; font-size: 14px; line-height: 1; cursor: pointer; }
 .colors { margin-top: 14px; display: grid; gap: 8px; justify-items: start; }
 .colors-title { font-size: 13px; font-weight: 600; }
 #colorList { display: grid; gap: 6px; width: 100%; }

@@ -128,15 +128,25 @@
     return t ? `url("${t.thumb || t.img}") center/cover no-repeat, ${c.hex}` : c.hex;
   };
 
+  // Texto del link de un producto (?producto=...), a partir del nombre: "Recibidor porta llaves" -> "recibidor-porta-llaves"
+  const slugify = (s) => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60);
+
   function normalize(list, shop) {
     const cfg = SHOPS[shop];
     const seen = new Set();
+    const slugs = new Set();
     return (Array.isArray(list) ? list : []).filter((p) => p && typeof p === "object" && p.id && !seen.has(p.id) && seen.add(p.id)).map((raw) => {
       const p = Object.assign({}, raw);
       const cat = cfg.categories.find((c) => c.id === p.category) || cfg.categories[0];
       p.category = cat.id;
       p.categoryLabel = cat.label;
       p.name = str(p.name, "Producto");
+      // Link propio: sigue al nombre; si dos productos tienen el mismo nombre, el segundo lleva -2, -3…
+      const baseSlug = slugify(p.name) || p.id;
+      let slug = baseSlug;
+      for (let n = 2; slugs.has(slug); n++) slug = `${baseSlug}-${n}`;
+      slugs.add(slug);
+      p.slug = slug;
       p.desc = str(p.desc);
       p.price = num(p.price);
       p.oldPrice = num(p.oldPrice);
@@ -149,6 +159,7 @@
       p.rating = num(p.rating);
       p.reviewsCount = num(p.reviewsCount) || 0;
       p.svg = p.svg || iconSvg(p.category);
+      p.gallery = (Array.isArray(p.gallery) ? p.gallery : []).filter((g) => g && (g.img480 || g.img900)).map((g) => ({ img480: g.img480 || g.img900, img900: g.img900 || g.img480 }));
       if (shop === "maderin") {
         p.cardDesc = str(p.cardDesc) || p.desc;
         p.subtitle = str(p.subtitle) || p.name;
@@ -179,6 +190,14 @@
     return null;
   }
 
+  // Todas las fotos de la ficha, en orden: la principal y luego las adicionales ({ small, big })
+  function slides(p, shop) {
+    const out = [];
+    if (hasPhoto(p)) out.push({ small: photoUrl(p, 480, shop), big: photoUrl(p, 900, shop) });
+    (p.gallery || []).forEach((g) => out.push({ small: g.img480, big: g.img900 }));
+    return out;
+  }
+
   // Disponibilidad: ready = listo para entrega | order = sobre pedido | out = agotado
   function stockInfo(p) {
     const state = p.stock || "order";
@@ -195,6 +214,9 @@
   function defaultsFor(shop) {
     return normalize(JSON.parse(JSON.stringify(DEFAULTS[shop])), shop);
   }
+
+  // Busca un producto por el texto de su link: primero el nombre (slug); si no, el id (links viejos)
+  const findByLink = (list, key) => list.find((p) => p.slug === key) || list.find((p) => p.id === key);
 
   let remotePromise = null;
   function fetchRemote() {
@@ -218,5 +240,5 @@
     return defaultsFor(shop);
   }
 
-  window.ACCatalog = { DEFAULTS, SHOPS, BADGES, ICONS, load, defaultsFor, normalize, iconSvg, hasPhoto, photoUrl, stockInfo, isPromo, setTextures, getTextures, textureOf, swatchBg, setShipping, shippingFor, formatPEN, DEFAULT_PAYMENTS, getPayments };
+  window.ACCatalog = { DEFAULTS, SHOPS, BADGES, ICONS, load, defaultsFor, normalize, findByLink, iconSvg, hasPhoto, photoUrl, slides, stockInfo, isPromo, setTextures, getTextures, textureOf, swatchBg, setShipping, shippingFor, formatPEN, DEFAULT_PAYMENTS, getPayments };
 })();

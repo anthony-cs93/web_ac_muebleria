@@ -1178,6 +1178,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Estado del modal
     let currentModalIndex = 0;
+    let modalSlides = [];
+    let modalSlideIndex = 0;
+    const modalNavBar = modal.querySelector(".ecom-modal-nav-bar");
     let selectedQuantity = 1;
     let selectedColor = "";
 
@@ -1193,16 +1196,18 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     function openModalForProduct(productId, { push = true } = {}) {
-      const idx = maderinProducts.findIndex(p => p.id === productId);
-      if (idx === -1) return;
-      currentModalIndex = idx;
+      const found = ACCatalog.findByLink(maderinProducts, productId);
+      if (!found) return;
+      currentModalIndex = maderinProducts.indexOf(found);
       selectedQuantity = 1;
-      populateModal(maderinProducts[currentModalIndex]);
+      populateModal(found);
       const wasOpen = modal.classList.contains("open");
       modal.classList.add("open");
       document.body.style.overflow = "hidden";
       modal.setAttribute("aria-hidden", "false");
-      if (push && !wasOpen) history.pushState({ mProd: productId, pushed: true }, "", productUrl(productId));
+      // El link usa el nombre actual del producto; un link viejo (con el id) se actualiza solo
+      if (push && !wasOpen) history.pushState({ mProd: found.slug, pushed: true }, "", productUrl(found.slug));
+      else if (!push && productId !== found.slug) history.replaceState(history.state, "", productUrl(found.slug));
     }
 
     function hideModal() {
@@ -1225,10 +1230,23 @@ document.addEventListener("DOMContentLoaded", () => {
       if (id) openModalForProduct(id, { push: false }); else hideModal();
     });
 
-    // Mantiene la URL al navegar entre productos con las flechas
-    function syncUrlToCurrent() {
-      const p = maderinProducts[currentModalIndex];
-      if (p) history.replaceState({ mProd: p.id, pushed: !!(history.state && history.state.pushed) }, "", productUrl(p.id));
+    // Muestra la foto activa; sin fotos se ve el icono y se ocultan los botones
+    function renderModalSlide(product) {
+      const total = modalSlides.length;
+      if (modalVisualEl) {
+        modalVisualEl.classList.toggle("has-photo", total > 0);
+        modalVisualEl.innerHTML = total
+          ? `<img src="${escapeHtml(modalSlides[modalSlideIndex].big)}" alt="${escapeHtml(product.name)}${total > 1 ? ` (foto ${modalSlideIndex + 1} de ${total})` : ""}" decoding="async">`
+          : (product.svg || "");
+      }
+      if (modalNavBar) modalNavBar.hidden = total < 2;
+      if (modalCounterEl) modalCounterEl.textContent = `${String(modalSlideIndex + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
+    }
+
+    function stepModalSlide(d) {
+      if (modalSlides.length < 2) return;
+      modalSlideIndex = (modalSlideIndex + d + modalSlides.length) % modalSlides.length;
+      renderModalSlide(maderinProducts[currentModalIndex]);
     }
 
     function populateModal(product) {
@@ -1238,20 +1256,10 @@ document.addEventListener("DOMContentLoaded", () => {
       selectedColor = product.colors && product.colors.length ? product.colors[0].name : "Pino Natural";
       selectedQuantity = 1;
 
-      // Navegación
-      if (modalCounterEl) {
-        const currentNum = String(currentModalIndex + 1).padStart(2, "0");
-        const totalNum = String(maderinProducts.length).padStart(2, "0");
-        modalCounterEl.textContent = `${currentNum} / ${totalNum}`;
-      }
-
-      // Visual & Badge
-      if (modalVisualEl) {
-        modalVisualEl.classList.toggle("has-photo", ACCatalog.hasPhoto(product));
-        modalVisualEl.innerHTML = ACCatalog.hasPhoto(product)
-          ? `<img src="${photoUrl(product, 900)}" alt="${product.name}" decoding="async">`
-          : (product.svg || "");
-      }
+      // Fotos del producto: Anterior / Siguiente las recorren
+      modalSlides = ACCatalog.slides(product, "maderin");
+      modalSlideIndex = 0;
+      renderModalSlide(product);
       if (modalBadge) {
         modalBadge.textContent = product.badge || "Destacado";
       }
@@ -1392,22 +1400,9 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // Navegación dentro del modal (Anterior / Siguiente)
-    if (modalPrevBtn) {
-      modalPrevBtn.addEventListener("click", () => {
-        currentModalIndex = (currentModalIndex - 1 + maderinProducts.length) % maderinProducts.length;
-        populateModal(maderinProducts[currentModalIndex]);
-        syncUrlToCurrent();
-      });
-    }
-
-    if (modalNextBtn) {
-      modalNextBtn.addEventListener("click", () => {
-        currentModalIndex = (currentModalIndex + 1) % maderinProducts.length;
-        populateModal(maderinProducts[currentModalIndex]);
-        syncUrlToCurrent();
-      });
-    }
+    // Navegación dentro del modal (Anterior / Siguiente): fotos del mismo producto
+    if (modalPrevBtn) modalPrevBtn.addEventListener("click", () => stepModalSlide(-1));
+    if (modalNextBtn) modalNextBtn.addEventListener("click", () => stepModalSlide(1));
 
     // Cierre del modal
     if (modalCloseBtn) modalCloseBtn.addEventListener("click", closeModal);
@@ -1553,10 +1548,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const card = e.target.closest(".compact-card");
       if (card) {
-        const productId = card.getAttribute("data-id");
-        if (productId) {
-          openModalForProduct(productId);
-        }
+        const product = maderinProducts.find(p => p.id === card.getAttribute("data-id"));
+        if (product) openModalForProduct(product.slug);
       }
     });
 
@@ -1656,7 +1649,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const $ = (id) => document.getElementById(id);
     const el = {
       badge: $("cModalBadge"), visual: $("cModalVisual"), colorInd: $("cModalColorIndicator"), colorLabel: $("cModalActiveColorLabel"),
-      counter: $("cModalCounter"), prev: $("cModalPrevBtn"), next: $("cModalNextBtn"),
+      counter: $("cModalCounter"), navBar: modal ? modal.querySelector(".ecom-modal-nav-bar") : null, prev: $("cModalPrevBtn"), next: $("cModalNextBtn"),
       category: $("cModalCategory"), unit: $("cModalUnit"), title: $("cModalTitle"),
       price: $("cModalPrice"), oldPrice: $("cModalOldPrice"), discount: $("cModalDiscount"), stock: $("cModalStock"),
       desc: $("cModalDesc"), colorGroup: $("cModalColorGroup"), colorText: $("cModalSelectedColorText"), swatches: $("cModalColorSwatches"),
@@ -1665,6 +1658,8 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     let navList = [];
     let navIndex = 0;
+    let slides = [];
+    let slideIndex = 0;
     let qty = 1;
     let modalColor = "";
     let modalText = "";
@@ -1688,18 +1683,26 @@ document.addEventListener("DOMContentLoaded", () => {
       el.wa.href = waLink(waMessage(p, modalColor, qty, modalText.trim()));
     }
 
+    // Muestra la foto activa; sin fotos se ve el icono y se oculta la barra Anterior / Siguiente
+    function renderSlide(p) {
+      const total = slides.length;
+      el.visual.classList.toggle("has-photo", total > 0);
+      el.visual.innerHTML = total
+        ? `<img src="${esc(slides[slideIndex].big)}" alt="${esc(p.name)}${total > 1 ? ` (foto ${slideIndex + 1} de ${total})` : ""}" decoding="async">`
+        : p.svg;
+      el.navBar.hidden = total < 2;
+      el.counter.textContent = `${String(slideIndex + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
+    }
+
     function populate() {
       const p = navList[navIndex];
       if (!p) return;
       qty = 1;
       modalText = "";
       modalColor = colorOf(p);
-      el.counter.textContent = `${String(navIndex + 1).padStart(2, "0")} / ${String(navList.length).padStart(2, "0")}`;
-      el.prev.hidden = el.next.hidden = navList.length < 2;
-
-      const photo = ACCatalog.hasPhoto(p);
-      el.visual.classList.toggle("has-photo", photo);
-      el.visual.innerHTML = photo ? `<img src="${esc(ACCatalog.photoUrl(p, 900, "cdm"))}" alt="${esc(p.name)}" decoding="async">` : p.svg;
+      slides = ACCatalog.slides(p, "cdm");
+      slideIndex = 0;
+      renderSlide(p);
       el.badge.hidden = !p.badge;
       el.badge.textContent = p.badge || "";
 
@@ -1742,24 +1745,54 @@ document.addEventListener("DOMContentLoaded", () => {
       updateButtons(p);
     }
 
-    function openModal(id) {
+    // URL por producto: ?producto=<id>. Abrir desde una tarjeta agrega una entrada al historial
+    // (el botón "atrás" cierra la ficha); entrar directo con el link abre la ficha sin agregarla.
+    const productUrl = (id) => {
+      const url = new URL(location.href);
+      if (id) url.searchParams.set("producto", id); else url.searchParams.delete("producto");
+      return url.pathname + url.search + url.hash;
+    };
+
+    function openModal(id, { push = true } = {}) {
+      const found = ACCatalog.findByLink(products, id);
+      if (!found) return;
       navList = visibleProducts();
-      navIndex = navList.findIndex(p => p.id === id);
-      if (navIndex === -1) { navList = products; navIndex = products.findIndex(p => p.id === id); }
-      if (navIndex === -1) return;
+      navIndex = navList.indexOf(found);
+      if (navIndex === -1) { navList = products; navIndex = products.indexOf(found); }
       populate();
+      const wasOpen = modalIsOpen();
       modal.classList.add("open");
       modal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
       el.add.focus({ preventScroll: true });
+      // El link usa el nombre actual del producto; un link viejo (con el id) se actualiza solo
+      if (push && !wasOpen) history.pushState({ cProd: found.slug, pushed: true }, "", productUrl(found.slug));
+      else if (!push && id !== found.slug) history.replaceState(history.state, "", productUrl(found.slug));
     }
-    function closeModal() {
+    function hideModal() {
       if (!modalIsOpen()) return;
       modal.classList.remove("open");
       modal.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
     }
-    const step = (d) => { navIndex = (navIndex + d + navList.length) % navList.length; populate(); };
+    function closeModal() {
+      if (!modalIsOpen()) return;
+      if (history.state && history.state.pushed) {
+        history.back(); // popstate oculta la ficha y limpia la URL
+      } else {
+        hideModal();
+        history.replaceState(null, "", productUrl(null));
+      }
+    }
+    window.addEventListener("popstate", () => {
+      const id = new URLSearchParams(location.search).get("producto");
+      if (id) openModal(id, { push: false }); else hideModal();
+    });
+    const step = (d) => {
+      if (slides.length < 2) return;
+      slideIndex = (slideIndex + d + slides.length) % slides.length;
+      renderSlide(navList[navIndex]);
+    };
 
     if (modal) {
       $("cdmModalCloseBtn").addEventListener("click", closeModal);
@@ -1815,8 +1848,8 @@ document.addEventListener("DOMContentLoaded", () => {
       document.addEventListener("keydown", (e) => {
         if (!modalIsOpen()) return;
         if (e.key === "Escape") closeModal();
-        if (e.key === "ArrowLeft" && navList.length > 1) step(-1);
-        if (e.key === "ArrowRight" && navList.length > 1) step(1);
+        if (e.key === "ArrowLeft") step(-1);
+        if (e.key === "ArrowRight") step(1);
       });
     }
 
@@ -1829,16 +1862,17 @@ document.addEventListener("DOMContentLoaded", () => {
       if (e.target.closest(".btn-consult")) { openWhatsApp(waMessage(p, p.colors.length === 1 ? colorOf(p) : "", 1)); return; }
       if (e.target.closest(".btn-add-cart")) {
         // Con varios colores o personalización obligatoria, se elige en la ficha antes de agregar
-        if (p.colors.length > 1 || (p.custom && p.custom.required)) { openModal(p.id); return; }
+        if (p.colors.length > 1 || (p.custom && p.custom.required)) { openModal(p.slug); return; }
         cartApi.add(p.id, colorOf(p), 1);
         return;
       }
-      openModal(p.id);
+      openModal(p.slug);
     });
     grid.addEventListener("keydown", (e) => {
       if ((e.key === "Enter" || e.key === " ") && e.target.classList.contains("product-card")) {
         e.preventDefault();
-        openModal(e.target.getAttribute("data-id"));
+        const p = byId(e.target.getAttribute("data-id"));
+        if (p) openModal(p.slug);
       }
     });
 
@@ -1851,6 +1885,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
     });
+
+    // Link directo a un producto: ?producto=<id>
+    const deepLinkId = new URLSearchParams(location.search).get("producto");
+    if (modal && deepLinkId) openModal(deepLinkId, { push: false });
   }
 
   // Bosquejos en trazos por tipo de proyecto (viewBox 320×160). Cada elemento

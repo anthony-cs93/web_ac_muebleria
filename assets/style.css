@@ -4215,6 +4215,7 @@ body.theme-ac .process-timeline-container {
 }
 
 /* Modal Nav Bar */
+.ecom-modal-nav-bar[hidden] { display: none; }
 .ecom-modal-nav-bar {
   display: flex;
   align-items: center;

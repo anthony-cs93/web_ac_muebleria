@@ -315,16 +315,76 @@
 
   // ---------------------------------------------------------------- Fotos adicionales (galería)
   const MAX_GALLERY = 8;
+  // La foto principal solo se puede intercambiar si es una foto subida (no una de las fijas del sitio)
+  const canSwapMain = (p) => !p.photo;
   function renderGallery(p) {
-    $("#galleryList").innerHTML = (p.gallery || []).map((g, i) =>
-      `<div class="gallery-item"><img src="${esc(g.img480 || g.img900)}" alt="Foto ${i + 2}" loading="lazy"><button type="button" data-i="${i}" aria-label="Quitar foto ${i + 2}" title="Quitar">×</button></div>`).join("");
+    const g = p.gallery || [];
+    $("#galleryList").innerHTML = g.map((it, i) =>
+      `<div class="gallery-item" draggable="true" data-i="${i}"><img src="${esc(it.img480 || it.img900)}" alt="Foto ${i + 2}" loading="lazy" draggable="false">
+        <button type="button" class="g-x" data-act="del" aria-label="Quitar foto ${i + 2}" title="Quitar">×</button>
+        <span class="g-tools">
+          <button type="button" data-act="left" aria-label="Mover foto ${i + 2} a la izquierda" title="Mover a la izquierda"${i === 0 ? " disabled" : ""}>‹</button>
+          ${canSwapMain(p) ? `<button type="button" data-act="main" aria-label="Hacer principal la foto ${i + 2}" title="Hacer foto principal">★</button>` : ""}
+          <button type="button" data-act="right" aria-label="Mover foto ${i + 2} a la derecha" title="Mover a la derecha"${i === g.length - 1 ? " disabled" : ""}>›</button>
+        </span></div>`).join("");
+  }
+  const galleryMoved = (msg) => {
+    renderGallery(editing.product);
+    $("#galleryMsg").textContent = `${msg} Aplica los cambios y publica para verlo en la tienda.`;
+  };
+  function moveGallery(from, to) {
+    const g = editing.product.gallery;
+    if (from === to || to < 0 || to >= g.length) return;
+    g.splice(to, 0, g.splice(from, 1)[0]);
+    galleryMoved("Orden actualizado.");
   }
   $("#galleryList").addEventListener("click", (e) => {
-    const btn = e.target.closest("button[data-i]");
-    if (!btn || !editing) return;
-    editing.product.gallery.splice(Number(btn.dataset.i), 1);
-    renderGallery(editing.product);
-    $("#galleryMsg").textContent = "Foto quitada. Aplica los cambios y publica para verlo en la tienda.";
+    const btn = e.target.closest("button[data-act]");
+    const item = btn && btn.closest(".gallery-item");
+    if (!item || !editing) return;
+    const p = editing.product;
+    const i = Number(item.dataset.i);
+    if (btn.dataset.act === "del") { p.gallery.splice(i, 1); galleryMoved("Foto quitada."); }
+    else if (btn.dataset.act === "left") moveGallery(i, i - 1);
+    else if (btn.dataset.act === "right") moveGallery(i, i + 1);
+    else if (btn.dataset.act === "main") {
+      // Intercambia la foto principal con la elegida
+      const old = p.img480 || p.img900 ? { img480: p.img480, img900: p.img900 } : null;
+      const pick = p.gallery[i];
+      Object.assign(p, { img480: pick.img480, img900: pick.img900 });
+      delete p.svg;
+      if (old) p.gallery[i] = old; else p.gallery.splice(i, 1);
+      renderPhotoPreview(p);
+      renderTexPreview();
+      galleryMoved("Esa foto ahora es la principal.");
+    }
+  });
+  // Arrastrar y soltar para reordenar (en el celular se usan las flechas)
+  let dragFrom = null;
+  $("#galleryList").addEventListener("dragstart", (e) => {
+    const item = e.target.closest(".gallery-item");
+    if (!item) return;
+    dragFrom = Number(item.dataset.i);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", String(dragFrom));
+    item.classList.add("is-dragging");
+  });
+  $("#galleryList").addEventListener("dragover", (e) => {
+    if (dragFrom === null) return;
+    e.preventDefault();
+    $$(".gallery-item", $("#galleryList")).forEach((el) => el.classList.toggle("is-over", el === e.target.closest(".gallery-item")));
+  });
+  $("#galleryList").addEventListener("drop", (e) => {
+    const item = e.target.closest(".gallery-item");
+    if (dragFrom === null || !item || !editing) return;
+    e.preventDefault();
+    const from = dragFrom;
+    dragFrom = null;
+    moveGallery(from, Number(item.dataset.i));
+  });
+  $("#galleryList").addEventListener("dragend", () => {
+    dragFrom = null;
+    $$(".gallery-item", $("#galleryList")).forEach((el) => el.classList.remove("is-dragging", "is-over"));
   });
   $("#galleryInput").addEventListener("change", async (e) => {
     const files = Array.from(e.target.files);

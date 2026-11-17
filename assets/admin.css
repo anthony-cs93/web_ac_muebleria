@@ -498,6 +498,16 @@ legend { padding: 0 6px; font-weight: 700; font-size: 13px; color: var(--ink-sof
 .od-proof { display: inline-grid; gap: 6px; justify-items: start; color: var(--accent); font-size: 13px; font-weight: 600; text-decoration: none; }
 .od-proof img { max-width: 200px; max-height: 200px; border-radius: 10px; border: 1px solid var(--line); }
 .od-proof span { display: inline-flex; align-items: center; gap: 6px; }
+.od-field { display: grid; gap: 4px; margin-bottom: 8px; font-size: 13px; }
+.od-field > span { color: var(--ink-soft); font-weight: 600; }
+.od-field input, .od-field textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; font: inherit; font-size: 14.5px; color: var(--ink); }
+.od-field textarea { resize: vertical; }
+.od-edit-item { padding: 10px 0; border-top: 1px dashed var(--line); display: grid; gap: 2px; }
+.od-edit-item:first-of-type { border-top: 0; }
+.od-edit-item small, .od-edit-hint { color: var(--ink-soft); font-size: 12.5px; margin: 0; }
+.od-edit-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+.od-edit-row .od-field { flex: 1 1 140px; margin-bottom: 0; }
+.od-edit-row .od-qty { flex: 0 0 90px; }
 .order-foot { justify-content: space-between; }
 .od-foot-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 .link-danger { background: none; border: 0; padding: 6px 2px; color: var(--danger); font-weight: 700; text-decoration: underline; cursor: pointer; font-size: 14px; }

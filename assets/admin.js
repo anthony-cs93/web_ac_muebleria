@@ -906,6 +906,48 @@
   // Ventana con el detalle y las acciones de un pedido
   const orderDialog = $("#orderDialog");
   let openOrderCode = null;
+  let editingOrder = false;
+
+  const field = (label, name, value, attrs = "") => `<label class="od-field"><span>${label}</span><input name="${name}" value="${esc(value)}" ${attrs}></label>`;
+
+  // Formulario para corregir los datos del pedido (los totales se recalculan en el servidor)
+  function orderEditHtml(o) {
+    const d = o.delivery;
+    const items = o.items.map((i, n) => `<div class="od-edit-item" data-i="${n}">
+        <b>${esc(i.name)}</b><small>${soles(i.unitPrice)} c/u</small>
+        <div class="od-edit-row">
+          <label class="od-field od-qty"><span>Cantidad</span><input name="qty" type="number" min="0" max="99" step="1" value="${i.qty}"></label>
+          ${i.color ? field("Color", "color", i.color, 'maxlength="40"') : ""}
+          ${i.textLabel ? field(esc(i.textLabel), "text", i.text, 'maxlength="120"') : ""}
+        </div>
+      </div>`).join("");
+    return `<form class="od-edit" id="orderEditForm" autocomplete="off">
+      <section class="od-sec"><h4>Cliente</h4>
+        ${field("Nombre", "name", o.customer.name, 'required maxlength="80"')}
+        ${field("Celular", "phone", o.customer.phone, 'required maxlength="20" inputmode="tel"')}
+        ${field("Email", "email", o.customer.email || "", 'type="email" maxlength="120"')}
+        ${o.invoice ? field("DNI de la boleta", "dni", o.invoice.dni, 'maxlength="8" inputmode="numeric"') : ""}
+      </section>
+      <section class="od-sec"><h4>Entrega</h4>
+        <label class="od-field"><span>Modalidad</span><select name="deliveryMode" class="od-select">
+          <option value="delivery"${d.mode === "delivery" ? " selected" : ""}>Envío a domicilio</option>
+          <option value="pickup"${d.mode === "pickup" ? " selected" : ""}>Recojo en tienda</option></select></label>
+        ${field("Dirección", "address", d.address, 'maxlength="160"')}
+        ${field("Distrito", "district", d.district || "", 'maxlength="60"')}
+        ${field("Costo de envío (S/)", "shipping", o.shipping, 'type="number" min="0" step="0.01" inputmode="decimal"')}
+        <label class="od-field"><span>Nota del cliente</span><textarea name="notes" rows="2" maxlength="300">${esc(o.notes || "")}</textarea></label>
+      </section>
+      <section class="od-sec"><h4>Productos</h4>
+        <p class="muted od-edit-hint">Pon la cantidad en 0 para quitar un producto.</p>
+        ${items}
+      </section>
+      <section class="od-sec"><h4>Descuento</h4>
+        ${field(`Descuento${o.coupon ? ` (cupón ${esc(o.coupon.code)})` : ""} (S/)`, "discount", o.discount || 0, 'type="number" min="0" step="0.01" inputmode="decimal"')}
+        <p class="muted od-edit-hint">Los totales se recalculan al guardar.${o.feeRate ? ` Incluye el recargo de tarjeta (${o.feeRate}%).` : ""}</p>
+      </section>
+    </form>`;
+  }
+
   function renderOrderDialog() {
     const o = state.orders.find((x) => x.code === openOrderCode);
     if (!o) { if (orderDialog.open) orderDialog.close(); return; }
@@ -914,22 +956,32 @@
     $("#orderDlgBadge").className = `badge badge-${o.status}`;
     $("#orderDlgBadge").textContent = ORDER_STATUS[o.status];
     $("#orderDlgSub").textContent = `${SHOP_LABEL[o.shop]} · ${fmtDate(o.createdAt)}`;
+    if (editingOrder) {
+      // No se vuelve a pintar si ya está abierto el formulario, para no perder lo escrito
+      if (!$("#orderEditForm")) $("#orderDlgBody").innerHTML = orderEditHtml(o);
+      $("#orderDlgFoot").innerHTML = `<span></span><div class="od-foot-actions">
+        <button type="button" class="btn btn-ghost" data-act="edit-cancel">Descartar cambios</button>
+        <button type="button" class="btn btn-primary" data-act="edit-save">Guardar cambios</button></div>`;
+      return;
+    }
     $("#orderDlgBody").innerHTML = orderDetailHtml(o);
     const canCancel = !["cancelled", "delivered"].includes(o.status);
     $("#orderDlgFoot").innerHTML = `${canCancel ? `<button type="button" class="link-danger" data-act="cancel">Cancelar pedido</button>` : "<span></span>"}
       <div class="od-foot-actions">
+        <button type="button" class="btn btn-ghost" data-act="edit">Editar pedido</button>
         <a class="btn btn-ghost" href="${esc(waLinkFor(o))}" target="_blank" rel="noopener">${icon("whatsapp")}WhatsApp al cliente</a>
         <a class="btn btn-ghost" href="pedido.html?c=${esc(o.code)}&t=${esc(o.token)}" target="_blank" rel="noopener">Ver página del cliente${icon("external")}</a>
       </div>`;
   }
   function openOrder(code) {
     openOrderCode = code;
+    editingOrder = false;
     renderOrderDialog();
     if (!orderDialog.open) orderDialog.showModal();
     $("#orderDlgBody").scrollTop = 0;
   }
   const closeOrderDialog = () => orderDialog.close();
-  orderDialog.addEventListener("close", () => { if (!orderDialog.open) openOrderCode = null; });
+  orderDialog.addEventListener("close", () => { if (!orderDialog.open) { openOrderCode = null; editingOrder = false; } });
   orderDialog.addEventListener("click", (e) => { if (e.target === orderDialog) closeOrderDialog(); });
   $("#orderDlgClose").addEventListener("click", closeOrderDialog);
 
@@ -1010,10 +1062,46 @@
     if (!sel || !card) return;
     card.querySelector('[data-act="save-status"]').disabled = sel.value === sel.dataset.current;
   });
+  async function saveOrderEdit(code, btn) {
+    const f = $("#orderEditForm");
+    if (!f.reportValidity()) return;
+    const v = (n) => (f.elements[n] ? f.elements[n].value : undefined);
+    const body = {
+      code, name: v("name"), phone: v("phone"), email: v("email"), dni: v("dni"),
+      deliveryMode: v("deliveryMode"), address: v("address"), district: v("district"),
+      shipping: v("shipping"), discount: v("discount"), notes: v("notes"),
+      items: [...f.querySelectorAll(".od-edit-item")].map((el) => ({
+        qty: el.querySelector('[name="qty"]').value,
+        color: el.querySelector('[name="color"]') ? el.querySelector('[name="color"]').value : "",
+        text: el.querySelector('[name="text"]') ? el.querySelector('[name="text"]').value : ""
+      }))
+    };
+    btn.disabled = true;
+    btn.textContent = "Guardando…";
+    try {
+      const res = await api("order-edit", { method: "POST", body });
+      const i = state.orders.findIndex((o) => o.code === code);
+      if (i >= 0) state.orders[i] = res.order;
+      editingOrder = false;
+      renderOrders();
+      $("#orderDlgBody").scrollTop = 0;
+      toast("Pedido editado.");
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = "Guardar cambios";
+      toast(`No se pudo guardar: ${err.message}`, true);
+    }
+  }
+
   orderDialog.addEventListener("click", (e) => {
     const card = e.target.closest("[data-code]");
     if (!card) return;
-    const save = e.target.closest('[data-act="save-status"]');
+    const editBtn = e.target.closest('[data-act="edit"]');
+    if (editBtn) { editingOrder = true; renderOrderDialog(); $("#orderDlgBody").scrollTop = 0; return; }
+    if (e.target.closest('[data-act="edit-cancel"]')) { editingOrder = false; renderOrderDialog(); return; }
+    const editSave = e.target.closest('[data-act="edit-save"]');
+    if (editSave) { saveOrderEdit(card.dataset.code, editSave); return; }
+    const save =e.target.closest('[data-act="save-status"]');
     if (save && !save.disabled) {
       const status = card.querySelector('[data-act="status"]').value;
       const code = card.dataset.code;

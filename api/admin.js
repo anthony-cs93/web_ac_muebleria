@@ -6,6 +6,8 @@
 //   POST op=save      { maderin?: [...], cdm?: [...], textures?: [...], shipping?: {...}, coupons?: [...], heroes?: [...], payments?: {...} }  -> publica los cambios
 //   GET  op=orders    pedidos de los clientes (más recientes primero)
 //   POST op=order-update { code, status?, note? }  -> cambia el estado de un pedido
+//   POST op=order-edit   { code, name, phone, email, deliveryMode, district, address, shipping, discount, notes, dni?, items:[{qty,color,text}] }
+//                        -> edita los datos del pedido y recalcula los totales (qty 0 quita el producto)
 //   POST op=upload    { id, img480, img900 } (data URLs webp/jpeg/png)  -> URLs de las fotos
 //   POST op=upload    { kind: 'texture', id, img, thumb }  -> { img, thumb } (textura de la biblioteca compartida)
 import {
@@ -94,6 +96,68 @@ export default async function handler(req, res) {
         }
       }
       if (typeof body.note === 'string' && body.note.trim()) addHistory(order, `Nota: ${body.note.trim().slice(0, 300)}`);
+      await saveOrder(order);
+      return sendJson(res, 200, { order }, noStore);
+    }
+
+    if (req.method === 'POST' && op === 'order-edit') {
+      const body = await readJsonBody(req, 40 * 1024);
+      const order = validCode(body.code) ? await findOrderByCode(body.code) : null;
+      if (!order) return sendJson(res, 404, { error: 'Pedido no encontrado' }, noStore);
+      const bad = (msg) => sendJson(res, 400, { error: msg }, noStore);
+      const txt = (v, max) => String(v == null ? '' : v).replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, max);
+      const num = (v) => Math.round(Number(v) * 100) / 100;
+
+      const name = txt(body.name, 80);
+      const phone = txt(body.phone, 20).replace(/[^\d+ ]/g, '');
+      const email = txt(body.email, 120);
+      if (name.length < 2) return bad('Escribe el nombre del cliente.');
+      if (phone.replace(/\D/g, '').length < 9) return bad('El celular debe tener 9 dígitos.');
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return bad('El email no es válido.');
+
+      const mode = body.deliveryMode === 'pickup' ? 'pickup' : 'delivery';
+      const address = txt(body.address, 160);
+      if (mode === 'delivery' && address.length < 5) return bad('Escribe la dirección de entrega.');
+      const shipping = num(body.shipping);
+      const discount = num(body.discount || 0);
+      if (!Number.isFinite(shipping) || shipping < 0 || !Number.isFinite(discount) || discount < 0) return bad('Envío y descuento deben ser montos válidos.');
+
+      const edits = Array.isArray(body.items) ? body.items : [];
+      if (edits.length !== order.items.length) return bad('La lista de productos cambió. Vuelve a abrir el pedido.');
+      const items = [];
+      for (let i = 0; i < edits.length; i++) {
+        const qty = Math.round(Number(edits[i].qty));
+        if (qty === 0) continue; // cantidad 0 = quitar el producto
+        if (!Number.isInteger(qty) || qty < 0 || qty > 99) return bad(`Cantidad no válida en «${order.items[i].name}».`);
+        const old = order.items[i];
+        items.push({ ...old, qty, color: old.color ? txt(edits[i].color, 40) : '', text: old.textLabel ? txt(edits[i].text, 120) : old.text, lineTotal: num(old.unitPrice * qty) });
+      }
+      if (!items.length) return bad('El pedido necesita al menos un producto. Para anularlo usa «Cancelar pedido».');
+
+      const subtotal = num(items.reduce((n, i) => n + i.lineTotal, 0));
+      if (discount > subtotal) return bad('El descuento no puede superar el subtotal.');
+      const feeRate = order.feeRate || 0;
+      const fee = num((subtotal - discount + shipping) * feeRate / 100);
+      const total = num(subtotal - discount + shipping + fee);
+      const before = order.total;
+
+      order.customer = { name, phone, email };
+      order.delivery = { ...order.delivery, mode, address: mode === 'pickup' ? order.delivery.address : address, district: txt(body.district, 60) || order.delivery.district, cost: shipping };
+      order.items = items;
+      order.subtotal = subtotal;
+      order.productDiscount = num(items.reduce((n, i) => n + (i.listPrice ? (i.listPrice - i.unitPrice) * i.qty : 0), 0));
+      order.discount = discount;
+      if (!discount) order.coupon = null;
+      order.shipping = shipping;
+      order.fee = fee;
+      order.total = total;
+      order.notes = txt(body.notes, 300);
+      if (body.dni !== undefined) {
+        const dni = txt(body.dni, 8);
+        if (dni && !/^\d{8}$/.test(dni)) return bad('El DNI debe tener 8 dígitos.');
+        order.invoice = dni ? { type: 'boleta', dni } : null;
+      }
+      addHistory(order, before !== total ? `Pedido editado desde el admin (total ${before} → ${total})` : 'Pedido editado desde el admin');
       await saveOrder(order);
       return sendJson(res, 200, { order }, noStore);
     }

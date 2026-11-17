@@ -911,13 +911,28 @@
   const field = (label, name, value, attrs = "") => `<label class="od-field"><span>${label}</span><input name="${name}" value="${esc(value)}" ${attrs}></label>`;
 
   // Formulario para corregir los datos del pedido (los totales se recalculan en el servidor)
+  const shipRule = (shop, d) => (state.catalog.shipping[shop] || {})[d] || null;
+
+  // Colores a elegir: los del producto y, aparte, el resto de texturas cargadas
+  function colorSelect(o, i) {
+    const prod = (state.catalog[o.shop] || []).find((p) => p.id === i.id);
+    const own = [...new Set(((prod && prod.colors) || []).map((c) => c.name).filter((n) => n && n !== "Por definir"))];
+    const others = [...new Set(state.catalog.textures.map((t) => t.name))].filter((n) => !own.includes(n));
+    const opt = (n) => `<option value="${esc(n)}"${n === i.color ? " selected" : ""}>${esc(n)}</option>`;
+    const stale = i.color && ![...own, ...others].includes(i.color) ? opt(i.color) : "";
+    return `<label class="od-field"><span>Color</span><select name="color" class="od-select">${stale}${own.map(opt).join("")}${others.length ? `<optgroup label="Otras texturas">${others.map(opt).join("")}</optgroup>` : ""}</select></label>`;
+  }
+
   function orderEditHtml(o) {
     const d = o.delivery;
+    const rules = state.catalog.shipping[o.shop] || {};
+    const dists = DISTRICTS.filter((n) => (rules[n] && rules[n].ok) || n === d.district);
+    const distOpts = dists.map((n) => `<option value="${esc(n)}"${n === d.district ? " selected" : ""}>${esc(n)}${rules[n] && rules[n].ok ? ` · ${soles(rules[n].cost)}` : " · sin envío"}</option>`).join("");
     const items = o.items.map((i, n) => `<div class="od-edit-item" data-i="${n}">
         <b>${esc(i.name)}</b><small>${soles(i.unitPrice)} c/u</small>
         <div class="od-edit-row">
           <label class="od-field od-qty"><span>Cantidad</span><input name="qty" type="number" min="0" max="99" step="1" value="${i.qty}"></label>
-          ${i.color ? field("Color", "color", i.color, 'maxlength="40"') : ""}
+          ${i.color ? colorSelect(o, i) : ""}
           ${i.textLabel ? field(esc(i.textLabel), "text", i.text, 'maxlength="120"') : ""}
         </div>
       </div>`).join("");
@@ -932,8 +947,8 @@
         <label class="od-field"><span>Modalidad</span><select name="deliveryMode" class="od-select">
           <option value="delivery"${d.mode === "delivery" ? " selected" : ""}>Envío a domicilio</option>
           <option value="pickup"${d.mode === "pickup" ? " selected" : ""}>Recojo en tienda</option></select></label>
-        ${field("Dirección", "address", d.address, 'maxlength="160"')}
-        ${field("Distrito", "district", d.district || "", 'maxlength="60"')}
+        ${field("Dirección", "address", d.address, `maxlength="160"${d.mode === "pickup" ? " disabled" : ""}`)}
+        <label class="od-field"><span>Distrito</span><select name="district" class="od-select"${d.mode === "pickup" ? " disabled" : ""}>${distOpts}</select></label>
         ${field("Costo de envío (S/)", "shipping", o.shipping, 'type="number" min="0" step="0.01" inputmode="decimal"')}
         <label class="od-field"><span>Nota del cliente</span><textarea name="notes" rows="2" maxlength="300">${esc(o.notes || "")}</textarea></label>
       </section>
@@ -1055,6 +1070,21 @@
   $("#ordersList").addEventListener("click", (e) => {
     const row = e.target.closest(".order-row");
     if (row) openOrder(row.dataset.code);
+  });
+  // En el formulario de edición: el costo de envío sigue al distrito, y el recojo lo deja en 0
+  orderDialog.addEventListener("change", (e) => {
+    const f = e.target.closest("#orderEditForm");
+    if (!f) return;
+    const o = state.orders.find((x) => x.code === openOrderCode);
+    if (!o) return;
+    const pickup = f.elements.deliveryMode.value === "pickup";
+    if (e.target.name === "district" || e.target.name === "deliveryMode") {
+      const rule = shipRule(o.shop, f.elements.district.value);
+      if (pickup) f.elements.shipping.value = 0;
+      else if (rule && rule.ok) f.elements.shipping.value = rule.cost;
+    }
+    f.elements.district.disabled = pickup;
+    f.elements.address.disabled = pickup;
   });
   orderDialog.addEventListener("change", (e) => {
     const sel = e.target.closest('[data-act="status"]');

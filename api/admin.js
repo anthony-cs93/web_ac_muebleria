@@ -11,10 +11,10 @@
 //   POST op=upload    { id, img480, img900 } (data URLs webp/jpeg/png)  -> URLs de las fotos
 //   POST op=upload    { kind: 'texture', id, img, thumb }  -> { img, thumb } (textura de la biblioteca compartida)
 import {
-  adminConfigured, createToken, isAuthed, passwordMatches, readCatalog, readJsonBody, sanitizeCoupons, sanitizeHeroes, sanitizePayments, getPayments, sanitizeShipping, sanitizeShop, sanitizeTextures,
+  DISTRICTS, adminConfigured, createToken, isAuthed, passwordMatches, readCatalog, readJsonBody, sanitizeCoupons, sanitizeHeroes, sanitizePayments, getPayments, sanitizeShipping, sanitizeShop, sanitizeTextures,
   sendJson, sessionCookie, slugify, storageMode, storePhoto, writeCatalog
 } from './_lib.js';
-import { STATUSES, addHistory, findOrderByCode, listOrders, mpSyncOrder, saveOrder, validCode } from './_orders.js';
+import { STATUSES, STORE, addHistory, findOrderByCode, listOrders, mpSyncOrder, saveOrder, validCode } from './_orders.js';
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -116,9 +116,16 @@ export default async function handler(req, res) {
       if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return bad('El email no es válido.');
 
       const mode = body.deliveryMode === 'pickup' ? 'pickup' : 'delivery';
+      const catalog = (await readCatalog()) || {};
       const address = txt(body.address, 160);
-      if (mode === 'delivery' && address.length < 5) return bad('Escribe la dirección de entrega.');
-      const shipping = num(body.shipping);
+      const district = txt(body.district, 60);
+      if (mode === 'delivery') {
+        if (address.length < 5) return bad('Escribe la dirección de entrega.');
+        const rule = catalog.shipping && catalog.shipping[order.shop] && catalog.shipping[order.shop][district];
+        // Solo distritos con envío (o el que el pedido ya tenía)
+        if (!DISTRICTS.includes(district) || (!(rule && rule.ok) && district !== order.delivery.district)) return bad('Elige un distrito con envío.');
+      }
+      const shipping = mode === 'pickup' ? 0 : num(body.shipping);
       const discount = num(body.discount || 0);
       if (!Number.isFinite(shipping) || shipping < 0 || !Number.isFinite(discount) || discount < 0) return bad('Envío y descuento deben ser montos válidos.');
 
@@ -130,7 +137,11 @@ export default async function handler(req, res) {
         if (qty === 0) continue; // cantidad 0 = quitar el producto
         if (!Number.isInteger(qty) || qty < 0 || qty > 99) return bad(`Cantidad no válida en «${order.items[i].name}».`);
         const old = order.items[i];
-        items.push({ ...old, qty, color: old.color ? txt(edits[i].color, 40) : '', text: old.textLabel ? txt(edits[i].text, 120) : old.text, lineTotal: num(old.unitPrice * qty) });
+        const prod = ((catalog[order.shop] || []).find((p) => p.id === old.id)) || {};
+        const known = [...(prod.colors || []).map((c) => c.name), ...(catalog.textures || []).map((t) => t.name)];
+        const picked = txt(edits[i].color, 40);
+        if (old.color && picked !== old.color && !known.includes(picked)) return bad(`Color no válido en «${old.name}».`);
+        items.push({ ...old, qty, color: old.color ? picked : '', text: old.textLabel ? txt(edits[i].text, 120) : old.text, lineTotal: num(old.unitPrice * qty) });
       }
       if (!items.length) return bad('El pedido necesita al menos un producto. Para anularlo usa «Cancelar pedido».');
 
@@ -142,7 +153,9 @@ export default async function handler(req, res) {
       const before = order.total;
 
       order.customer = { name, phone, email };
-      order.delivery = { ...order.delivery, mode, address: mode === 'pickup' ? order.delivery.address : address, district: txt(body.district, 60) || order.delivery.district, cost: shipping };
+      order.delivery = mode === 'pickup'
+        ? { mode, address: STORE.address, district: 'Comas', cost: 0 }
+        : { mode, address, district, cost: shipping };
       order.items = items;
       order.subtotal = subtotal;
       order.productDiscount = num(items.reduce((n, i) => n + (i.listPrice ? (i.listPrice - i.unitPrice) * i.qty : 0), 0));

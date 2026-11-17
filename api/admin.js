@@ -164,7 +164,8 @@ export default async function handler(req, res) {
       order.shipping = shipping;
       order.fee = fee;
       order.total = total;
-      order.notes = txt(body.notes, 300);
+      // La nota conserva los saltos de línea (máx. 2 seguidos)
+      order.notes = String(body.notes == null ? '' : body.notes).replace(/\r\n?/g, '\n').replace(/[\u0000-\u0009\u000b-\u001f]/g, ' ').replace(/\n{3,}/g, '\n\n').trim().slice(0, 300);
       if (body.dni !== undefined) {
         const dni = txt(body.dni, 8);
         if (dni && !/^\d{8}$/.test(dni)) return bad('El DNI debe tener 8 dígitos.');

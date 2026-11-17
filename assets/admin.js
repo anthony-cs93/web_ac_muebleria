@@ -874,7 +874,7 @@
         ${kv("Modalidad", d.mode === "pickup" ? "Recojo en tienda" : "Envío a domicilio")}
         ${kv("Dirección", d.mode === "pickup" ? esc(d.address) : `${esc(d.address)}, ${esc(d.district)}`)}
         ${o.eta ? kv("Plazo estimado", esc(o.eta.text)) : ""}
-        ${o.notes ? kv("Nota del cliente", esc(o.notes)) : ""}
+        ${o.notes ? kv("Nota del cliente", esc(o.notes), "od-note") : ""}
       </section>
       <section class="od-sec">
         <h4>Productos</h4>

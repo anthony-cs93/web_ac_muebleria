@@ -480,6 +480,7 @@ legend { padding: 0 6px; font-weight: 700; font-size: 13px; color: var(--ink-sof
 .od-sec h4 { margin: 0 0 6px; font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
 .od-kv { display: flex; justify-content: space-between; gap: 18px; padding: 4px 0; font-size: 14.5px; }
 .od-kv span { color: var(--ink-soft); }
+.od-note b { white-space: pre-line; }
 .od-kv b { font-weight: 700; text-align: right; overflow-wrap: anywhere; }
 .od-item { display: flex; justify-content: space-between; gap: 18px; padding: 5px 0; font-size: 14.5px; }
 .od-item > div { display: grid; gap: 2px; color: var(--ink-soft); }

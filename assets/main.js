@@ -1021,13 +1021,12 @@ document.addEventListener("DOMContentLoaded", () => {
       else cart.push({ id, color, qty: Math.min(qty, MAX_LINE_QTY), text });
       saveCart();
       renderCart();
-      if (navCartBtn) {
-        navCartBtn.classList.remove("bump");
-        void navCartBtn.offsetWidth; // reinicia la animación
-        navCartBtn.classList.add("bump");
-      }
-      showToast("✓ Agregado al carrito");
+      openCart(); // al agregar, se abre el carrito para que vea lo que lleva
     }
+
+    // Si hay productos y el carrito está cerrado, el botón del carrito palpita para invitar a terminar la compra
+    const isCartOpen = () => !!(cartDrawer && cartDrawer.classList.contains("open"));
+    const syncCartAttention = () => { if (navCartBtn) navCartBtn.classList.toggle("attn", cartCount() > 0 && !isCartOpen()); };
 
     function renderCart() {
       const count = cartCount();
@@ -1036,6 +1035,7 @@ document.addEventListener("DOMContentLoaded", () => {
         navCartCount.hidden = count === 0;
       }
       if (cartHeadCount) cartHeadCount.textContent = count ? `(${count})` : "";
+      syncCartAttention();
       if (!cartItemsEl) return;
 
       cartEmptyEl.hidden = count > 0;
@@ -1075,7 +1075,8 @@ document.addEventListener("DOMContentLoaded", () => {
       cartBackdrop.classList.add("open");
       cartDrawer.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
-      cartToast.classList.remove("show");
+      if (cartToast) cartToast.classList.remove("show");
+      syncCartAttention();
       const closeBtn = document.getElementById("cartCloseBtn");
       if (closeBtn) closeBtn.focus();
     }
@@ -1086,7 +1087,42 @@ document.addEventListener("DOMContentLoaded", () => {
       cartBackdrop.classList.remove("open");
       cartDrawer.setAttribute("aria-hidden", "true");
       if (!(cfg.isBlocked && cfg.isBlocked())) document.body.style.overflow = "";
+      hideClearConfirm();
+      syncCartAttention();
       if (navCartBtn) navCartBtn.focus();
+    }
+
+    // Confirmación antes de vaciar el carrito
+    let clearConfirm = null;
+    function hideClearConfirm() { if (clearConfirm) clearConfirm.hidden = true; }
+    function askClearCart() {
+      if (!cartDrawer) return;
+      if (!clearConfirm) {
+        clearConfirm = document.createElement("div");
+        clearConfirm.className = "cart-confirm";
+        clearConfirm.innerHTML = `<div class="cart-confirm-card" role="alertdialog" aria-modal="true" aria-labelledby="cartConfirmTitle">
+          <h4 id="cartConfirmTitle">¿Vaciar el carrito?</h4>
+          <p id="cartConfirmText"></p>
+          <div class="cart-confirm-actions">
+            <button type="button" class="btn btn-ghost" data-no>No, mantener</button>
+            <button type="button" class="btn btn-buy" data-yes>Sí, vaciar</button>
+          </div></div>`;
+        clearConfirm.addEventListener("click", (e) => {
+          if (e.target.closest("[data-yes]")) {
+            cart = [];
+            saveCart();
+            renderCart();
+            hideClearConfirm();
+          } else if (e.target.closest("[data-no]") || e.target === clearConfirm) {
+            hideClearConfirm();
+          }
+        });
+        cartDrawer.appendChild(clearConfirm);
+      }
+      const n = cartCount();
+      clearConfirm.querySelector("#cartConfirmText").textContent = n === 1 ? "Se quitará 1 producto de tu carrito." : `Se quitarán ${n} productos de tu carrito.`;
+      clearConfirm.hidden = false;
+      clearConfirm.querySelector("[data-no]").focus();
     }
 
     if (cartItemsEl) {
@@ -1113,18 +1149,16 @@ document.addEventListener("DOMContentLoaded", () => {
       closeCart();
       document.getElementById("productos")?.scrollIntoView({ behavior: "smooth" });
     });
-    document.getElementById("cartClearBtn")?.addEventListener("click", () => {
-      cart = [];
-      saveCart();
-      renderCart();
-    });
+    document.getElementById("cartClearBtn")?.addEventListener("click", askClearCart);
     // Seguir comprando: cierra el carrito y vuelve al catálogo
     document.getElementById("cartContinueBtn")?.addEventListener("click", () => {
       closeCart();
       document.getElementById("productos")?.scrollIntoView({ behavior: "smooth" });
     });
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeCart();
+      if (e.key !== "Escape") return;
+      if (clearConfirm && !clearConfirm.hidden) hideClearConfirm(); // Esc cierra primero la confirmación
+      else closeCart();
     });
 
     renderCart();
@@ -1493,8 +1527,8 @@ document.addEventListener("DOMContentLoaded", () => {
           openWhatsApp(`Hola Maderin, quiero consultar el precio de: "${product.name}". ¿Me indican precio, medidas y fecha de entrega?`);
           return;
         }
-        addToCart(product.id, selectedColor, selectedQuantity);
         closeModal();
+        addToCart(product.id, selectedColor, selectedQuantity);
       });
     }
 
@@ -1537,12 +1571,15 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Botón "Agregar" de la tarjeta: suma al carrito sin abrir el modal
+      // Botón "Agregar" de la tarjeta: con varios colores se elige en la ficha del producto (igual que en CDM);
+      // con un solo color se suma directo al carrito
       const addBtn = e.target.closest(".btn-add-cart");
       if (addBtn) {
         e.stopPropagation();
         const product = maderinProducts.find(p => p.id === addBtn.getAttribute("data-add-id"));
-        if (product) addToCart(product.id, product.colors[0].name, 1);
+        if (!product) return;
+        if (product.colors.length > 1) openModalForProduct(product.slug);
+        else addToCart(product.id, product.colors[0].name, 1);
         return;
       }
 

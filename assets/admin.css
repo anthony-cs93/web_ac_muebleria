@@ -489,10 +489,18 @@ legend { padding: 0 6px; font-weight: 700; font-size: 13px; color: var(--ink-sof
 .od-kv span { color: var(--ink-soft); }
 .od-note b { white-space: pre-line; }
 .od-kv b { font-weight: 700; text-align: right; overflow-wrap: anywhere; }
-.od-item { display: flex; justify-content: space-between; gap: 18px; padding: 5px 0; font-size: 14.5px; }
-.od-item > div { display: grid; gap: 2px; color: var(--ink-soft); }
-.od-item small { font-size: 12.5px; }
-.od-item b { white-space: nowrap; }
+.od-item { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; padding: 12px 14px; margin-bottom: 8px; border: 1px solid var(--line); border-radius: 12px; background: #fff; font-size: 14.5px; }
+.od-item-main { display: grid; gap: 8px; min-width: 0; flex: 1; }
+.od-item-name { font-size: 16px; line-height: 1.25; color: var(--ink); }
+.od-item-data { margin: 0; display: grid; gap: 4px; }
+.od-item-data > div { display: flex; gap: 10px; align-items: center; }
+.od-item-data dt { flex: 0 0 74px; color: var(--ink-soft); font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.od-item-data dd { margin: 0; display: inline-flex; align-items: center; gap: 8px; font-weight: 600; color: var(--ink); }
+.od-swatch { width: 18px; height: 18px; border-radius: 50%; border: 1px solid rgba(0, 0, 0, .2); background-size: cover; background-position: center; flex: none; }
+.od-item-custom { display: grid; gap: 2px; padding: 8px 10px; border-radius: 10px; background: var(--accent-soft); border-left: 3px solid var(--accent); }
+.od-item-custom span { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--accent); }
+.od-item-custom q { quotes: none; font-size: 16px; font-weight: 700; color: var(--ink); overflow-wrap: anywhere; white-space: pre-line; }
+.od-item-total { white-space: nowrap; font-size: 15px; }
 .od-totals { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); }
 .od-saving b { color: var(--ok); }
 .od-total { margin-top: 4px; font-size: 17px; }

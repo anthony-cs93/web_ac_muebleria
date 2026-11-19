@@ -909,13 +909,30 @@
 
   const kv = (label, value, cls = "") => `<div class="od-kv${cls ? ` ${cls}` : ""}"><span>${label}</span><b>${value}</b></div>`;
 
+  // Muestrita del color elegido (textura cargada o color del producto)
+  function colorSwatch(o, i) {
+    const prod = (state.catalog[o.shop] || []).find((p) => p.id === i.id);
+    const c = ((prod && prod.colors) || []).find((x) => x.name === i.color);
+    const tex = state.catalog.textures.find((t) => (c && c.tex && t.id === c.tex) || t.name === i.color);
+    const src = tex && (tex.thumb || tex.img);
+    if (src) return `<i class="od-swatch" style="background-image:url('${esc(src)}')"></i>`;
+    return c && c.hex ? `<i class="od-swatch" style="background:${esc(c.hex)}"></i>` : "";
+  }
+
   function orderDetailHtml(o) {
     const d = o.delivery;
     const canConfirm = ["pending", "review"].includes(o.status);
     const statusOpts = Object.entries(ORDER_STATUS).map(([v, l]) => `<option value="${v}"${o.status === v ? " selected" : ""}>${l}</option>`).join("");
     const items = o.items.map((i) => `<div class="od-item">
-        <div><span>${esc(i.name)}${i.color ? ` · ${esc(i.color)}` : ""} × ${i.qty}</span>${i.text ? `<small>${esc(i.textLabel)}: “${esc(i.text)}”</small>` : ""}</div>
-        <b>${soles(i.lineTotal)}</b>
+        <div class="od-item-main">
+          <strong class="od-item-name">${esc(i.name)}</strong>
+          <dl class="od-item-data">
+            ${i.color ? `<div><dt>Color</dt><dd>${colorSwatch(o, i)}${esc(i.color)}</dd></div>` : ""}
+            <div><dt>Cantidad</dt><dd>${i.qty} × ${soles(i.unitPrice)}</dd></div>
+          </dl>
+          ${i.text ? `<div class="od-item-custom"><span>${esc(i.textLabel || "Texto a personalizar")}</span><q>${esc(i.text)}</q></div>` : ""}
+        </div>
+        <b class="od-item-total">${soles(i.lineTotal)}</b>
       </div>`).join("");
     const hist = (o.history || []).slice().reverse().map((h) => {
       const text = String(h.text || "").replace(/«(\w+)»/g, (m, k) => (ORDER_STATUS[k] ? `«${ORDER_STATUS[k]}»` : m));

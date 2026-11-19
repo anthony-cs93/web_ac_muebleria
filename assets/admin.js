@@ -885,6 +885,7 @@
   }[f]);
   const soles = (n) => C.formatPEN(n);
   const fmtDate = (iso) => new Date(iso).toLocaleString("es-PE", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+  const fmtDateLong = (iso) => new Date(iso).toLocaleString("es-PE", { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
 
   function waLinkFor(o) {
     let phone = String(o.customer.phone).replace(/\D/g, "");
@@ -939,6 +940,11 @@
       return `<li><span>${esc(text)}</span><small>${fmtDate(h.at)}</small></li>`;
     }).join("");
     return `
+      <section class="od-sec">
+        <h4>Pedido</h4>
+        ${kv("Fecha del pedido", esc(fmtDateLong(o.createdAt)).replace(/^./, (c) => c.toUpperCase()))}
+        ${kv("Tienda", SHOP_LABEL[o.shop])}
+      </section>
       <section class="od-sec">
         <h4>Cliente</h4>
         ${kv("Nombre", esc(o.customer.name))}
@@ -1047,7 +1053,6 @@
     $("#orderDlgCode").textContent = o.code;
     $("#orderDlgBadge").className = `badge badge-${o.status}`;
     $("#orderDlgBadge").textContent = ORDER_STATUS[o.status];
-    $("#orderDlgSub").textContent = `${SHOP_LABEL[o.shop]} · ${fmtDate(o.createdAt)}`;
     if (editingOrder) {
       // No se vuelve a pintar si ya está abierto el formulario, para no perder lo escrito
       if (!$("#orderEditForm")) $("#orderDlgBody").innerHTML = orderEditHtml(o);

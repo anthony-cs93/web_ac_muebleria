@@ -470,7 +470,6 @@ legend { padding: 0 6px; font-weight: 700; font-size: 13px; color: var(--ink-sof
 .order-row:hover .order-go { color: var(--accent); }
 .order-dialog { width: min(680px, calc(100vw - 24px)); }
 .order-dlg-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.order-dlg-sub { margin: 0; padding: 10px 20px 0; font-size: 13px; }
 .order-dialog .editor-body { min-height: 0; }
 @media (max-width: 720px) { .order-row { grid-template-columns: 1fr auto 20px; } .order-meta { grid-column: 1 / -1; order: 3; white-space: normal; } }
 

@@ -178,6 +178,8 @@
     if (o.discount > 0) { $("pdCouponLabel").textContent = `Cupón ${o.coupon ? o.coupon.code : ""}`; $("pdCouponAmt").textContent = `− ${soles(o.discount)}`; }
     $("pdEta").hidden = !o.eta;
     if (o.eta) $("pdEta").innerHTML = `<b>Plazo estimado de entrega:</b> ${esc(o.eta.text)}`;
+    $("pdNotes").hidden = !o.notes;
+    if (o.notes) $("pdNotes").innerHTML = `<b>Notas adicionales:</b> ${esc(o.notes)}`;
     $("pdBoleta").hidden = !o.boleta;
     $("pdShipping").textContent = o.delivery.mode === "pickup" ? "Recojo en tienda · S/0" : soles(o.shipping);
     $("pdFeeRow").hidden = !o.fee;

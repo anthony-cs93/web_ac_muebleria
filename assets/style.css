@@ -5905,3 +5905,4 @@ body.theme-cdm .nav-cart { --pulse-c: rgba(255, 255, 255, .55); }
 .cart-confirm-card p { margin: 0 0 16px; font-size: 14px; color: var(--ink-soft); }
 .cart-confirm-actions { display: flex; gap: 8px; }
 .cart-confirm-actions .btn { flex: 1; justify-content: center; }
+.pd-notes { white-space: pre-line; }

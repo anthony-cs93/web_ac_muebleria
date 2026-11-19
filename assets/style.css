@@ -5906,3 +5906,12 @@ body.theme-cdm .nav-cart { --pulse-c: rgba(255, 255, 255, .55); }
 .cart-confirm-actions { display: flex; gap: 8px; }
 .cart-confirm-actions .btn { flex: 1; justify-content: center; }
 .pd-notes { white-space: pre-line; }
+/* Aviso de pago por WhatsApp: botón verde que palpita para invitar a avisar tras pagar */
+.pd-wa-pulse { margin-top: 12px; padding-block: 16px; font-size: 17px; gap: 10px; animation: waPulse 1.8s ease-in-out infinite; }
+@keyframes waPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(31, 170, 89, .6); }
+  50% { transform: scale(1.03); box-shadow: 0 0 0 12px rgba(31, 170, 89, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(31, 170, 89, 0); }
+}
+.pd-wa-pulse:hover { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .pd-wa-pulse { animation: none; } }

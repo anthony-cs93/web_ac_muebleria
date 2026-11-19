@@ -58,6 +58,81 @@ function showTexSample(indicator, sample, color){
   }, true);
 })();
 
+// Foto del producto completa: al pasar el mouse sobre la foto de la ficha aparece un botón que la abre sin recortar,
+// con navegación (← →) por las demás fotos del producto, si las hay
+(function(){
+  let box = null;
+  let col = null; // columna de la ficha: de ahí se leen y se mueven las fotos (barra Anterior / Siguiente)
+  const navBtn = (cls) => col && col.querySelector(`.ecom-modal-nav-bar .${cls}`);
+  const hasMany = () => { const bar = col && col.querySelector(".ecom-modal-nav-bar"); return !!bar && !bar.hidden; };
+  const close = () => { if (box) { box.hidden = true; box.querySelector("img").removeAttribute("src"); } };
+  function build(){
+    box = document.createElement("div");
+    box.className = "tex-lightbox photo-lightbox";
+    box.hidden = true;
+    box.setAttribute("role", "dialog");
+    box.setAttribute("aria-modal", "true");
+    box.setAttribute("aria-label", "Foto del producto");
+    box.innerHTML = `<figure><img alt=""><figcaption></figcaption>
+      <button type="button" class="tex-lightbox-close" aria-label="Cerrar">✕</button>
+      <button type="button" class="photo-nav prev" data-d="-1" aria-label="Foto anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <button type="button" class="photo-nav next" data-d="1" aria-label="Foto siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button></figure>`;
+    box.addEventListener("click", (e) => {
+      const nav = e.target.closest(".photo-nav");
+      if (nav) { go(Number(nav.dataset.d)); return; }
+      if (e.target === box || e.target.closest(".tex-lightbox-close")) close();
+    });
+    document.body.appendChild(box);
+  }
+  // Muestra la foto que está activa en la ficha
+  function render(){
+    const img = col.querySelector(".preview-visual img");
+    if (!img) return;
+    const big = box.querySelector("img");
+    big.src = img.currentSrc || img.src;
+    big.alt = img.alt;
+    const counter = col.querySelector(".modal-nav-counter");
+    const many = hasMany();
+    box.querySelector("figcaption").textContent = [img.alt.replace(/\s*\(foto \d+ de \d+\)$/, ""), many && counter ? counter.textContent.replace(/\s+/g, " ") : ""].filter(Boolean).join(" · ");
+    box.querySelectorAll(".photo-nav").forEach((b) => { b.hidden = !many; });
+  }
+  // Pasa de foto usando los botones de la propia ficha, para que ambas queden sincronizadas
+  function go(d){
+    const b = navBtn(d < 0 ? "prev" : "next");
+    if (!hasMany() || !b) return;
+    b.click();
+    render();
+  }
+  const ZOOM_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>';
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".ecom-main-preview").forEach((wrap) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "photo-zoom";
+      btn.setAttribute("aria-label", "Ver foto completa");
+      btn.title = "Ver foto completa";
+      btn.innerHTML = `${ZOOM_ICON}<span>Ver completa</span>`;
+      wrap.appendChild(btn);
+    });
+  });
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".photo-zoom");
+    if (!btn) return;
+    col = btn.closest(".ecom-modal-media-col");
+    if (!col || !col.querySelector(".preview-visual img")) return;
+    if (!box) build();
+    box.hidden = false;
+    render();
+    box.querySelector(".tex-lightbox-close").focus();
+  });
+  // Escape y las flechas afectan solo a esta ventana, no a la ficha del producto
+  document.addEventListener("keydown", (e) => {
+    if (!box || box.hidden) return;
+    if (e.key === "Escape") { e.stopImmediatePropagation(); e.preventDefault(); close(); }
+    else if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.stopImmediatePropagation(); e.preventDefault(); go(e.key === "ArrowLeft" ? -1 : 1); }
+  }, true);
+})();
+
 // --- Nav móvil ---
 document.addEventListener("DOMContentLoaded", () => {
   const toggle = document.querySelector(".nav-toggle");

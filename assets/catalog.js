@@ -198,6 +198,25 @@
     return out;
   }
 
+  // Fecha de entrega estimada: hoy (cuando lo ve el cliente) + el plazo del producto, en su valor máximo.
+  // «días hábiles» y «semanas» no cuentan sábado ni domingo; «días» a secas son corridos.
+  function deliveryDate(p, from) {
+    if (!p || p.stock === "out" || typeof p.deliveryTime !== "string") return null;
+    const m = /(\d+)\s*(?:a|-|–|al)\s*(\d+)/i.exec(p.deliveryTime) || /(\d+)/.exec(p.deliveryTime);
+    if (!m) return null;
+    const weeks = /semana/i.test(p.deliveryTime);
+    const days = Math.max(Number(m[1]), Number(m[2] || m[1])) * (weeks ? 5 : 1);
+    if (!(days > 0)) return null;
+    const business = weeks || /h[aá]bil/i.test(p.deliveryTime);
+    const d = new Date(from || Date.now());
+    for (let left = days; left > 0;) {
+      d.setDate(d.getDate() + 1);
+      if (!business || (d.getDay() !== 0 && d.getDay() !== 6)) left--;
+    }
+    const dd = String(d.getDate()).padStart(2, "0"), mm = String(d.getMonth() + 1).padStart(2, "0");
+    return { date: d, label: `Recíbelo aprox. el ${dd}/${mm}` };
+  }
+
   // Disponibilidad: ready = listo para entrega | order = sobre pedido | out = agotado
   function stockInfo(p) {
     const state = p.stock || "order";
@@ -240,5 +259,5 @@
     return defaultsFor(shop);
   }
 
-  window.ACCatalog = { DEFAULTS, SHOPS, BADGES, ICONS, load, defaultsFor, normalize, findByLink, iconSvg, hasPhoto, photoUrl, slides, stockInfo, isPromo, setTextures, getTextures, textureOf, swatchBg, setShipping, shippingFor, formatPEN, DEFAULT_PAYMENTS, getPayments };
+  window.ACCatalog = { DEFAULTS, SHOPS, BADGES, ICONS, load, defaultsFor, normalize, findByLink, iconSvg, hasPhoto, photoUrl, slides, stockInfo, deliveryDate, isPromo, setTextures, getTextures, textureOf, swatchBg, setShipping, shippingFor, formatPEN, DEFAULT_PAYMENTS, getPayments };
 })();

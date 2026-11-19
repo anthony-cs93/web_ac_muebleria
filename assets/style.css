@@ -5947,3 +5947,14 @@ body.theme-cdm .nav-cart { --pulse-c: rgba(255, 255, 255, .55); }
 .photo-nav.prev { left: 10px; }
 .photo-nav.next { right: 10px; }
 @media (max-width: 640px) { .photo-nav { width: 38px; height: 38px; } }
+
+/* Badge «Recíbelo el dd/mm» bajo el precio */
+.eta-badge { display: inline-flex; align-items: center; gap: 7px; margin: 10px 0 0; padding: 6px 12px 6px 10px; border-radius: 999px; background: #e7f6ec; color: #17653a; border: 1px solid rgba(23, 101, 58, .18); font-size: 13px; font-weight: 800; line-height: 1.2; }
+.eta-badge[hidden] { display: none; }
+.eta-badge svg { width: 17px; height: 17px; flex: none; }
+
+/* Disponibilidad dentro de la ficha: una línea aparte, bajo el badge de entrega y más discreta */
+.ecom-price-box .p-stock { display: flex; width: fit-content; margin: 8px 0 0 2px; font-size: 12px; font-weight: 500; opacity: .85; }
+.ecom-price-box .p-stock .p-stock-dot { width: 6px; height: 6px; }
+.ecom-price-box .p-stock--order { color: var(--ink-soft); }
+.eta-badge { display: flex; width: fit-content; }

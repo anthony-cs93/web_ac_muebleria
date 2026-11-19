@@ -28,6 +28,15 @@ function showTexSample(indicator, sample, color){
   if (label) label.textContent = color.name;
 }
 
+// Badge «Recíbelo el dd/mm» bajo el precio: fecha de hoy + plazo de entrega del producto
+function showEta(id, product){
+  const el = document.getElementById(id);
+  if (!el) return;
+  const eta = ACCatalog.deliveryDate(product);
+  el.hidden = !eta;
+  if (eta) el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="6" width="14" height="10" rx="1.5"/><path d="M15 9h4l3 3v4h-7M5 20a2 2 0 1 0 0-.01M18 20a2 2 0 1 0 0-.01"/></svg><span>${eta.label}</span>`;
+}
+
 // Ventana con la textura en grande (clic en la muestra sobre la foto)
 (function(){
   let box = null;
@@ -1437,6 +1446,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Disponibilidad
+      showEta("mModalEta", product);
       if (modalStock) {
         const av = getAvailability(product);
         modalStock.className = `p-stock p-stock--${av.state}`;
@@ -1826,6 +1836,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (p.oldPrice) el.oldPrice.textContent = ACCatalog.formatPEN(p.oldPrice);
       el.discount.hidden = !p.discount;
       if (p.discount) el.discount.textContent = p.discount;
+      showEta("cModalEta", p);
       const av = availability(p);
       el.stock.className = `p-stock p-stock--${av.state}`;
       el.stock.innerHTML = `<span class="p-stock-dot"></span>${esc(av.label)}`;
